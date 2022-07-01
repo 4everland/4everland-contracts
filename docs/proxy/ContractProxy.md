@@ -1,0 +1,9 @@
+# ContractProxy
+
+
+
+> proxy contract
+
+
+## Functions
+

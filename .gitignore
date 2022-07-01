@@ -1,0 +1,27 @@
+.DS_STORE
+cache/
+artifacts/
+exports/
+deploy/
+# docs/
+hbs/
+
+coverage*
+tasks/
+hardhat.config.ts
+scripts/
+test/
+.vscode/*
+!.vscode/settings.json.default
+!.vscode/launch.json.default
+!.vscode/extensions.json.default
+
+node_modules/
+.env
+
+.yalc
+yalc.lock
+
+contractsInfo.json
+deployments/hardhat
+deployments/localhost
