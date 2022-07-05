@@ -108,8 +108,7 @@ contract ProviderController is IProviderController, EIP712Upgradeable, Pauser, R
 		bytes32 account,
 		ResourceData.AmountPayload[] memory payloads
 	) internal {
-		require(accountExists(provider, account), 'AccountRegistry: account exists');
-		require(router.ProviderRegistry().isProvider(provider), 'ProviderController: nonexistent provider');
+		require(accountExists(provider, account), 'ProviderController: nonexistent account');
 		require(payloads.length > 0, 'ProviderController: empty payloads');
 		for (uint256 i = 0; i < payloads.length; i++) {
 			ResourceData.AmountPayload memory payload = payloads[i];
