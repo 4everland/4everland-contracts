@@ -32,14 +32,7 @@ contract ContentTracer is RouterWrapper, OwnableUpgradeable {
 	/// @param provider provider address
 	/// @param account user account
 	/// @param content ipfs content
-	/// @param size ipfs content size
-	/// @param count ipfs content count
-	event Remove(address provider, bytes32 account, string content, uint256 size, uint256 count);
-
-	modifier nonSize(uint256 size) {
-		require(size > 0, 'ContentTracer: zero size.');
-		_;
-	}
+	event Remove(address provider, bytes32 account, string content);
 
 	/// @dev proxy initialize function
 	/// @param owner contract owner
@@ -79,7 +72,7 @@ contract ContentTracer is RouterWrapper, OwnableUpgradeable {
 		string memory content,
 		uint256 size,
 		uint256 count
-	) public nonSize(size) onlyProvider {
+	) public onlyProvider {
 		_insert(msg.sender, account, content, size, count);
 	}
 
@@ -89,11 +82,9 @@ contract ContentTracer is RouterWrapper, OwnableUpgradeable {
 		string memory content,
 		uint256 size,
 		uint256 count
-	) internal nonSize(size) {
+	) internal {
 		IIPFSStorageController controller = router.IPFSStorageController();
-		require(!exists(provider, account, content), 'ContentTracer: content exists');
 		require(!controller.isExpired(provider, account), 'ContentTracer: account expired');
-		metas[provider][account][content] = ContentMeta(size, count);
 
 		emit Insert(provider, account, content, size, count, controller.expiredAt(provider, account));
 	}
@@ -120,38 +111,7 @@ contract ContentTracer is RouterWrapper, OwnableUpgradeable {
 		bytes32 account,
 		string memory content
 	) internal {
-		require(exists(provider, account, content), 'ContentTracer: nonexistent content');
-		ContentMeta memory meta = metas[provider][account][content];
-		delete metas[provider][account][content];
-
-		emit Remove(provider, account, content, meta.size, meta.count);
+		emit Remove(provider, account, content);
 	}
 
-	/// @dev return whether ipfs content exists in provider
-	/// @param provider provider address
-	/// @param account user account
-	/// @param content ipfs content
-	/// @return ipfs ipfs content exists
-	function exists(
-		address provider,
-		bytes32 account,
-		string memory content
-	) public view returns (bool) {
-		return metas[provider][account][content].size != 0;
-	}
-
-	/// @dev return ipfs content size
-	/// @param provider provider address
-	/// @param account user account
-	/// @param content ipfs content
-	/// @return ipfs ipfs content size
-	function size(
-		address provider,
-		bytes32 account,
-		string memory content
-	) public view returns (uint256) {
-		require(router.ProviderRegistry().isProvider(provider), 'ContentTracer: nonexistent provider');
-		require(exists(provider, account, content), 'ContentTracer: nonexistent content');
-		return metas[provider][account][content].size;
-	}
 }
