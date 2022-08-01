@@ -33,6 +33,7 @@ interface MessageSenderInterface extends ethers.utils.Interface {
     "ownerWithdrawNative(address,uint256)": FunctionFragment;
     "receiver()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
+    "sendMessage(bytes)": FunctionFragment;
     "sendMessageWithTransfer(address,uint256,uint64,uint32,bytes,uint8)": FunctionFragment;
     "setDstChainId(uint64)": FunctionFragment;
     "setMessageBus(address)": FunctionFragment;
@@ -85,6 +86,10 @@ interface MessageSenderInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "sendMessage",
+    values: [BytesLike]
   ): string;
   encodeFunctionData(
     functionFragment: "sendMessageWithTransfer",
@@ -140,6 +145,10 @@ interface MessageSenderInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "receiver", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "sendMessage",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -333,6 +342,11 @@ export class MessageSender extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    sendMessage(
+      message: BytesLike,
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     sendMessageWithTransfer(
       token: string,
       amount: BigNumberish,
@@ -426,6 +440,11 @@ export class MessageSender extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  sendMessage(
+    message: BytesLike,
+    overrides?: PayableOverrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   sendMessageWithTransfer(
     token: string,
     amount: BigNumberish,
@@ -516,6 +535,8 @@ export class MessageSender extends BaseContract {
     receiver(overrides?: CallOverrides): Promise<string>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
+
+    sendMessage(message: BytesLike, overrides?: CallOverrides): Promise<void>;
 
     sendMessageWithTransfer(
       token: string,
@@ -711,6 +732,11 @@ export class MessageSender extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    sendMessage(
+      message: BytesLike,
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     sendMessageWithTransfer(
       token: string,
       amount: BigNumberish,
@@ -806,6 +832,11 @@ export class MessageSender extends BaseContract {
 
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    sendMessage(
+      message: BytesLike,
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     sendMessageWithTransfer(

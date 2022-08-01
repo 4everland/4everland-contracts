@@ -188,6 +188,19 @@ var _abi = [
     {
         inputs: [
             {
+                internalType: "bytes",
+                name: "message",
+                type: "bytes",
+            },
+        ],
+        name: "sendMessage",
+        outputs: [],
+        stateMutability: "payable",
+        type: "function",
+    },
+    {
+        inputs: [
+            {
                 internalType: "address",
                 name: "token",
                 type: "address",

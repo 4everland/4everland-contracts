@@ -24,6 +24,10 @@ contract SrcChainPayment is ReentrancyGuardUpgradeable, Pauser, OwnerWithdrawabl
 	/// @dev message sender on src chain
 	IMessageSender public messageSender;
 
+	mapping(address => uint256) public providerBalances;
+
+	mapping(address => mapping(bytes32 => uint256)) public fees;
+
 	/// @dev emit when token updated
 	/// @param token token address
 	event TokenUpdated(IERC20Upgradeable token);
@@ -39,6 +43,12 @@ contract SrcChainPayment is ReentrancyGuardUpgradeable, Pauser, OwnerWithdrawabl
 	/// @param payloads payment payloads
 	/// @param maxSlippage maxSlippage in cBridge
 	event Paid(address provider, uint64 nonce, bytes32 account, ResourceData.ValuePayload[] payloads, uint32 maxSlippage);
+
+	/// @dev emit when user paid on src chain
+	/// @param provider provider address
+	/// @param account sender
+	/// @param payloads payment payloads
+	event PaidV2(address provider, bytes32 account, ResourceData.ValuePayload[] payloads);
 
 	constructor() initializer {}
 
@@ -100,6 +110,31 @@ contract SrcChainPayment is ReentrancyGuardUpgradeable, Pauser, OwnerWithdrawabl
 		emit Paid(provider, nonce, account, payloads, maxSlippage);
 	}
 
+	/// @dev pay from source chain
+	/// @param provider provider address
+	/// @param account sender
+	/// @param payloads payment payloads
+	function payV2(
+		address provider,
+		bytes32 account,
+		ResourceData.ValuePayload[] memory payloads
+	) external payable whenNotPaused nonReentrant {
+		uint256 value = payloadsValue(payloads);
+		providerBalances[provider] = providerBalances[provider] + value;
+		fees[provider][account] = fees[provider][account] + value;
+		token.safeTransferFrom(msg.sender, address(this), value);
+		messageSender.sendMessage{value: msg.value}(encodeMessageV2(provider, account, payloads));
+		emit PaidV2(provider, account, payloads);
+	}
+
+	/// @dev return payment total token value
+	/// @param payloads payment payloads
+	/// @return value payment total token value
+	function payloadsValue(ResourceData.ValuePayload[] memory payloads) public returns (uint256 value) {
+		value = ResourceData.totalValue(payloads);
+		value = ResourceData.matchResourceToToken(token, value);
+	}
+
 	/// @dev update message sender
 	/// @param _messageSender message sender address
 	function setMessageSender(IMessageSender _messageSender) external onlyOwner {
@@ -138,6 +173,33 @@ contract SrcChainPayment is ReentrancyGuardUpgradeable, Pauser, OwnerWithdrawabl
 	) public view returns (uint256 value) {
 		return messageSender.calcFee(encodeMessage(provider, nonce, account, payloads));
 	}
+
+	/// @dev calculate message fee
+	/// @param provider provider address
+	/// @param account user account
+	/// @param payloads payment payloads
+	/// @return value message fee
+	function calcFeeV2(
+		address provider,
+		bytes32 account,
+		ResourceData.ValuePayload[] memory payloads
+	) public view returns (uint256 value) {
+		return messageSender.calcFee(encodeMessageV2(provider, account, payloads));
+	}
+
+	/// @dev encode payment message
+	/// @param provider provider address
+	/// @param account user account
+	/// @param payloads payment payloads
+	/// @return message message bytes
+	function encodeMessageV2(
+		address provider,
+		bytes32 account,
+		ResourceData.ValuePayload[] memory payloads
+	) public pure returns (bytes memory) {
+		return abi.encode(provider, account, payloads);
+	}
+
 
 	/// @dev encode payment message
 	/// @param provider provider address

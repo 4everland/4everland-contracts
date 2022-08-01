@@ -25,6 +25,7 @@ interface IMessageSenderInterface extends ethers.utils.Interface {
     "dstChainId()": FunctionFragment;
     "messageId((address,address,uint64,bytes32),uint64,bytes)": FunctionFragment;
     "receiver()": FunctionFragment;
+    "sendMessage(bytes)": FunctionFragment;
     "sendMessageWithTransfer(address,uint256,uint64,uint32,bytes,uint8)": FunctionFragment;
   };
 
@@ -48,6 +49,10 @@ interface IMessageSenderInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "receiver", values?: undefined): string;
   encodeFunctionData(
+    functionFragment: "sendMessage",
+    values: [BytesLike]
+  ): string;
+  encodeFunctionData(
     functionFragment: "sendMessageWithTransfer",
     values: [
       string,
@@ -63,6 +68,10 @@ interface IMessageSenderInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "dstChainId", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "messageId", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "receiver", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "sendMessage",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "sendMessageWithTransfer",
     data: BytesLike
@@ -171,6 +180,11 @@ export class IMessageSender extends BaseContract {
 
     receiver(overrides?: CallOverrides): Promise<[string]>;
 
+    sendMessage(
+      message: BytesLike,
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     sendMessageWithTransfer(
       token: string,
       amount: BigNumberish,
@@ -200,6 +214,11 @@ export class IMessageSender extends BaseContract {
 
   receiver(overrides?: CallOverrides): Promise<string>;
 
+  sendMessage(
+    message: BytesLike,
+    overrides?: PayableOverrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   sendMessageWithTransfer(
     token: string,
     amount: BigNumberish,
@@ -228,6 +247,8 @@ export class IMessageSender extends BaseContract {
     ): Promise<string>;
 
     receiver(overrides?: CallOverrides): Promise<string>;
+
+    sendMessage(message: BytesLike, overrides?: CallOverrides): Promise<void>;
 
     sendMessageWithTransfer(
       token: string,
@@ -313,6 +334,11 @@ export class IMessageSender extends BaseContract {
 
     receiver(overrides?: CallOverrides): Promise<BigNumber>;
 
+    sendMessage(
+      message: BytesLike,
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     sendMessageWithTransfer(
       token: string,
       amount: BigNumberish,
@@ -345,6 +371,11 @@ export class IMessageSender extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     receiver(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    sendMessage(
+      message: BytesLike,
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
 
     sendMessageWithTransfer(
       token: string,

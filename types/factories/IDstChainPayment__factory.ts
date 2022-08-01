@@ -56,11 +56,48 @@ const _abi = [
         ],
         indexed: false,
         internalType: "struct IDstChainPayment.PaymentPayload",
-        name: "payload",
+        name: "payloads",
         type: "tuple",
       },
     ],
     name: "Paid",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "provider",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "bytes32",
+        name: "account",
+        type: "bytes32",
+      },
+      {
+        components: [
+          {
+            internalType: "enum ResourceData.ResourceType",
+            name: "resourceType",
+            type: "uint8",
+          },
+          {
+            internalType: "uint256[]",
+            name: "values",
+            type: "uint256[]",
+          },
+        ],
+        indexed: false,
+        internalType: "struct ResourceData.ValuePayload[]",
+        name: "payloads",
+        type: "tuple[]",
+      },
+    ],
+    name: "PaidV2",
     type: "event",
   },
   {
@@ -80,6 +117,19 @@ const _abi = [
       },
     ],
     stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes",
+        name: "message",
+        type: "bytes",
+      },
+    ],
+    name: "celerExec",
+    outputs: [],
+    stateMutability: "nonpayable",
     type: "function",
   },
   {
@@ -337,6 +387,47 @@ const _abi = [
     ],
     name: "payFromSourceChain",
     outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "provider",
+        type: "address",
+      },
+      {
+        internalType: "bytes32",
+        name: "account",
+        type: "bytes32",
+      },
+      {
+        components: [
+          {
+            internalType: "enum ResourceData.ResourceType",
+            name: "resourceType",
+            type: "uint8",
+          },
+          {
+            internalType: "uint256[]",
+            name: "values",
+            type: "uint256[]",
+          },
+        ],
+        internalType: "struct ResourceData.ValuePayload[]",
+        name: "payloads",
+        type: "tuple[]",
+      },
+    ],
+    name: "payV2",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "value",
+        type: "uint256",
+      },
+    ],
     stateMutability: "nonpayable",
     type: "function",
   },

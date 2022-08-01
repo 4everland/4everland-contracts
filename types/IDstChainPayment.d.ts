@@ -22,6 +22,7 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 interface IDstChainPaymentInterface extends ethers.utils.Interface {
   functions: {
     "balanceOf(address)": FunctionFragment;
+    "celerExec(bytes)": FunctionFragment;
     "decodeSourceChainMessage(bytes)": FunctionFragment;
     "getAmountOf(address,uint8,uint256)": FunctionFragment;
     "getValueOf(address,uint8,uint256)": FunctionFragment;
@@ -29,10 +30,15 @@ interface IDstChainPaymentInterface extends ethers.utils.Interface {
     "ipfsAlloctionsFee(address,bytes32,uint256,uint256)": FunctionFragment;
     "pay((address,uint64,bytes32,tuple[]))": FunctionFragment;
     "payFromSourceChain(address,uint256,bytes)": FunctionFragment;
+    "payV2(address,bytes32,tuple[])": FunctionFragment;
     "priceOf(address,uint8)": FunctionFragment;
   };
 
   encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "celerExec",
+    values: [BytesLike]
+  ): string;
   encodeFunctionData(
     functionFragment: "decodeSourceChainMessage",
     values: [BytesLike]
@@ -69,11 +75,20 @@ interface IDstChainPaymentInterface extends ethers.utils.Interface {
     values: [string, BigNumberish, BytesLike]
   ): string;
   encodeFunctionData(
+    functionFragment: "payV2",
+    values: [
+      string,
+      BytesLike,
+      { resourceType: BigNumberish; values: BigNumberish[] }[]
+    ]
+  ): string;
+  encodeFunctionData(
     functionFragment: "priceOf",
     values: [string, BigNumberish]
   ): string;
 
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "celerExec", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "decodeSourceChainMessage",
     data: BytesLike
@@ -96,13 +111,16 @@ interface IDstChainPaymentInterface extends ethers.utils.Interface {
     functionFragment: "payFromSourceChain",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "payV2", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "priceOf", data: BytesLike): Result;
 
   events: {
     "Paid(address,tuple)": EventFragment;
+    "PaidV2(address,bytes32,tuple[])": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "Paid"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "PaidV2"): EventFragment;
 }
 
 export type PaidEvent = TypedEvent<
@@ -124,7 +142,7 @@ export type PaidEvent = TypedEvent<
     }
   ] & {
     token: string;
-    payload: [
+    payloads: [
       string,
       BigNumber,
       string,
@@ -138,6 +156,21 @@ export type PaidEvent = TypedEvent<
         values: BigNumber[];
       })[];
     };
+  }
+>;
+
+export type PaidV2Event = TypedEvent<
+  [
+    string,
+    string,
+    ([number, BigNumber[]] & { resourceType: number; values: BigNumber[] })[]
+  ] & {
+    provider: string;
+    account: string;
+    payloads: ([number, BigNumber[]] & {
+      resourceType: number;
+      values: BigNumber[];
+    })[];
   }
 >;
 
@@ -189,6 +222,11 @@ export class IDstChainPayment extends BaseContract {
       provider: string,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
+
+    celerExec(
+      message: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
 
     decodeSourceChainMessage(
       message: BytesLike,
@@ -267,6 +305,13 @@ export class IDstChainPayment extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    payV2(
+      provider: string,
+      account: BytesLike,
+      payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     priceOf(
       provider: string,
       resourceType: BigNumberish,
@@ -275,6 +320,11 @@ export class IDstChainPayment extends BaseContract {
   };
 
   balanceOf(provider: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+  celerExec(
+    message: BytesLike,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   decodeSourceChainMessage(
     message: BytesLike,
@@ -347,6 +397,13 @@ export class IDstChainPayment extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  payV2(
+    provider: string,
+    account: BytesLike,
+    payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   priceOf(
     provider: string,
     resourceType: BigNumberish,
@@ -355,6 +412,8 @@ export class IDstChainPayment extends BaseContract {
 
   callStatic: {
     balanceOf(provider: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    celerExec(message: BytesLike, overrides?: CallOverrides): Promise<void>;
 
     decodeSourceChainMessage(
       message: BytesLike,
@@ -433,6 +492,13 @@ export class IDstChainPayment extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    payV2(
+      provider: string,
+      account: BytesLike,
+      payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     priceOf(
       provider: string,
       resourceType: BigNumberish,
@@ -443,7 +509,7 @@ export class IDstChainPayment extends BaseContract {
   filters: {
     "Paid(address,tuple)"(
       token?: null,
-      payload?: null
+      payloads?: null
     ): TypedEventFilter<
       [
         string,
@@ -467,7 +533,7 @@ export class IDstChainPayment extends BaseContract {
       ],
       {
         token: string;
-        payload: [
+        payloads: [
           string,
           BigNumber,
           string,
@@ -489,7 +555,7 @@ export class IDstChainPayment extends BaseContract {
 
     Paid(
       token?: null,
-      payload?: null
+      payloads?: null
     ): TypedEventFilter<
       [
         string,
@@ -513,7 +579,7 @@ export class IDstChainPayment extends BaseContract {
       ],
       {
         token: string;
-        payload: [
+        payloads: [
           string,
           BigNumber,
           string,
@@ -532,10 +598,61 @@ export class IDstChainPayment extends BaseContract {
         };
       }
     >;
+
+    "PaidV2(address,bytes32,tuple[])"(
+      provider?: null,
+      account?: null,
+      payloads?: null
+    ): TypedEventFilter<
+      [
+        string,
+        string,
+        ([number, BigNumber[]] & {
+          resourceType: number;
+          values: BigNumber[];
+        })[]
+      ],
+      {
+        provider: string;
+        account: string;
+        payloads: ([number, BigNumber[]] & {
+          resourceType: number;
+          values: BigNumber[];
+        })[];
+      }
+    >;
+
+    PaidV2(
+      provider?: null,
+      account?: null,
+      payloads?: null
+    ): TypedEventFilter<
+      [
+        string,
+        string,
+        ([number, BigNumber[]] & {
+          resourceType: number;
+          values: BigNumber[];
+        })[]
+      ],
+      {
+        provider: string;
+        account: string;
+        payloads: ([number, BigNumber[]] & {
+          resourceType: number;
+          values: BigNumber[];
+        })[];
+      }
+    >;
   };
 
   estimateGas: {
     balanceOf(provider: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    celerExec(
+      message: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
 
     decodeSourceChainMessage(
       message: BytesLike,
@@ -586,6 +703,13 @@ export class IDstChainPayment extends BaseContract {
       _token: string,
       dstAmount: BigNumberish,
       message: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    payV2(
+      provider: string,
+      account: BytesLike,
+      payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -602,6 +726,11 @@ export class IDstChainPayment extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    celerExec(
+      message: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     decodeSourceChainMessage(
       message: BytesLike,
       overrides?: CallOverrides
@@ -651,6 +780,13 @@ export class IDstChainPayment extends BaseContract {
       _token: string,
       dstAmount: BigNumberish,
       message: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    payV2(
+      provider: string,
+      account: BytesLike,
+      payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

@@ -24,7 +24,10 @@ interface SrcChainPaymentInterface extends ethers.utils.Interface {
   functions: {
     "addPauser(address)": FunctionFragment;
     "calcFee(address,uint64,bytes32,tuple[])": FunctionFragment;
+    "calcFeeV2(address,bytes32,tuple[])": FunctionFragment;
     "encodeMessage(address,uint64,bytes32,tuple[])": FunctionFragment;
+    "encodeMessageV2(address,bytes32,tuple[])": FunctionFragment;
+    "fees(address,bytes32)": FunctionFragment;
     "initialize(address,address,address,address)": FunctionFragment;
     "isPauser(address)": FunctionFragment;
     "messageSender()": FunctionFragment;
@@ -35,6 +38,9 @@ interface SrcChainPaymentInterface extends ethers.utils.Interface {
     "paused()": FunctionFragment;
     "pausers(address)": FunctionFragment;
     "pay(address,uint64,bytes32,tuple[],uint32)": FunctionFragment;
+    "payV2(address,bytes32,tuple[])": FunctionFragment;
+    "payloadsValue(tuple[])": FunctionFragment;
+    "providerBalances(address)": FunctionFragment;
     "removePauser(address)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "renouncePauser()": FunctionFragment;
@@ -56,6 +62,14 @@ interface SrcChainPaymentInterface extends ethers.utils.Interface {
     ]
   ): string;
   encodeFunctionData(
+    functionFragment: "calcFeeV2",
+    values: [
+      string,
+      BytesLike,
+      { resourceType: BigNumberish; values: BigNumberish[] }[]
+    ]
+  ): string;
+  encodeFunctionData(
     functionFragment: "encodeMessage",
     values: [
       string,
@@ -63,6 +77,18 @@ interface SrcChainPaymentInterface extends ethers.utils.Interface {
       BytesLike,
       { resourceType: BigNumberish; values: BigNumberish[] }[]
     ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "encodeMessageV2",
+    values: [
+      string,
+      BytesLike,
+      { resourceType: BigNumberish; values: BigNumberish[] }[]
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "fees",
+    values: [string, BytesLike]
   ): string;
   encodeFunctionData(
     functionFragment: "initialize",
@@ -96,6 +122,22 @@ interface SrcChainPaymentInterface extends ethers.utils.Interface {
     ]
   ): string;
   encodeFunctionData(
+    functionFragment: "payV2",
+    values: [
+      string,
+      BytesLike,
+      { resourceType: BigNumberish; values: BigNumberish[] }[]
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "payloadsValue",
+    values: [{ resourceType: BigNumberish; values: BigNumberish[] }[]]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "providerBalances",
+    values: [string]
+  ): string;
+  encodeFunctionData(
     functionFragment: "removePauser",
     values: [string]
   ): string;
@@ -121,10 +163,16 @@ interface SrcChainPaymentInterface extends ethers.utils.Interface {
 
   decodeFunctionResult(functionFragment: "addPauser", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "calcFee", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "calcFeeV2", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "encodeMessage",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "encodeMessageV2",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "fees", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "isPauser", data: BytesLike): Result;
   decodeFunctionResult(
@@ -144,6 +192,15 @@ interface SrcChainPaymentInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "pausers", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "pay", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "payV2", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "payloadsValue",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "providerBalances",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "removePauser",
     data: BytesLike
@@ -174,6 +231,7 @@ interface SrcChainPaymentInterface extends ethers.utils.Interface {
     "NativeWithdrawal(address,uint256)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
     "Paid(address,uint64,bytes32,tuple[],uint32)": EventFragment;
+    "PaidV2(address,bytes32,tuple[])": EventFragment;
     "Paused(address)": EventFragment;
     "PauserAdded(address)": EventFragment;
     "PauserRemoved(address)": EventFragment;
@@ -187,6 +245,7 @@ interface SrcChainPaymentInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "NativeWithdrawal"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Paid"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "PaidV2"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Paused"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "PauserAdded"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "PauserRemoved"): EventFragment;
@@ -225,6 +284,21 @@ export type PaidEvent = TypedEvent<
       values: BigNumber[];
     })[];
     maxSlippage: number;
+  }
+>;
+
+export type PaidV2Event = TypedEvent<
+  [
+    string,
+    string,
+    ([number, BigNumber[]] & { resourceType: number; values: BigNumber[] })[]
+  ] & {
+    provider: string;
+    account: string;
+    payloads: ([number, BigNumber[]] & {
+      resourceType: number;
+      values: BigNumber[];
+    })[];
   }
 >;
 
@@ -299,6 +373,13 @@ export class SrcChainPayment extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber] & { value: BigNumber }>;
 
+    calcFeeV2(
+      provider: string,
+      account: BytesLike,
+      payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { value: BigNumber }>;
+
     encodeMessage(
       provider: string,
       nonce: BigNumberish,
@@ -306,6 +387,19 @@ export class SrcChainPayment extends BaseContract {
       payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
       overrides?: CallOverrides
     ): Promise<[string]>;
+
+    encodeMessageV2(
+      provider: string,
+      account: BytesLike,
+      payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
+    fees(
+      arg0: string,
+      arg1: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
     initialize(
       owner: string,
@@ -350,6 +444,23 @@ export class SrcChainPayment extends BaseContract {
       maxSlippage: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
+
+    payV2(
+      provider: string,
+      account: BytesLike,
+      payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    payloadsValue(
+      payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    providerBalances(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
     removePauser(
       account: string,
@@ -399,6 +510,13 @@ export class SrcChainPayment extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  calcFeeV2(
+    provider: string,
+    account: BytesLike,
+    payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   encodeMessage(
     provider: string,
     nonce: BigNumberish,
@@ -406,6 +524,19 @@ export class SrcChainPayment extends BaseContract {
     payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
     overrides?: CallOverrides
   ): Promise<string>;
+
+  encodeMessageV2(
+    provider: string,
+    account: BytesLike,
+    payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
+    overrides?: CallOverrides
+  ): Promise<string>;
+
+  fees(
+    arg0: string,
+    arg1: BytesLike,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   initialize(
     owner: string,
@@ -450,6 +581,20 @@ export class SrcChainPayment extends BaseContract {
     maxSlippage: BigNumberish,
     overrides?: PayableOverrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
+
+  payV2(
+    provider: string,
+    account: BytesLike,
+    payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
+    overrides?: PayableOverrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  payloadsValue(
+    payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  providerBalances(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
   removePauser(
     account: string,
@@ -496,6 +641,13 @@ export class SrcChainPayment extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    calcFeeV2(
+      provider: string,
+      account: BytesLike,
+      payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     encodeMessage(
       provider: string,
       nonce: BigNumberish,
@@ -503,6 +655,19 @@ export class SrcChainPayment extends BaseContract {
       payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
       overrides?: CallOverrides
     ): Promise<string>;
+
+    encodeMessageV2(
+      provider: string,
+      account: BytesLike,
+      payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    fees(
+      arg0: string,
+      arg1: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     initialize(
       owner: string,
@@ -545,6 +710,23 @@ export class SrcChainPayment extends BaseContract {
       maxSlippage: BigNumberish,
       overrides?: CallOverrides
     ): Promise<string>;
+
+    payV2(
+      provider: string,
+      account: BytesLike,
+      payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    payloadsValue(
+      payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    providerBalances(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     removePauser(account: string, overrides?: CallOverrides): Promise<void>;
 
@@ -670,6 +852,52 @@ export class SrcChainPayment extends BaseContract {
       }
     >;
 
+    "PaidV2(address,bytes32,tuple[])"(
+      provider?: null,
+      account?: null,
+      payloads?: null
+    ): TypedEventFilter<
+      [
+        string,
+        string,
+        ([number, BigNumber[]] & {
+          resourceType: number;
+          values: BigNumber[];
+        })[]
+      ],
+      {
+        provider: string;
+        account: string;
+        payloads: ([number, BigNumber[]] & {
+          resourceType: number;
+          values: BigNumber[];
+        })[];
+      }
+    >;
+
+    PaidV2(
+      provider?: null,
+      account?: null,
+      payloads?: null
+    ): TypedEventFilter<
+      [
+        string,
+        string,
+        ([number, BigNumber[]] & {
+          resourceType: number;
+          values: BigNumber[];
+        })[]
+      ],
+      {
+        provider: string;
+        account: string;
+        payloads: ([number, BigNumber[]] & {
+          resourceType: number;
+          values: BigNumber[];
+        })[];
+      }
+    >;
+
     "Paused(address)"(
       account?: null
     ): TypedEventFilter<[string], { account: string }>;
@@ -737,11 +965,31 @@ export class SrcChainPayment extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    calcFeeV2(
+      provider: string,
+      account: BytesLike,
+      payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     encodeMessage(
       provider: string,
       nonce: BigNumberish,
       account: BytesLike,
       payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    encodeMessageV2(
+      provider: string,
+      account: BytesLike,
+      payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    fees(
+      arg0: string,
+      arg1: BytesLike,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -787,6 +1035,23 @@ export class SrcChainPayment extends BaseContract {
       payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
       maxSlippage: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    payV2(
+      provider: string,
+      account: BytesLike,
+      payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    payloadsValue(
+      payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    providerBalances(
+      arg0: string,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     removePauser(
@@ -838,11 +1103,31 @@ export class SrcChainPayment extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    calcFeeV2(
+      provider: string,
+      account: BytesLike,
+      payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     encodeMessage(
       provider: string,
       nonce: BigNumberish,
       account: BytesLike,
       payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    encodeMessageV2(
+      provider: string,
+      account: BytesLike,
+      payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    fees(
+      arg0: string,
+      arg1: BytesLike,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -894,6 +1179,23 @@ export class SrcChainPayment extends BaseContract {
       payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
       maxSlippage: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    payV2(
+      provider: string,
+      account: BytesLike,
+      payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    payloadsValue(
+      payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    providerBalances(
+      arg0: string,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     removePauser(

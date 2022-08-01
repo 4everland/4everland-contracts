@@ -23,6 +23,8 @@ interface DstChainPaymentInterface extends ethers.utils.Interface {
   functions: {
     "addPauser(address)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
+    "celerExec(bytes)": FunctionFragment;
+    "decodeMessage(bytes)": FunctionFragment;
     "decodeSourceChainMessage(bytes)": FunctionFragment;
     "getAmountOf(address,uint8,uint256)": FunctionFragment;
     "getValueOf(address,uint8,uint256)": FunctionFragment;
@@ -38,6 +40,7 @@ interface DstChainPaymentInterface extends ethers.utils.Interface {
     "pausers(address)": FunctionFragment;
     "pay((address,uint64,bytes32,tuple[]))": FunctionFragment;
     "payFromSourceChain(address,uint256,bytes)": FunctionFragment;
+    "payV2(address,bytes32,tuple[])": FunctionFragment;
     "priceOf(address,uint8)": FunctionFragment;
     "removePauser(address)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
@@ -49,6 +52,14 @@ interface DstChainPaymentInterface extends ethers.utils.Interface {
 
   encodeFunctionData(functionFragment: "addPauser", values: [string]): string;
   encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "celerExec",
+    values: [BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "decodeMessage",
+    values: [BytesLike]
+  ): string;
   encodeFunctionData(
     functionFragment: "decodeSourceChainMessage",
     values: [BytesLike]
@@ -102,6 +113,14 @@ interface DstChainPaymentInterface extends ethers.utils.Interface {
     values: [string, BigNumberish, BytesLike]
   ): string;
   encodeFunctionData(
+    functionFragment: "payV2",
+    values: [
+      string,
+      BytesLike,
+      { resourceType: BigNumberish; values: BigNumberish[] }[]
+    ]
+  ): string;
+  encodeFunctionData(
     functionFragment: "priceOf",
     values: [string, BigNumberish]
   ): string;
@@ -126,6 +145,11 @@ interface DstChainPaymentInterface extends ethers.utils.Interface {
 
   decodeFunctionResult(functionFragment: "addPauser", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "celerExec", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "decodeMessage",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "decodeSourceChainMessage",
     data: BytesLike
@@ -162,6 +186,7 @@ interface DstChainPaymentInterface extends ethers.utils.Interface {
     functionFragment: "payFromSourceChain",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "payV2", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "priceOf", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "removePauser",
@@ -187,6 +212,7 @@ interface DstChainPaymentInterface extends ethers.utils.Interface {
     "NativeWithdrawal(address,uint256)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
     "Paid(address,tuple)": EventFragment;
+    "PaidV2(address,bytes32,tuple[])": EventFragment;
     "Paused(address)": EventFragment;
     "PauserAdded(address)": EventFragment;
     "PauserRemoved(address)": EventFragment;
@@ -199,6 +225,7 @@ interface DstChainPaymentInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "NativeWithdrawal"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Paid"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "PaidV2"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Paused"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "PauserAdded"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "PauserRemoved"): EventFragment;
@@ -236,7 +263,7 @@ export type PaidEvent = TypedEvent<
     }
   ] & {
     token: string;
-    payload: [
+    payloads: [
       string,
       BigNumber,
       string,
@@ -250,6 +277,21 @@ export type PaidEvent = TypedEvent<
         values: BigNumber[];
       })[];
     };
+  }
+>;
+
+export type PaidV2Event = TypedEvent<
+  [
+    string,
+    string,
+    ([number, BigNumber[]] & { resourceType: number; values: BigNumber[] })[]
+  ] & {
+    provider: string;
+    account: string;
+    payloads: ([number, BigNumber[]] & {
+      resourceType: number;
+      values: BigNumber[];
+    })[];
   }
 >;
 
@@ -320,6 +362,32 @@ export class DstChainPayment extends BaseContract {
       provider: string,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
+
+    celerExec(
+      message: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    decodeMessage(
+      message: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<
+      [
+        string,
+        string,
+        ([number, BigNumber[]] & {
+          resourceType: number;
+          values: BigNumber[];
+        })[]
+      ] & {
+        provider: string;
+        account: string;
+        payloads: ([number, BigNumber[]] & {
+          resourceType: number;
+          values: BigNumber[];
+        })[];
+      }
+    >;
 
     decodeSourceChainMessage(
       message: BytesLike,
@@ -430,6 +498,13 @@ export class DstChainPayment extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    payV2(
+      provider: string,
+      account: BytesLike,
+      payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     priceOf(
       provider: string,
       resourceType: BigNumberish,
@@ -467,6 +542,29 @@ export class DstChainPayment extends BaseContract {
   ): Promise<ContractTransaction>;
 
   balanceOf(provider: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+  celerExec(
+    message: BytesLike,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  decodeMessage(
+    message: BytesLike,
+    overrides?: CallOverrides
+  ): Promise<
+    [
+      string,
+      string,
+      ([number, BigNumber[]] & { resourceType: number; values: BigNumber[] })[]
+    ] & {
+      provider: string;
+      account: string;
+      payloads: ([number, BigNumber[]] & {
+        resourceType: number;
+        values: BigNumber[];
+      })[];
+    }
+  >;
 
   decodeSourceChainMessage(
     message: BytesLike,
@@ -571,6 +669,13 @@ export class DstChainPayment extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  payV2(
+    provider: string,
+    account: BytesLike,
+    payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   priceOf(
     provider: string,
     resourceType: BigNumberish,
@@ -605,6 +710,29 @@ export class DstChainPayment extends BaseContract {
     addPauser(account: string, overrides?: CallOverrides): Promise<void>;
 
     balanceOf(provider: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    celerExec(message: BytesLike, overrides?: CallOverrides): Promise<void>;
+
+    decodeMessage(
+      message: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<
+      [
+        string,
+        string,
+        ([number, BigNumber[]] & {
+          resourceType: number;
+          values: BigNumber[];
+        })[]
+      ] & {
+        provider: string;
+        account: string;
+        payloads: ([number, BigNumber[]] & {
+          resourceType: number;
+          values: BigNumber[];
+        })[];
+      }
+    >;
 
     decodeSourceChainMessage(
       message: BytesLike,
@@ -713,6 +841,13 @@ export class DstChainPayment extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    payV2(
+      provider: string,
+      account: BytesLike,
+      payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     priceOf(
       provider: string,
       resourceType: BigNumberish,
@@ -772,7 +907,7 @@ export class DstChainPayment extends BaseContract {
 
     "Paid(address,tuple)"(
       token?: null,
-      payload?: null
+      payloads?: null
     ): TypedEventFilter<
       [
         string,
@@ -796,7 +931,7 @@ export class DstChainPayment extends BaseContract {
       ],
       {
         token: string;
-        payload: [
+        payloads: [
           string,
           BigNumber,
           string,
@@ -818,7 +953,7 @@ export class DstChainPayment extends BaseContract {
 
     Paid(
       token?: null,
-      payload?: null
+      payloads?: null
     ): TypedEventFilter<
       [
         string,
@@ -842,7 +977,7 @@ export class DstChainPayment extends BaseContract {
       ],
       {
         token: string;
-        payload: [
+        payloads: [
           string,
           BigNumber,
           string,
@@ -859,6 +994,52 @@ export class DstChainPayment extends BaseContract {
             values: BigNumber[];
           })[];
         };
+      }
+    >;
+
+    "PaidV2(address,bytes32,tuple[])"(
+      provider?: null,
+      account?: null,
+      payloads?: null
+    ): TypedEventFilter<
+      [
+        string,
+        string,
+        ([number, BigNumber[]] & {
+          resourceType: number;
+          values: BigNumber[];
+        })[]
+      ],
+      {
+        provider: string;
+        account: string;
+        payloads: ([number, BigNumber[]] & {
+          resourceType: number;
+          values: BigNumber[];
+        })[];
+      }
+    >;
+
+    PaidV2(
+      provider?: null,
+      account?: null,
+      payloads?: null
+    ): TypedEventFilter<
+      [
+        string,
+        string,
+        ([number, BigNumber[]] & {
+          resourceType: number;
+          values: BigNumber[];
+        })[]
+      ],
+      {
+        provider: string;
+        account: string;
+        payloads: ([number, BigNumber[]] & {
+          resourceType: number;
+          values: BigNumber[];
+        })[];
       }
     >;
 
@@ -924,6 +1105,16 @@ export class DstChainPayment extends BaseContract {
     ): Promise<BigNumber>;
 
     balanceOf(provider: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    celerExec(
+      message: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    decodeMessage(
+      message: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     decodeSourceChainMessage(
       message: BytesLike,
@@ -1009,6 +1200,13 @@ export class DstChainPayment extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    payV2(
+      provider: string,
+      account: BytesLike,
+      payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     priceOf(
       provider: string,
       resourceType: BigNumberish,
@@ -1048,6 +1246,16 @@ export class DstChainPayment extends BaseContract {
 
     balanceOf(
       provider: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    celerExec(
+      message: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    decodeMessage(
+      message: BytesLike,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1138,6 +1346,13 @@ export class DstChainPayment extends BaseContract {
       _token: string,
       dstAmount: BigNumberish,
       message: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    payV2(
+      provider: string,
+      account: BytesLike,
+      payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

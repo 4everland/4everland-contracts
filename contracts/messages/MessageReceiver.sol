@@ -18,6 +18,7 @@ import '../govers/RouterWrapper.sol';
 contract MessageReceiver is RouterWrapper, OwnerWithdrawable {
 	using SafeMathUpgradeable for uint256;
 	using SafeERC20Upgradeable for IERC20Upgradeable;
+
 	enum ExecutionStatus {
 		Fail,
 		Success,
@@ -66,6 +67,21 @@ contract MessageReceiver is RouterWrapper, OwnerWithdrawable {
 	/// @param executor executor address
 	event MessageWithTransferFallback(address _sender, address _token, uint256 _amount, uint64 _srcChainId, bytes _message, address executor);
 
+	/// @dev emit when message with transfer executed
+	/// @param sender message sender address
+	/// @param srcChainId src chain chainId
+	/// @param message src chain message
+	/// @param executor executor address
+	event MessageExecuted(address sender, uint64 srcChainId, bytes message, address executor);
+
+	/// @dev emit message with transfer failed
+	/// @param sender message sender address
+	/// @param srcChainId src chain chainId
+	/// @param message src chain message
+	/// @param executor executor address
+	/// @param error error message
+	event MessageFailed(address sender, uint64 srcChainId, bytes message, address executor, bytes error);
+
 	modifier onlyMessageBus() {
 		require(msg.sender == messageBus, 'MessageReceiver: caller is not message bus');
 		_;
@@ -113,6 +129,27 @@ contract MessageReceiver is RouterWrapper, OwnerWithdrawable {
 			emit MessageWithTransferFailed(sender, token, amount, srcChainId, message, _executor, err);
 		}
 		token.safeApprove(address(dstChainPayment), 0);
+		return ExecutionStatus.Success;
+	}
+
+	/// @dev execute message
+	/// @param sender message sender address
+	/// @param srcChainId src chain chainId
+	/// @param message src chain message
+	/// @param _executor executor address
+	function executeMessage(
+        address sender,
+        uint64 srcChainId,
+        bytes memory message,
+        address _executor
+    ) external payable returns (ExecutionStatus) {
+		require(executor == _executor, 'MessageReceiver: invalid executor');
+		IDstChainPayment dstChainPayment = router.DstChainPayment();
+		try dstChainPayment.celerExec(message) {
+			emit MessageExecuted(sender, srcChainId, message, _executor);
+		} catch (bytes memory err) {
+			emit MessageFailed(sender, srcChainId, message, _executor, err);
+		}
 		return ExecutionStatus.Success;
 	}
 

@@ -60,4 +60,9 @@ interface IMessageSender {
 		bytes memory message,
 		MsgDataTypes.BridgeSendType bridgeSendType
 	) external payable returns (bytes32);
+
+	/// @dev send message to dst chain
+	/// @param message message for dst chain
+	function sendMessage(bytes memory message) external payable;
+
 }

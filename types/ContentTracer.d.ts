@@ -21,7 +21,6 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface ContentTracerInterface extends ethers.utils.Interface {
   functions: {
-    "exists(address,bytes32,string)": FunctionFragment;
     "initialize(address,address)": FunctionFragment;
     "insert(bytes32,string,uint256,uint256)": FunctionFragment;
     "insertMult(bytes32[],string[],uint256[],uint256[])": FunctionFragment;
@@ -31,14 +30,9 @@ interface ContentTracerInterface extends ethers.utils.Interface {
     "removeMult(bytes32[],string[])": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "router()": FunctionFragment;
-    "size(address,bytes32,string)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
   };
 
-  encodeFunctionData(
-    functionFragment: "exists",
-    values: [string, BytesLike, string]
-  ): string;
   encodeFunctionData(
     functionFragment: "initialize",
     values: [string, string]
@@ -70,15 +64,10 @@ interface ContentTracerInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "router", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "size",
-    values: [string, BytesLike, string]
-  ): string;
-  encodeFunctionData(
     functionFragment: "transferOwnership",
     values: [string]
   ): string;
 
-  decodeFunctionResult(functionFragment: "exists", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "insert", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "insertMult", data: BytesLike): Result;
@@ -91,7 +80,6 @@ interface ContentTracerInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "router", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "size", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "transferOwnership",
     data: BytesLike
@@ -101,7 +89,7 @@ interface ContentTracerInterface extends ethers.utils.Interface {
     "Initialized(uint8)": EventFragment;
     "Insert(address,bytes32,string,uint256,uint256,uint256)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
-    "Remove(address,bytes32,string,uint256,uint256)": EventFragment;
+    "Remove(address,bytes32,string)": EventFragment;
     "RouterUpdated(address)": EventFragment;
   };
 
@@ -130,12 +118,10 @@ export type OwnershipTransferredEvent = TypedEvent<
 >;
 
 export type RemoveEvent = TypedEvent<
-  [string, string, string, BigNumber, BigNumber] & {
+  [string, string, string] & {
     provider: string;
     account: string;
     content: string;
-    size: BigNumber;
-    count: BigNumber;
   }
 >;
 
@@ -185,13 +171,6 @@ export class ContentTracer extends BaseContract {
   interface: ContentTracerInterface;
 
   functions: {
-    exists(
-      provider: string,
-      account: BytesLike,
-      content: string,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
-
     initialize(
       owner: string,
       router: string,
@@ -241,25 +220,11 @@ export class ContentTracer extends BaseContract {
 
     router(overrides?: CallOverrides): Promise<[string]>;
 
-    size(
-      provider: string,
-      account: BytesLike,
-      content: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
     transferOwnership(
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
-
-  exists(
-    provider: string,
-    account: BytesLike,
-    content: string,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
 
   initialize(
     owner: string,
@@ -310,26 +275,12 @@ export class ContentTracer extends BaseContract {
 
   router(overrides?: CallOverrides): Promise<string>;
 
-  size(
-    provider: string,
-    account: BytesLike,
-    content: string,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
   transferOwnership(
     newOwner: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    exists(
-      provider: string,
-      account: BytesLike,
-      content: string,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
     initialize(
       owner: string,
       router: string,
@@ -376,13 +327,6 @@ export class ContentTracer extends BaseContract {
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
     router(overrides?: CallOverrides): Promise<string>;
-
-    size(
-      provider: string,
-      account: BytesLike,
-      content: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
 
     transferOwnership(
       newOwner: string,
@@ -453,38 +397,22 @@ export class ContentTracer extends BaseContract {
       { previousOwner: string; newOwner: string }
     >;
 
-    "Remove(address,bytes32,string,uint256,uint256)"(
+    "Remove(address,bytes32,string)"(
       provider?: null,
       account?: null,
-      content?: null,
-      size?: null,
-      count?: null
+      content?: null
     ): TypedEventFilter<
-      [string, string, string, BigNumber, BigNumber],
-      {
-        provider: string;
-        account: string;
-        content: string;
-        size: BigNumber;
-        count: BigNumber;
-      }
+      [string, string, string],
+      { provider: string; account: string; content: string }
     >;
 
     Remove(
       provider?: null,
       account?: null,
-      content?: null,
-      size?: null,
-      count?: null
+      content?: null
     ): TypedEventFilter<
-      [string, string, string, BigNumber, BigNumber],
-      {
-        provider: string;
-        account: string;
-        content: string;
-        size: BigNumber;
-        count: BigNumber;
-      }
+      [string, string, string],
+      { provider: string; account: string; content: string }
     >;
 
     "RouterUpdated(address)"(
@@ -497,13 +425,6 @@ export class ContentTracer extends BaseContract {
   };
 
   estimateGas: {
-    exists(
-      provider: string,
-      account: BytesLike,
-      content: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     initialize(
       owner: string,
       router: string,
@@ -553,13 +474,6 @@ export class ContentTracer extends BaseContract {
 
     router(overrides?: CallOverrides): Promise<BigNumber>;
 
-    size(
-      provider: string,
-      account: BytesLike,
-      content: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     transferOwnership(
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -567,13 +481,6 @@ export class ContentTracer extends BaseContract {
   };
 
   populateTransaction: {
-    exists(
-      provider: string,
-      account: BytesLike,
-      content: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     initialize(
       owner: string,
       router: string,
@@ -622,13 +529,6 @@ export class ContentTracer extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     router(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    size(
-      provider: string,
-      account: BytesLike,
-      content: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
 
     transferOwnership(
       newOwner: string,
