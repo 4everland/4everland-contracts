@@ -23,6 +23,7 @@ interface FundPoolInterface extends ethers.utils.Interface {
   functions: {
     "addPauser(address)": FunctionFragment;
     "balanceOf(address,bytes32)": FunctionFragment;
+    "initWalletAndRecharge(address,bytes32,uint256,address,bytes)": FunctionFragment;
     "initialize(address,address,address)": FunctionFragment;
     "isPauser(address)": FunctionFragment;
     "owner()": FunctionFragment;
@@ -47,6 +48,10 @@ interface FundPoolInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "balanceOf",
     values: [string, BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "initWalletAndRecharge",
+    values: [string, BytesLike, BigNumberish, string, BytesLike]
   ): string;
   encodeFunctionData(
     functionFragment: "initialize",
@@ -118,6 +123,10 @@ interface FundPoolInterface extends ethers.utils.Interface {
 
   decodeFunctionResult(functionFragment: "addPauser", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "initWalletAndRecharge",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "isPauser", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
@@ -288,6 +297,15 @@ export class FundPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
+    initWalletAndRecharge(
+      provider: string,
+      account: BytesLike,
+      amount: BigNumberish,
+      wallet: string,
+      signature: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     initialize(
       owner: string,
       pauser: string,
@@ -391,6 +409,15 @@ export class FundPool extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  initWalletAndRecharge(
+    provider: string,
+    account: BytesLike,
+    amount: BigNumberish,
+    wallet: string,
+    signature: BytesLike,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   initialize(
     owner: string,
     pauser: string,
@@ -490,6 +517,15 @@ export class FundPool extends BaseContract {
       account: BytesLike,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    initWalletAndRecharge(
+      provider: string,
+      account: BytesLike,
+      amount: BigNumberish,
+      wallet: string,
+      signature: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     initialize(
       owner: string,
@@ -730,6 +766,15 @@ export class FundPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    initWalletAndRecharge(
+      provider: string,
+      account: BytesLike,
+      amount: BigNumberish,
+      wallet: string,
+      signature: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     initialize(
       owner: string,
       pauser: string,
@@ -832,6 +877,15 @@ export class FundPool extends BaseContract {
       provider: string,
       account: BytesLike,
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    initWalletAndRecharge(
+      provider: string,
+      account: BytesLike,
+      amount: BigNumberish,
+      wallet: string,
+      signature: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     initialize(

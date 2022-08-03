@@ -34,6 +34,7 @@ interface ProviderControllerInterface extends ethers.utils.Interface {
     "pause()": FunctionFragment;
     "paused()": FunctionFragment;
     "pausers(address)": FunctionFragment;
+    "poolInitWallet(address,bytes32,address,bytes)": FunctionFragment;
     "registerAccount(bytes32)": FunctionFragment;
     "registerAndDripMult(bytes32[],tuple[][])": FunctionFragment;
     "registerMult(bytes32[])": FunctionFragment;
@@ -89,6 +90,10 @@ interface ProviderControllerInterface extends ethers.utils.Interface {
   encodeFunctionData(functionFragment: "pause", values?: undefined): string;
   encodeFunctionData(functionFragment: "paused", values?: undefined): string;
   encodeFunctionData(functionFragment: "pausers", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "poolInitWallet",
+    values: [string, BytesLike, string, BytesLike]
+  ): string;
   encodeFunctionData(
     functionFragment: "registerAccount",
     values: [BytesLike]
@@ -161,6 +166,10 @@ interface ProviderControllerInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "pausers", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "poolInitWallet",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "registerAccount",
     data: BytesLike
@@ -380,6 +389,14 @@ export class ProviderController extends BaseContract {
 
     pausers(arg0: string, overrides?: CallOverrides): Promise<[boolean]>;
 
+    poolInitWallet(
+      provider: string,
+      account: BytesLike,
+      wallet: string,
+      signature: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     registerAccount(
       account: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -509,6 +526,14 @@ export class ProviderController extends BaseContract {
 
   pausers(arg0: string, overrides?: CallOverrides): Promise<boolean>;
 
+  poolInitWallet(
+    provider: string,
+    account: BytesLike,
+    wallet: string,
+    signature: BytesLike,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   registerAccount(
     account: BytesLike,
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -632,6 +657,14 @@ export class ProviderController extends BaseContract {
     paused(overrides?: CallOverrides): Promise<boolean>;
 
     pausers(arg0: string, overrides?: CallOverrides): Promise<boolean>;
+
+    poolInitWallet(
+      provider: string,
+      account: BytesLike,
+      wallet: string,
+      signature: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     registerAccount(
       account: BytesLike,
@@ -876,6 +909,14 @@ export class ProviderController extends BaseContract {
 
     pausers(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+    poolInitWallet(
+      provider: string,
+      account: BytesLike,
+      wallet: string,
+      signature: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     registerAccount(
       account: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -1010,6 +1051,14 @@ export class ProviderController extends BaseContract {
     pausers(
       arg0: string,
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    poolInitWallet(
+      provider: string,
+      account: BytesLike,
+      wallet: string,
+      signature: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     registerAccount(

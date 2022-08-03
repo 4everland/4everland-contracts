@@ -49,6 +49,25 @@ contract FundPool is IFundPool, OwnerWithdrawable, Pauser, ReentrancyGuardUpgrad
 		_recharge(provider, account, amount);
 	}
 
+	/// @dev initialize wallet and recharge for account
+	/// @param provider provider address
+	/// @param account user account
+	/// @param amount token amount
+	/// @param wallet account wallet
+	/// @param signature provider signature
+	function initWalletAndRecharge(
+		address provider,
+		bytes32 account,
+		uint256 amount,
+		address wallet,
+		bytes memory signature
+	) external override whenNotPaused nonReentrant {
+		require(msg.sender == wallet, 'FundPool: caller is not the wallet');
+		require(amount > 0, 'FundPool: zero amount');
+		router.ProviderController().poolInitWallet(provider, account, wallet, signature);
+		_recharge(provider, account, amount);
+	}
+
 	function _recharge(
 		address provider,
 		bytes32 account,

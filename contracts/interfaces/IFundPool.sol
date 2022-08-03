@@ -35,6 +35,20 @@ interface IFundPool {
 		uint256 amount
 	) external;
 
+	/// @dev initialize wallet and recharge for account
+	/// @param provider provider address
+	/// @param account user account
+	/// @param amount token amount
+	/// @param wallet account wallet
+	/// @param signature provider signature
+	function initWalletAndRecharge(
+		address provider,
+		bytes32 account,
+		uint256 amount,
+		address wallet,
+		bytes memory signature
+	) external;
+
 	/// @dev spend bills for account
 	/// @param provider provider address
 	/// @param account user account
