@@ -52,20 +52,27 @@ contract FundPool is IFundPool, OwnerWithdrawable, Pauser, ReentrancyGuardUpgrad
 	/// @dev initialize wallet and recharge for account
 	/// @param provider provider address
 	/// @param account user account
+	/// @param bills billing data
+	/// @param timeout tx timeout
+	/// @param nonce billing nonce
+	/// @param signature billing signature
+	/// @param to token receiver
 	/// @param amount token amount
-	/// @param wallet account wallet
 	/// @param signature provider signature
-	function initWalletAndRecharge(
+	/// @return fee bill fee
+	function initWalletAndWithdraw(
 		address provider,
 		bytes32 account,
-		uint256 amount,
-		address wallet,
-		bytes memory signature
-	) external override whenNotPaused nonReentrant {
-		require(msg.sender == wallet, 'FundPool: caller is not the wallet');
+		bytes memory bills,
+		uint256 timeout,
+		uint64 nonce,
+		bytes memory signature,
+		address to,
+		uint256 amount
+	) external override whenNotPaused nonReentrant returns (uint256 fee) {
 		require(amount > 0, 'FundPool: zero amount');
-		router.ProviderController().poolInitWallet(provider, account, wallet, signature);
-		_recharge(provider, account, amount);
+		router.ProviderController().poolInitWallet(provider, account, msg.sender, signature);
+		return _withdraw(provider, account, bills, timeout, nonce, signature, to, amount);
 	}
 
 	function _recharge(
@@ -138,6 +145,19 @@ contract FundPool is IFundPool, OwnerWithdrawable, Pauser, ReentrancyGuardUpgrad
 	) external override whenNotPaused nonReentrant returns (uint256 fee) {
 		IProviderController controller = router.ProviderController();
 		require(controller.walletOf(provider, account) == msg.sender, 'FundPool: caller is not the wallet for the account');
+		return _withdraw(provider, account, bills, timeout, nonce, signature, to, amount);
+	}
+
+	function _withdraw(
+		address provider,
+		bytes32 account,
+		bytes memory bills,
+		uint256 timeout,
+		uint64 nonce,
+		bytes memory signature,
+		address to,
+		uint256 amount
+	) internal returns (uint256 fee) {
 		fee = _spend(provider, account, bills, timeout, nonce, signature);
 		require(balanceOf(provider, account) >= amount, 'FundPool: insufficient balance for withdrawal');
 		balances[provider][account] = balances[provider][account].sub(amount);

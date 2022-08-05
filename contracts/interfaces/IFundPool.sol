@@ -38,16 +38,24 @@ interface IFundPool {
 	/// @dev initialize wallet and recharge for account
 	/// @param provider provider address
 	/// @param account user account
+	/// @param bills billing data
+	/// @param timeout tx timeout
+	/// @param nonce billing nonce
+	/// @param signature billing signature
+	/// @param to token receiver
 	/// @param amount token amount
-	/// @param wallet account wallet
 	/// @param signature provider signature
-	function initWalletAndRecharge(
+	/// @return fee bill fee
+	function initWalletAndWithdraw(
 		address provider,
 		bytes32 account,
-		uint256 amount,
-		address wallet,
-		bytes memory signature
-	) external;
+		bytes memory bills,
+		uint256 timeout,
+		uint64 nonce,
+		bytes memory signature,
+		address to,
+		uint256 amount
+	) external returns (uint256 fee);
 
 	/// @dev spend bills for account
 	/// @param provider provider address
