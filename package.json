@@ -1,9 +1,9 @@
 {
 	"name": "4everland-contracts",
-	"version": "0.2.2",
+	"version": "0.2.4",
 	"description": "4everland contracts",
 	"main": "./types/index.js",
-	"types": "./types/index.ts",
+	"types": "./types/index.ts",g
 	"engines": {
 		"node": ">= 12.18.0"
 	},

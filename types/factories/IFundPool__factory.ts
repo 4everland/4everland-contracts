@@ -126,6 +126,11 @@ const _abi = [
       },
       {
         internalType: "bytes",
+        name: "walletSig",
+        type: "bytes",
+      },
+      {
+        internalType: "bytes",
         name: "bills",
         type: "bytes",
       },
@@ -141,7 +146,7 @@ const _abi = [
       },
       {
         internalType: "bytes",
-        name: "signature",
+        name: "billSig",
         type: "bytes",
       },
       {

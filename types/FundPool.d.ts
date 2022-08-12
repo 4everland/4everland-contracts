@@ -23,7 +23,7 @@ interface FundPoolInterface extends ethers.utils.Interface {
   functions: {
     "addPauser(address)": FunctionFragment;
     "balanceOf(address,bytes32)": FunctionFragment;
-    "initWalletAndWithdraw(address,bytes32,bytes,uint256,uint64,bytes,address,uint256)": FunctionFragment;
+    "initWalletAndWithdraw(address,bytes32,bytes,bytes,uint256,uint64,bytes,address,uint256)": FunctionFragment;
     "initialize(address,address,address)": FunctionFragment;
     "isPauser(address)": FunctionFragment;
     "owner()": FunctionFragment;
@@ -53,6 +53,7 @@ interface FundPoolInterface extends ethers.utils.Interface {
     functionFragment: "initWalletAndWithdraw",
     values: [
       string,
+      BytesLike,
       BytesLike,
       BytesLike,
       BigNumberish,
@@ -309,10 +310,11 @@ export class FundPool extends BaseContract {
     initWalletAndWithdraw(
       provider: string,
       account: BytesLike,
+      walletSig: BytesLike,
       bills: BytesLike,
       timeout: BigNumberish,
       nonce: BigNumberish,
-      signature: BytesLike,
+      billSig: BytesLike,
       to: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -424,10 +426,11 @@ export class FundPool extends BaseContract {
   initWalletAndWithdraw(
     provider: string,
     account: BytesLike,
+    walletSig: BytesLike,
     bills: BytesLike,
     timeout: BigNumberish,
     nonce: BigNumberish,
-    signature: BytesLike,
+    billSig: BytesLike,
     to: string,
     amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -536,10 +539,11 @@ export class FundPool extends BaseContract {
     initWalletAndWithdraw(
       provider: string,
       account: BytesLike,
+      walletSig: BytesLike,
       bills: BytesLike,
       timeout: BigNumberish,
       nonce: BigNumberish,
-      signature: BytesLike,
+      billSig: BytesLike,
       to: string,
       amount: BigNumberish,
       overrides?: CallOverrides
@@ -787,10 +791,11 @@ export class FundPool extends BaseContract {
     initWalletAndWithdraw(
       provider: string,
       account: BytesLike,
+      walletSig: BytesLike,
       bills: BytesLike,
       timeout: BigNumberish,
       nonce: BigNumberish,
-      signature: BytesLike,
+      billSig: BytesLike,
       to: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -903,10 +908,11 @@ export class FundPool extends BaseContract {
     initWalletAndWithdraw(
       provider: string,
       account: BytesLike,
+      walletSig: BytesLike,
       bills: BytesLike,
       timeout: BigNumberish,
       nonce: BigNumberish,
-      signature: BytesLike,
+      billSig: BytesLike,
       to: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }

@@ -22,7 +22,7 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 interface IFundPoolInterface extends ethers.utils.Interface {
   functions: {
     "balanceOf(address,bytes32)": FunctionFragment;
-    "initWalletAndWithdraw(address,bytes32,bytes,uint256,uint64,bytes,address,uint256)": FunctionFragment;
+    "initWalletAndWithdraw(address,bytes32,bytes,bytes,uint256,uint64,bytes,address,uint256)": FunctionFragment;
     "recharge(address,bytes32,uint256)": FunctionFragment;
     "spend(address,bytes32,bytes,uint256,uint64,bytes)": FunctionFragment;
     "walletOf(address,bytes32)": FunctionFragment;
@@ -37,6 +37,7 @@ interface IFundPoolInterface extends ethers.utils.Interface {
     functionFragment: "initWalletAndWithdraw",
     values: [
       string,
+      BytesLike,
       BytesLike,
       BytesLike,
       BigNumberish,
@@ -178,10 +179,11 @@ export class IFundPool extends BaseContract {
     initWalletAndWithdraw(
       provider: string,
       account: BytesLike,
+      walletSig: BytesLike,
       bills: BytesLike,
       timeout: BigNumberish,
       nonce: BigNumberish,
-      signature: BytesLike,
+      billSig: BytesLike,
       to: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -232,10 +234,11 @@ export class IFundPool extends BaseContract {
   initWalletAndWithdraw(
     provider: string,
     account: BytesLike,
+    walletSig: BytesLike,
     bills: BytesLike,
     timeout: BigNumberish,
     nonce: BigNumberish,
-    signature: BytesLike,
+    billSig: BytesLike,
     to: string,
     amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -286,10 +289,11 @@ export class IFundPool extends BaseContract {
     initWalletAndWithdraw(
       provider: string,
       account: BytesLike,
+      walletSig: BytesLike,
       bills: BytesLike,
       timeout: BigNumberish,
       nonce: BigNumberish,
-      signature: BytesLike,
+      billSig: BytesLike,
       to: string,
       amount: BigNumberish,
       overrides?: CallOverrides
@@ -399,10 +403,11 @@ export class IFundPool extends BaseContract {
     initWalletAndWithdraw(
       provider: string,
       account: BytesLike,
+      walletSig: BytesLike,
       bills: BytesLike,
       timeout: BigNumberish,
       nonce: BigNumberish,
-      signature: BytesLike,
+      billSig: BytesLike,
       to: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -454,10 +459,11 @@ export class IFundPool extends BaseContract {
     initWalletAndWithdraw(
       provider: string,
       account: BytesLike,
+      walletSig: BytesLike,
       bills: BytesLike,
       timeout: BigNumberish,
       nonce: BigNumberish,
-      signature: BytesLike,
+      billSig: BytesLike,
       to: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
