@@ -3,7 +3,7 @@
 	"version": "0.2.4",
 	"description": "4everland contracts",
 	"main": "./types/index.js",
-	"types": "./types/index.ts",g
+	"types": "./types/index.ts",
 	"engines": {
 		"node": ">= 12.18.0"
 	},
@@ -54,7 +54,7 @@
 	"scripts": {
 		"prepublish": "tsc ./types/**.ts --esModuleInterop true --target es5",
 		"clean": "hardhat clean",
-		"build": "cross-env NODE_ENV=build hardhat compile && hardhat typechain && yarn prepublish",
+		"build": "cross-env NODE_ENV=build hardhat compile && cross-env NODE_ENV=build hardhat typechain && yarn prepublish",
 		"console": "hardhat console",
 		"coverage": "cross-env HARDHAT_DEPLOY_FIXTURE=true hardhat coverage",
 		"gas": "cross-env REPORT_GAS=true hardhat test",

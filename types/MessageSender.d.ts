@@ -184,6 +184,7 @@ interface MessageSenderInterface extends ethers.utils.Interface {
     "DstChainIdUpdated(uint64)": EventFragment;
     "Initialized(uint8)": EventFragment;
     "MessageBusUpdated(address)": EventFragment;
+    "MessageSent(address,address,uint64,uint64,bytes)": EventFragment;
     "MessageWithTransferRefund(address,uint256,bytes,address)": EventFragment;
     "NativeWithdrawal(address,uint256)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
@@ -195,6 +196,7 @@ interface MessageSenderInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "DstChainIdUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Initialized"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "MessageBusUpdated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "MessageSent"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "MessageWithTransferRefund"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "NativeWithdrawal"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
@@ -211,6 +213,16 @@ export type InitializedEvent = TypedEvent<[number] & { version: number }>;
 
 export type MessageBusUpdatedEvent = TypedEvent<
   [string] & { messageBus: string }
+>;
+
+export type MessageSentEvent = TypedEvent<
+  [string, string, BigNumber, BigNumber, string] & {
+    sender: string;
+    receiver: string;
+    srcChainId: BigNumber;
+    dstChainId: BigNumber;
+    message: string;
+  }
 >;
 
 export type MessageWithTransferRefundEvent = TypedEvent<
@@ -594,6 +606,40 @@ export class MessageSender extends BaseContract {
     MessageBusUpdated(
       messageBus?: null
     ): TypedEventFilter<[string], { messageBus: string }>;
+
+    "MessageSent(address,address,uint64,uint64,bytes)"(
+      sender?: null,
+      receiver?: null,
+      srcChainId?: null,
+      dstChainId?: null,
+      message?: null
+    ): TypedEventFilter<
+      [string, string, BigNumber, BigNumber, string],
+      {
+        sender: string;
+        receiver: string;
+        srcChainId: BigNumber;
+        dstChainId: BigNumber;
+        message: string;
+      }
+    >;
+
+    MessageSent(
+      sender?: null,
+      receiver?: null,
+      srcChainId?: null,
+      dstChainId?: null,
+      message?: null
+    ): TypedEventFilter<
+      [string, string, BigNumber, BigNumber, string],
+      {
+        sender: string;
+        receiver: string;
+        srcChainId: BigNumber;
+        dstChainId: BigNumber;
+        message: string;
+      }
+    >;
 
     "MessageWithTransferRefund(address,uint256,bytes,address)"(
       token?: null,

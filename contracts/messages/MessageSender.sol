@@ -85,6 +85,7 @@ contract MessageSender is IMessageSender, OwnerWithdrawable {
 	/// @param message message to dst chain
 	function sendMessage(bytes memory message) external payable onlySrcChainPayment {
 		MessageSenderLib.sendMessage(receiver, dstChainId, message, messageBus, msg.value);
+		emit MessageSent(address(this), receiver, uint64(block.chainid), dstChainId, message);
 	}
 
 	/// @dev call when cBridge transfer failed

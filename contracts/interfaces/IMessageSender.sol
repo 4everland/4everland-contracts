@@ -28,6 +28,14 @@ interface IMessageSender {
 	/// @param executor executor address
 	event MessageWithTransferRefund(address token, uint256 amount, bytes message, address executor);
 
+	/// @dev emit message sent
+	/// @param sender sender contract address
+	/// @param receiver receiver contract address
+	/// @param srcChainId srcChainId
+	/// @param dstChainId dstChainId
+	/// @param message sender's message
+	event MessageSent(address sender, address receiver, uint64 srcChainId, uint64 dstChainId, bytes message);
+
 	/// @dev dst chain receiver
 	function receiver() external view returns (address);
 

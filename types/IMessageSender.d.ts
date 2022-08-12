@@ -80,6 +80,7 @@ interface IMessageSenderInterface extends ethers.utils.Interface {
   events: {
     "DstChainIdUpdated(uint64)": EventFragment;
     "MessageBusUpdated(address)": EventFragment;
+    "MessageSent(address,address,uint64,uint64,bytes)": EventFragment;
     "MessageWithTransferRefund(address,uint256,bytes,address)": EventFragment;
     "ReceiverUpdated(address)": EventFragment;
     "SrcChainPaymentUpdated(address)": EventFragment;
@@ -87,6 +88,7 @@ interface IMessageSenderInterface extends ethers.utils.Interface {
 
   getEvent(nameOrSignatureOrTopic: "DstChainIdUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "MessageBusUpdated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "MessageSent"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "MessageWithTransferRefund"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ReceiverUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "SrcChainPaymentUpdated"): EventFragment;
@@ -98,6 +100,16 @@ export type DstChainIdUpdatedEvent = TypedEvent<
 
 export type MessageBusUpdatedEvent = TypedEvent<
   [string] & { messageBus: string }
+>;
+
+export type MessageSentEvent = TypedEvent<
+  [string, string, BigNumber, BigNumber, string] & {
+    sender: string;
+    receiver: string;
+    srcChainId: BigNumber;
+    dstChainId: BigNumber;
+    message: string;
+  }
 >;
 
 export type MessageWithTransferRefundEvent = TypedEvent<
@@ -277,6 +289,40 @@ export class IMessageSender extends BaseContract {
     MessageBusUpdated(
       messageBus?: null
     ): TypedEventFilter<[string], { messageBus: string }>;
+
+    "MessageSent(address,address,uint64,uint64,bytes)"(
+      sender?: null,
+      receiver?: null,
+      srcChainId?: null,
+      dstChainId?: null,
+      message?: null
+    ): TypedEventFilter<
+      [string, string, BigNumber, BigNumber, string],
+      {
+        sender: string;
+        receiver: string;
+        srcChainId: BigNumber;
+        dstChainId: BigNumber;
+        message: string;
+      }
+    >;
+
+    MessageSent(
+      sender?: null,
+      receiver?: null,
+      srcChainId?: null,
+      dstChainId?: null,
+      message?: null
+    ): TypedEventFilter<
+      [string, string, BigNumber, BigNumber, string],
+      {
+        sender: string;
+        receiver: string;
+        srcChainId: BigNumber;
+        dstChainId: BigNumber;
+        message: string;
+      }
+    >;
 
     "MessageWithTransferRefund(address,uint256,bytes,address)"(
       token?: null,
