@@ -142,7 +142,7 @@ contract MessageReceiver is RouterWrapper, OwnerWithdrawable {
         uint64 srcChainId,
         bytes memory message,
         address _executor
-    ) external payable returns (ExecutionStatus) {
+    ) external payable onlyMessageBus returns (ExecutionStatus) {
 		require(executor == _executor, 'MessageReceiver: invalid executor');
 		IDstChainPayment dstChainPayment = router.DstChainPayment();
 		try dstChainPayment.celerExec(message) {
