@@ -22,7 +22,7 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface MessageReceiverInterface extends ethers.utils.Interface {
   functions: {
-    "executeMessageWithTransfer(address,address,uint256,uint64,bytes,address)": FunctionFragment;
+    "executeMessage(address,uint64,bytes,address)": FunctionFragment;
     "executeMessageWithTransferFallback(address,address,uint256,uint64,bytes,address)": FunctionFragment;
     "executor()": FunctionFragment;
     "initialize(address,address,address,address)": FunctionFragment;
@@ -39,8 +39,8 @@ interface MessageReceiverInterface extends ethers.utils.Interface {
   };
 
   encodeFunctionData(
-    functionFragment: "executeMessageWithTransfer",
-    values: [string, string, BigNumberish, BigNumberish, BytesLike, string]
+    functionFragment: "executeMessage",
+    values: [string, BigNumberish, BytesLike, string]
   ): string;
   encodeFunctionData(
     functionFragment: "executeMessageWithTransferFallback",
@@ -93,7 +93,7 @@ interface MessageReceiverInterface extends ethers.utils.Interface {
   ): string;
 
   decodeFunctionResult(
-    functionFragment: "executeMessageWithTransfer",
+    functionFragment: "executeMessage",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -135,6 +135,8 @@ interface MessageReceiverInterface extends ethers.utils.Interface {
     "ExecutorUpdated(address)": EventFragment;
     "Initialized(uint8)": EventFragment;
     "MessageBusUpdated(address)": EventFragment;
+    "MessageExecuted(address,uint64,bytes,address)": EventFragment;
+    "MessageFailed(address,uint64,bytes,address,bytes)": EventFragment;
     "MessageWithTransferExecuted(address,address,uint256,uint64,bytes,address)": EventFragment;
     "MessageWithTransferFailed(address,address,uint256,uint64,bytes,address,bytes)": EventFragment;
     "MessageWithTransferFallback(address,address,uint256,uint64,bytes,address)": EventFragment;
@@ -147,6 +149,8 @@ interface MessageReceiverInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "ExecutorUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Initialized"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "MessageBusUpdated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "MessageExecuted"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "MessageFailed"): EventFragment;
   getEvent(
     nameOrSignatureOrTopic: "MessageWithTransferExecuted"
   ): EventFragment;
@@ -166,6 +170,25 @@ export type InitializedEvent = TypedEvent<[number] & { version: number }>;
 
 export type MessageBusUpdatedEvent = TypedEvent<
   [string] & { messageBus: string }
+>;
+
+export type MessageExecutedEvent = TypedEvent<
+  [string, BigNumber, string, string] & {
+    sender: string;
+    srcChainId: BigNumber;
+    message: string;
+    executor: string;
+  }
+>;
+
+export type MessageFailedEvent = TypedEvent<
+  [string, BigNumber, string, string, string] & {
+    sender: string;
+    srcChainId: BigNumber;
+    message: string;
+    executor: string;
+    error: string;
+  }
 >;
 
 export type MessageWithTransferExecutedEvent = TypedEvent<
@@ -260,10 +283,8 @@ export class MessageReceiver extends BaseContract {
   interface: MessageReceiverInterface;
 
   functions: {
-    executeMessageWithTransfer(
+    executeMessage(
       sender: string,
-      token: string,
-      amount: BigNumberish,
       srcChainId: BigNumberish,
       message: BytesLike,
       _executor: string,
@@ -341,10 +362,8 @@ export class MessageReceiver extends BaseContract {
     ): Promise<ContractTransaction>;
   };
 
-  executeMessageWithTransfer(
+  executeMessage(
     sender: string,
-    token: string,
-    amount: BigNumberish,
     srcChainId: BigNumberish,
     message: BytesLike,
     _executor: string,
@@ -422,10 +441,8 @@ export class MessageReceiver extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    executeMessageWithTransfer(
+    executeMessage(
       sender: string,
-      token: string,
-      amount: BigNumberish,
       srcChainId: BigNumberish,
       message: BytesLike,
       _executor: string,
@@ -519,6 +536,70 @@ export class MessageReceiver extends BaseContract {
     MessageBusUpdated(
       messageBus?: null
     ): TypedEventFilter<[string], { messageBus: string }>;
+
+    "MessageExecuted(address,uint64,bytes,address)"(
+      sender?: null,
+      srcChainId?: null,
+      message?: null,
+      executor?: null
+    ): TypedEventFilter<
+      [string, BigNumber, string, string],
+      {
+        sender: string;
+        srcChainId: BigNumber;
+        message: string;
+        executor: string;
+      }
+    >;
+
+    MessageExecuted(
+      sender?: null,
+      srcChainId?: null,
+      message?: null,
+      executor?: null
+    ): TypedEventFilter<
+      [string, BigNumber, string, string],
+      {
+        sender: string;
+        srcChainId: BigNumber;
+        message: string;
+        executor: string;
+      }
+    >;
+
+    "MessageFailed(address,uint64,bytes,address,bytes)"(
+      sender?: null,
+      srcChainId?: null,
+      message?: null,
+      executor?: null,
+      error?: null
+    ): TypedEventFilter<
+      [string, BigNumber, string, string, string],
+      {
+        sender: string;
+        srcChainId: BigNumber;
+        message: string;
+        executor: string;
+        error: string;
+      }
+    >;
+
+    MessageFailed(
+      sender?: null,
+      srcChainId?: null,
+      message?: null,
+      executor?: null,
+      error?: null
+    ): TypedEventFilter<
+      [string, BigNumber, string, string, string],
+      {
+        sender: string;
+        srcChainId: BigNumber;
+        message: string;
+        executor: string;
+        error: string;
+      }
+    >;
 
     "MessageWithTransferExecuted(address,address,uint256,uint64,bytes,address)"(
       sender?: null,
@@ -692,10 +773,8 @@ export class MessageReceiver extends BaseContract {
   };
 
   estimateGas: {
-    executeMessageWithTransfer(
+    executeMessage(
       sender: string,
-      token: string,
-      amount: BigNumberish,
       srcChainId: BigNumberish,
       message: BytesLike,
       _executor: string,
@@ -774,10 +853,8 @@ export class MessageReceiver extends BaseContract {
   };
 
   populateTransaction: {
-    executeMessageWithTransfer(
+    executeMessage(
       sender: string,
-      token: string,
-      amount: BigNumberish,
       srcChainId: BigNumberish,
       message: BytesLike,
       _executor: string,

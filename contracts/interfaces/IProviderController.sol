@@ -81,6 +81,18 @@ interface IProviderController {
 		bytes memory signature
 	) external;
 
+	/// @dev initialize wallet for the given account called by fund pool
+	/// @param provider provider address
+	/// @param account user account
+	/// @param wallet account wallet
+	/// @param signature provider signature
+	function poolInitWallet(
+		address provider,
+		bytes32 account,
+		address wallet,
+		bytes memory signature
+	) external;
+
 	/// @dev transfer wallet for the account
 	/// @param provider provider address
 	/// @param account user account

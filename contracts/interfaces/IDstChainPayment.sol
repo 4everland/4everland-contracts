@@ -16,40 +16,21 @@ interface IDstChainPayment {
 	}
 
 	/// @dev emit when a user paid
-	/// @param token token address
-	/// @param payload payment payload
-	event Paid(IERC20Upgradeable token, PaymentPayload payload);
+	/// @param provider provider address
+	/// @param account user account
+	/// @param payloads payment payloads
+	event PaidV2(address provider, bytes32 account, ResourceData.ValuePayload[] payloads);
 
 	/// @dev pay from source chain only called by message receiver
-	/// @param _token token address
-	/// @param dstAmount token amount
 	/// @param message payment payload message bytes
-	function payFromSourceChain(
-		IERC20Upgradeable _token,
-		uint256 dstAmount,
-		bytes calldata message
-	) external;
+	function celerExec(bytes calldata message) external;
 
 	/// @dev pay on dst chain
-	/// @param payload payment payload
-	/// @return value payment value
-	function pay(PaymentPayload memory payload) external returns (uint256 value);
-
-	/// @dev decode source chain message
-	/// @param message message bytes
-	/// @return provider provider address
-	/// @return nonce nonce
-	/// @return account user account
-	/// @return payloads payment payloads
-	function decodeSourceChainMessage(bytes memory message)
-		external
-		view
-		returns (
-			address provider,
-			uint64 nonce,
-			bytes32 account,
-			ResourceData.ValuePayload[] memory payloads
-		);
+	/// @param provider provider address
+	/// @param account user account
+	/// @param payloads payment payloads
+	/// @return value total token value
+	function payV2(address provider, bytes32 account, ResourceData.ValuePayload[] memory payloads) external returns (uint256 value);
 
 	/// @dev calculate fee for ipfs storage and expiration
 	/// @param provider provider address

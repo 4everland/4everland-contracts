@@ -125,6 +125,65 @@ const _abi = [
         type: "bytes32",
       },
       {
+        internalType: "bytes",
+        name: "walletSig",
+        type: "bytes",
+      },
+      {
+        internalType: "bytes",
+        name: "bills",
+        type: "bytes",
+      },
+      {
+        internalType: "uint256",
+        name: "timeout",
+        type: "uint256",
+      },
+      {
+        internalType: "uint64",
+        name: "nonce",
+        type: "uint64",
+      },
+      {
+        internalType: "bytes",
+        name: "billSig",
+        type: "bytes",
+      },
+      {
+        internalType: "address",
+        name: "to",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+    ],
+    name: "initWalletAndWithdraw",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "fee",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "provider",
+        type: "address",
+      },
+      {
+        internalType: "bytes32",
+        name: "account",
+        type: "bytes32",
+      },
+      {
         internalType: "uint256",
         name: "amount",
         type: "uint256",

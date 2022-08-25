@@ -167,6 +167,36 @@ contract ProviderController is IProviderController, EIP712Upgradeable, Pauser, R
 		_transferWallet(provider, account, address(0), wallet);
 	}
 
+	/// @dev initialize wallet for the given account called by fund pool
+	/// @param provider provider address
+	/// @param account user account
+	/// @param wallet account wallet
+	/// @param signature provider signature
+	function poolInitWallet(
+		address provider,
+		bytes32 account,
+		address wallet,
+		bytes memory signature
+	) external override {
+		require(msg.sender == address(router.FundPool()), 'ProviderController: caller is not fund pool');
+		require(accountExists(provider, account), 'ProviderController: nonexistent account');
+		require(!walletExists(provider, account), 'ProviderController: wallet exists');
+		bytes32 hash = hashTypedDataV4ForWallet(provider, account, wallet);
+		require(router.ProviderRegistry().isValidSignature(provider, hash, signature), 'ProviderController: invalid signature');
+		_transferWallet(provider, account, address(0), wallet);
+	}
+
+	function _initWallet(
+		address provider,
+		bytes32 account,
+		address wallet,
+		bytes memory signature
+	) internal {
+		bytes32 hash = hashTypedDataV4ForWallet(provider, account, wallet);
+		require(router.ProviderRegistry().isValidSignature(provider, hash, signature), 'ProviderController: invalid signature');
+		_transferWallet(provider, account, address(0), wallet);
+	}
+
 	/// @dev transfer wallet for the account
 	/// @param provider provider address
 	/// @param account user account

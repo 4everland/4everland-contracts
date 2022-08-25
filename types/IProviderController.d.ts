@@ -25,6 +25,7 @@ interface IProviderControllerInterface extends ethers.utils.Interface {
     "drip(bytes32,tuple[])": FunctionFragment;
     "dripMult(bytes32[],tuple[][])": FunctionFragment;
     "initWallet(address,bytes32,address,bytes)": FunctionFragment;
+    "poolInitWallet(address,bytes32,address,bytes)": FunctionFragment;
     "registerAccount(bytes32)": FunctionFragment;
     "registerAndDripMult(bytes32[],tuple[][])": FunctionFragment;
     "registerMult(bytes32[])": FunctionFragment;
@@ -54,6 +55,10 @@ interface IProviderControllerInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "initWallet",
+    values: [string, BytesLike, string, BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "poolInitWallet",
     values: [string, BytesLike, string, BytesLike]
   ): string;
   encodeFunctionData(
@@ -95,6 +100,10 @@ interface IProviderControllerInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "drip", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "dripMult", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "initWallet", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "poolInitWallet",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "registerAccount",
     data: BytesLike
@@ -225,6 +234,14 @@ export class IProviderController extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    poolInitWallet(
+      provider: string,
+      account: BytesLike,
+      wallet: string,
+      signature: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     registerAccount(
       account: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -289,6 +306,14 @@ export class IProviderController extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  poolInitWallet(
+    provider: string,
+    account: BytesLike,
+    wallet: string,
+    signature: BytesLike,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   registerAccount(
     account: BytesLike,
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -346,6 +371,14 @@ export class IProviderController extends BaseContract {
     ): Promise<void>;
 
     initWallet(
+      provider: string,
+      account: BytesLike,
+      wallet: string,
+      signature: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    poolInitWallet(
       provider: string,
       account: BytesLike,
       wallet: string,
@@ -480,6 +513,14 @@ export class IProviderController extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    poolInitWallet(
+      provider: string,
+      account: BytesLike,
+      wallet: string,
+      signature: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     registerAccount(
       account: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -538,6 +579,14 @@ export class IProviderController extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     initWallet(
+      provider: string,
+      account: BytesLike,
+      wallet: string,
+      signature: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    poolInitWallet(
       provider: string,
       account: BytesLike,
       wallet: string,

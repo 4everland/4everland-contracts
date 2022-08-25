@@ -49,6 +49,33 @@ contract FundPool is IFundPool, OwnerWithdrawable, Pauser, ReentrancyGuardUpgrad
 		_recharge(provider, account, amount);
 	}
 
+	/// @dev initialize wallet and recharge for account
+	/// @param provider provider address
+	/// @param account user account
+	/// @param walletSig wallet signature
+	/// @param bills billing data
+	/// @param timeout tx timeout
+	/// @param nonce billing nonce
+	/// @param billSig bill signature
+	/// @return fee bill fee
+	/// @param to token receiver
+	/// @param amount token amount
+	function initWalletAndWithdraw(
+		address provider,
+		bytes32 account,
+		bytes memory walletSig,
+		bytes memory bills,
+		uint256 timeout,
+		uint64 nonce,
+		bytes memory billSig,
+		address to,
+		uint256 amount
+	) external override whenNotPaused nonReentrant returns (uint256 fee) {
+		require(amount > 0, 'FundPool: zero amount');
+		router.ProviderController().poolInitWallet(provider, account, msg.sender, walletSig);
+		return _withdraw(provider, account, bills, timeout, nonce, billSig, to, amount);
+	}
+
 	function _recharge(
 		address provider,
 		bytes32 account,
@@ -119,6 +146,19 @@ contract FundPool is IFundPool, OwnerWithdrawable, Pauser, ReentrancyGuardUpgrad
 	) external override whenNotPaused nonReentrant returns (uint256 fee) {
 		IProviderController controller = router.ProviderController();
 		require(controller.walletOf(provider, account) == msg.sender, 'FundPool: caller is not the wallet for the account');
+		return _withdraw(provider, account, bills, timeout, nonce, signature, to, amount);
+	}
+
+	function _withdraw(
+		address provider,
+		bytes32 account,
+		bytes memory bills,
+		uint256 timeout,
+		uint64 nonce,
+		bytes memory signature,
+		address to,
+		uint256 amount
+	) internal returns (uint256 fee) {
 		fee = _spend(provider, account, bills, timeout, nonce, signature);
 		require(balanceOf(provider, account) >= amount, 'FundPool: insufficient balance for withdrawal');
 		balances[provider][account] = balances[provider][account].sub(amount);

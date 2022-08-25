@@ -25,7 +25,7 @@ interface IMessageSenderInterface extends ethers.utils.Interface {
     "dstChainId()": FunctionFragment;
     "messageId((address,address,uint64,bytes32),uint64,bytes)": FunctionFragment;
     "receiver()": FunctionFragment;
-    "sendMessageWithTransfer(address,uint256,uint64,uint32,bytes,uint8)": FunctionFragment;
+    "sendMessage(bytes)": FunctionFragment;
   };
 
   encodeFunctionData(functionFragment: "calcFee", values: [BytesLike]): string;
@@ -48,15 +48,8 @@ interface IMessageSenderInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "receiver", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "sendMessageWithTransfer",
-    values: [
-      string,
-      BigNumberish,
-      BigNumberish,
-      BigNumberish,
-      BytesLike,
-      BigNumberish
-    ]
+    functionFragment: "sendMessage",
+    values: [BytesLike]
   ): string;
 
   decodeFunctionResult(functionFragment: "calcFee", data: BytesLike): Result;
@@ -64,13 +57,14 @@ interface IMessageSenderInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "messageId", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "receiver", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "sendMessageWithTransfer",
+    functionFragment: "sendMessage",
     data: BytesLike
   ): Result;
 
   events: {
     "DstChainIdUpdated(uint64)": EventFragment;
     "MessageBusUpdated(address)": EventFragment;
+    "MessageSent(address,address,uint64,uint64,bytes)": EventFragment;
     "MessageWithTransferRefund(address,uint256,bytes,address)": EventFragment;
     "ReceiverUpdated(address)": EventFragment;
     "SrcChainPaymentUpdated(address)": EventFragment;
@@ -78,6 +72,7 @@ interface IMessageSenderInterface extends ethers.utils.Interface {
 
   getEvent(nameOrSignatureOrTopic: "DstChainIdUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "MessageBusUpdated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "MessageSent"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "MessageWithTransferRefund"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ReceiverUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "SrcChainPaymentUpdated"): EventFragment;
@@ -89,6 +84,16 @@ export type DstChainIdUpdatedEvent = TypedEvent<
 
 export type MessageBusUpdatedEvent = TypedEvent<
   [string] & { messageBus: string }
+>;
+
+export type MessageSentEvent = TypedEvent<
+  [string, string, BigNumber, BigNumber, string] & {
+    sender: string;
+    receiver: string;
+    srcChainId: BigNumber;
+    dstChainId: BigNumber;
+    message: string;
+  }
 >;
 
 export type MessageWithTransferRefundEvent = TypedEvent<
@@ -171,13 +176,8 @@ export class IMessageSender extends BaseContract {
 
     receiver(overrides?: CallOverrides): Promise<[string]>;
 
-    sendMessageWithTransfer(
-      token: string,
-      amount: BigNumberish,
-      nonce: BigNumberish,
-      maxSlippage: BigNumberish,
+    sendMessage(
       message: BytesLike,
-      bridgeSendType: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
@@ -200,13 +200,8 @@ export class IMessageSender extends BaseContract {
 
   receiver(overrides?: CallOverrides): Promise<string>;
 
-  sendMessageWithTransfer(
-    token: string,
-    amount: BigNumberish,
-    nonce: BigNumberish,
-    maxSlippage: BigNumberish,
+  sendMessage(
     message: BytesLike,
-    bridgeSendType: BigNumberish,
     overrides?: PayableOverrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -229,15 +224,7 @@ export class IMessageSender extends BaseContract {
 
     receiver(overrides?: CallOverrides): Promise<string>;
 
-    sendMessageWithTransfer(
-      token: string,
-      amount: BigNumberish,
-      nonce: BigNumberish,
-      maxSlippage: BigNumberish,
-      message: BytesLike,
-      bridgeSendType: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<string>;
+    sendMessage(message: BytesLike, overrides?: CallOverrides): Promise<void>;
   };
 
   filters: {
@@ -256,6 +243,40 @@ export class IMessageSender extends BaseContract {
     MessageBusUpdated(
       messageBus?: null
     ): TypedEventFilter<[string], { messageBus: string }>;
+
+    "MessageSent(address,address,uint64,uint64,bytes)"(
+      sender?: null,
+      receiver?: null,
+      srcChainId?: null,
+      dstChainId?: null,
+      message?: null
+    ): TypedEventFilter<
+      [string, string, BigNumber, BigNumber, string],
+      {
+        sender: string;
+        receiver: string;
+        srcChainId: BigNumber;
+        dstChainId: BigNumber;
+        message: string;
+      }
+    >;
+
+    MessageSent(
+      sender?: null,
+      receiver?: null,
+      srcChainId?: null,
+      dstChainId?: null,
+      message?: null
+    ): TypedEventFilter<
+      [string, string, BigNumber, BigNumber, string],
+      {
+        sender: string;
+        receiver: string;
+        srcChainId: BigNumber;
+        dstChainId: BigNumber;
+        message: string;
+      }
+    >;
 
     "MessageWithTransferRefund(address,uint256,bytes,address)"(
       token?: null,
@@ -313,13 +334,8 @@ export class IMessageSender extends BaseContract {
 
     receiver(overrides?: CallOverrides): Promise<BigNumber>;
 
-    sendMessageWithTransfer(
-      token: string,
-      amount: BigNumberish,
-      nonce: BigNumberish,
-      maxSlippage: BigNumberish,
+    sendMessage(
       message: BytesLike,
-      bridgeSendType: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
@@ -346,13 +362,8 @@ export class IMessageSender extends BaseContract {
 
     receiver(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    sendMessageWithTransfer(
-      token: string,
-      amount: BigNumberish,
-      nonce: BigNumberish,
-      maxSlippage: BigNumberish,
+    sendMessage(
       message: BytesLike,
-      bridgeSendType: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };

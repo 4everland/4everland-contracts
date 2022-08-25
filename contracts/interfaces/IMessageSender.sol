@@ -28,6 +28,14 @@ interface IMessageSender {
 	/// @param executor executor address
 	event MessageWithTransferRefund(address token, uint256 amount, bytes message, address executor);
 
+	/// @dev emit message sent
+	/// @param sender sender contract address
+	/// @param receiver receiver contract address
+	/// @param srcChainId srcChainId
+	/// @param dstChainId dstChainId
+	/// @param message sender's message
+	event MessageSent(address sender, address receiver, uint64 srcChainId, uint64 dstChainId, bytes message);
+
 	/// @dev dst chain receiver
 	function receiver() external view returns (address);
 
@@ -44,20 +52,8 @@ interface IMessageSender {
 		bytes calldata message
 	) external view returns (bytes32);
 
-	/// @dev send message with transfer to dst chain
-	/// @param token pay token
-	/// @param amount token amount
-	/// @param nonce nonce
-	/// @param maxSlippage max slippage for cBridge in sgn
+	/// @dev send message to dst chain
 	/// @param message message for dst chain
-	/// @param bridgeSendType bridge send type for cBridge
-	/// @return messageId message id for messageBus in sgn
-	function sendMessageWithTransfer(
-		address token,
-		uint256 amount,
-		uint64 nonce,
-		uint32 maxSlippage,
-		bytes memory message,
-		MsgDataTypes.BridgeSendType bridgeSendType
-	) external payable returns (bytes32);
+	function sendMessage(bytes memory message) external payable;
+
 }

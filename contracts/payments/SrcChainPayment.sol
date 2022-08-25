@@ -24,6 +24,10 @@ contract SrcChainPayment is ReentrancyGuardUpgradeable, Pauser, OwnerWithdrawabl
 	/// @dev message sender on src chain
 	IMessageSender public messageSender;
 
+	mapping(address => uint256) public providerBalances;
+
+	mapping(address => mapping(bytes32 => uint256)) public fees;
+
 	/// @dev emit when token updated
 	/// @param token token address
 	event TokenUpdated(IERC20Upgradeable token);
@@ -34,11 +38,9 @@ contract SrcChainPayment is ReentrancyGuardUpgradeable, Pauser, OwnerWithdrawabl
 
 	/// @dev emit when user paid on src chain
 	/// @param provider provider address
-	/// @param nonce nonce
 	/// @param account sender
 	/// @param payloads payment payloads
-	/// @param maxSlippage maxSlippage in cBridge
-	event Paid(address provider, uint64 nonce, bytes32 account, ResourceData.ValuePayload[] payloads, uint32 maxSlippage);
+	event PaidV2(address provider, bytes32 account, ResourceData.ValuePayload[] payloads);
 
 	constructor() initializer {}
 
@@ -71,33 +73,27 @@ contract SrcChainPayment is ReentrancyGuardUpgradeable, Pauser, OwnerWithdrawabl
 
 	/// @dev pay from source chain
 	/// @param provider provider address
-	/// @param nonce nonce
 	/// @param account sender
 	/// @param payloads payment payloads
-	/// @param maxSlippage maxSlippage in cBridge
-	/// @return transferId token transfer id in cBridge
-	function pay(
+	function payV2(
 		address provider,
-		uint64 nonce,
 		bytes32 account,
-		ResourceData.ValuePayload[] memory payloads,
-		uint32 maxSlippage
-	) external payable whenNotPaused nonReentrant returns (bytes32 transferId) {
-		uint256 value = ResourceData.totalValue(payloads);
-		value = ResourceData.matchResourceToToken(token, value);
+		ResourceData.ValuePayload[] memory payloads
+	) external payable whenNotPaused nonReentrant {
+		uint256 value = payloadsValue(payloads);
+		providerBalances[provider] = providerBalances[provider] + value;
+		fees[provider][account] = fees[provider][account] + value;
 		token.safeTransferFrom(msg.sender, address(this), value);
-		token.safeApprove(address(messageSender), value);
-		transferId = messageSender.sendMessageWithTransfer{ value: msg.value }(
-			address(token),
-			value,
-			nonce,
-			maxSlippage,
-			encodeMessage(provider, nonce, account, payloads),
-			MsgDataTypes.BridgeSendType.Liquidity
-		);
-		token.safeApprove(address(messageSender), 0);
+		messageSender.sendMessage{value: msg.value}(encodeMessageV2(provider, account, payloads));
+		emit PaidV2(provider, account, payloads);
+	}
 
-		emit Paid(provider, nonce, account, payloads, maxSlippage);
+	/// @dev return payment total token value
+	/// @param payloads payment payloads
+	/// @return value payment total token value
+	function payloadsValue(ResourceData.ValuePayload[] memory payloads) public returns (uint256 value) {
+		value = ResourceData.totalValue(payloads);
+		value = ResourceData.matchResourceToToken(token, value);
 	}
 
 	/// @dev update message sender
@@ -126,31 +122,28 @@ contract SrcChainPayment is ReentrancyGuardUpgradeable, Pauser, OwnerWithdrawabl
 
 	/// @dev calculate message fee
 	/// @param provider provider address
-	/// @param nonce nonce
 	/// @param account user account
 	/// @param payloads payment payloads
 	/// @return value message fee
-	function calcFee(
+	function calcFeeV2(
 		address provider,
-		uint64 nonce,
 		bytes32 account,
 		ResourceData.ValuePayload[] memory payloads
 	) public view returns (uint256 value) {
-		return messageSender.calcFee(encodeMessage(provider, nonce, account, payloads));
+		return messageSender.calcFee(encodeMessageV2(provider, account, payloads));
 	}
 
 	/// @dev encode payment message
 	/// @param provider provider address
-	/// @param nonce nonce
 	/// @param account user account
 	/// @param payloads payment payloads
 	/// @return message message bytes
-	function encodeMessage(
+	function encodeMessageV2(
 		address provider,
-		uint64 nonce,
 		bytes32 account,
 		ResourceData.ValuePayload[] memory payloads
 	) public pure returns (bytes memory) {
-		return abi.encode(provider, nonce, account, payloads);
+		return abi.encode(provider, account, payloads);
 	}
+
 }

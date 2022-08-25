@@ -42,6 +42,43 @@ const _abi = [
       {
         indexed: false,
         internalType: "address",
+        name: "sender",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "receiver",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint64",
+        name: "srcChainId",
+        type: "uint64",
+      },
+      {
+        indexed: false,
+        internalType: "uint64",
+        name: "dstChainId",
+        type: "uint64",
+      },
+      {
+        indexed: false,
+        internalType: "bytes",
+        name: "message",
+        type: "bytes",
+      },
+    ],
+    name: "MessageSent",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
         name: "token",
         type: "address",
       },
@@ -192,44 +229,13 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "address",
-        name: "token",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-      {
-        internalType: "uint64",
-        name: "nonce",
-        type: "uint64",
-      },
-      {
-        internalType: "uint32",
-        name: "maxSlippage",
-        type: "uint32",
-      },
-      {
         internalType: "bytes",
         name: "message",
         type: "bytes",
       },
-      {
-        internalType: "enum MsgDataTypes.BridgeSendType",
-        name: "bridgeSendType",
-        type: "uint8",
-      },
     ],
-    name: "sendMessageWithTransfer",
-    outputs: [
-      {
-        internalType: "bytes32",
-        name: "",
-        type: "bytes32",
-      },
-    ],
+    name: "sendMessage",
+    outputs: [],
     stateMutability: "payable",
     type: "function",
   },

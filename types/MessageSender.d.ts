@@ -33,7 +33,7 @@ interface MessageSenderInterface extends ethers.utils.Interface {
     "ownerWithdrawNative(address,uint256)": FunctionFragment;
     "receiver()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
-    "sendMessageWithTransfer(address,uint256,uint64,uint32,bytes,uint8)": FunctionFragment;
+    "sendMessage(bytes)": FunctionFragment;
     "setDstChainId(uint64)": FunctionFragment;
     "setMessageBus(address)": FunctionFragment;
     "setReceiver(address)": FunctionFragment;
@@ -87,15 +87,8 @@ interface MessageSenderInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "sendMessageWithTransfer",
-    values: [
-      string,
-      BigNumberish,
-      BigNumberish,
-      BigNumberish,
-      BytesLike,
-      BigNumberish
-    ]
+    functionFragment: "sendMessage",
+    values: [BytesLike]
   ): string;
   encodeFunctionData(
     functionFragment: "setDstChainId",
@@ -143,7 +136,7 @@ interface MessageSenderInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "sendMessageWithTransfer",
+    functionFragment: "sendMessage",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -175,6 +168,7 @@ interface MessageSenderInterface extends ethers.utils.Interface {
     "DstChainIdUpdated(uint64)": EventFragment;
     "Initialized(uint8)": EventFragment;
     "MessageBusUpdated(address)": EventFragment;
+    "MessageSent(address,address,uint64,uint64,bytes)": EventFragment;
     "MessageWithTransferRefund(address,uint256,bytes,address)": EventFragment;
     "NativeWithdrawal(address,uint256)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
@@ -186,6 +180,7 @@ interface MessageSenderInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "DstChainIdUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Initialized"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "MessageBusUpdated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "MessageSent"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "MessageWithTransferRefund"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "NativeWithdrawal"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
@@ -202,6 +197,16 @@ export type InitializedEvent = TypedEvent<[number] & { version: number }>;
 
 export type MessageBusUpdatedEvent = TypedEvent<
   [string] & { messageBus: string }
+>;
+
+export type MessageSentEvent = TypedEvent<
+  [string, string, BigNumber, BigNumber, string] & {
+    sender: string;
+    receiver: string;
+    srcChainId: BigNumber;
+    dstChainId: BigNumber;
+    message: string;
+  }
 >;
 
 export type MessageWithTransferRefundEvent = TypedEvent<
@@ -333,13 +338,8 @@ export class MessageSender extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    sendMessageWithTransfer(
-      token: string,
-      amount: BigNumberish,
-      nonce: BigNumberish,
-      maxSlippage: BigNumberish,
+    sendMessage(
       message: BytesLike,
-      bridgeSendType: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -426,13 +426,8 @@ export class MessageSender extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  sendMessageWithTransfer(
-    token: string,
-    amount: BigNumberish,
-    nonce: BigNumberish,
-    maxSlippage: BigNumberish,
+  sendMessage(
     message: BytesLike,
-    bridgeSendType: BigNumberish,
     overrides?: PayableOverrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -517,15 +512,7 @@ export class MessageSender extends BaseContract {
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
-    sendMessageWithTransfer(
-      token: string,
-      amount: BigNumberish,
-      nonce: BigNumberish,
-      maxSlippage: BigNumberish,
-      message: BytesLike,
-      bridgeSendType: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<string>;
+    sendMessage(message: BytesLike, overrides?: CallOverrides): Promise<void>;
 
     setDstChainId(
       dstChainId: BigNumberish,
@@ -573,6 +560,40 @@ export class MessageSender extends BaseContract {
     MessageBusUpdated(
       messageBus?: null
     ): TypedEventFilter<[string], { messageBus: string }>;
+
+    "MessageSent(address,address,uint64,uint64,bytes)"(
+      sender?: null,
+      receiver?: null,
+      srcChainId?: null,
+      dstChainId?: null,
+      message?: null
+    ): TypedEventFilter<
+      [string, string, BigNumber, BigNumber, string],
+      {
+        sender: string;
+        receiver: string;
+        srcChainId: BigNumber;
+        dstChainId: BigNumber;
+        message: string;
+      }
+    >;
+
+    MessageSent(
+      sender?: null,
+      receiver?: null,
+      srcChainId?: null,
+      dstChainId?: null,
+      message?: null
+    ): TypedEventFilter<
+      [string, string, BigNumber, BigNumber, string],
+      {
+        sender: string;
+        receiver: string;
+        srcChainId: BigNumber;
+        dstChainId: BigNumber;
+        message: string;
+      }
+    >;
 
     "MessageWithTransferRefund(address,uint256,bytes,address)"(
       token?: null,
@@ -711,13 +732,8 @@ export class MessageSender extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    sendMessageWithTransfer(
-      token: string,
-      amount: BigNumberish,
-      nonce: BigNumberish,
-      maxSlippage: BigNumberish,
+    sendMessage(
       message: BytesLike,
-      bridgeSendType: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -808,13 +824,8 @@ export class MessageSender extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    sendMessageWithTransfer(
-      token: string,
-      amount: BigNumberish,
-      nonce: BigNumberish,
-      maxSlippage: BigNumberish,
+    sendMessage(
       message: BytesLike,
-      bridgeSendType: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

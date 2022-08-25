@@ -11,52 +11,36 @@ var _abi = [
         inputs: [
             {
                 indexed: false,
-                internalType: "contract IERC20Upgradeable",
-                name: "token",
+                internalType: "address",
+                name: "provider",
                 type: "address",
+            },
+            {
+                indexed: false,
+                internalType: "bytes32",
+                name: "account",
+                type: "bytes32",
             },
             {
                 components: [
                     {
-                        internalType: "address",
-                        name: "provider",
-                        type: "address",
+                        internalType: "enum ResourceData.ResourceType",
+                        name: "resourceType",
+                        type: "uint8",
                     },
                     {
-                        internalType: "uint64",
-                        name: "nonce",
-                        type: "uint64",
-                    },
-                    {
-                        internalType: "bytes32",
-                        name: "account",
-                        type: "bytes32",
-                    },
-                    {
-                        components: [
-                            {
-                                internalType: "enum ResourceData.ResourceType",
-                                name: "resourceType",
-                                type: "uint8",
-                            },
-                            {
-                                internalType: "uint256[]",
-                                name: "values",
-                                type: "uint256[]",
-                            },
-                        ],
-                        internalType: "struct ResourceData.ValuePayload[]",
-                        name: "payloads",
-                        type: "tuple[]",
+                        internalType: "uint256[]",
+                        name: "values",
+                        type: "uint256[]",
                     },
                 ],
                 indexed: false,
-                internalType: "struct IDstChainPayment.PaymentPayload",
-                name: "payload",
-                type: "tuple",
+                internalType: "struct ResourceData.ValuePayload[]",
+                name: "payloads",
+                type: "tuple[]",
             },
         ],
-        name: "Paid",
+        name: "PaidV2",
         type: "event",
     },
     {
@@ -86,42 +70,9 @@ var _abi = [
                 type: "bytes",
             },
         ],
-        name: "decodeSourceChainMessage",
-        outputs: [
-            {
-                internalType: "address",
-                name: "provider",
-                type: "address",
-            },
-            {
-                internalType: "uint64",
-                name: "nonce",
-                type: "uint64",
-            },
-            {
-                internalType: "bytes32",
-                name: "account",
-                type: "bytes32",
-            },
-            {
-                components: [
-                    {
-                        internalType: "enum ResourceData.ResourceType",
-                        name: "resourceType",
-                        type: "uint8",
-                    },
-                    {
-                        internalType: "uint256[]",
-                        name: "values",
-                        type: "uint256[]",
-                    },
-                ],
-                internalType: "struct ResourceData.ValuePayload[]",
-                name: "payloads",
-                type: "tuple[]",
-            },
-        ],
-        stateMutability: "view",
+        name: "celerExec",
+        outputs: [],
+        stateMutability: "nonpayable",
         type: "function",
     },
     {
@@ -263,46 +214,34 @@ var _abi = [
     {
         inputs: [
             {
+                internalType: "address",
+                name: "provider",
+                type: "address",
+            },
+            {
+                internalType: "bytes32",
+                name: "account",
+                type: "bytes32",
+            },
+            {
                 components: [
                     {
-                        internalType: "address",
-                        name: "provider",
-                        type: "address",
+                        internalType: "enum ResourceData.ResourceType",
+                        name: "resourceType",
+                        type: "uint8",
                     },
                     {
-                        internalType: "uint64",
-                        name: "nonce",
-                        type: "uint64",
-                    },
-                    {
-                        internalType: "bytes32",
-                        name: "account",
-                        type: "bytes32",
-                    },
-                    {
-                        components: [
-                            {
-                                internalType: "enum ResourceData.ResourceType",
-                                name: "resourceType",
-                                type: "uint8",
-                            },
-                            {
-                                internalType: "uint256[]",
-                                name: "values",
-                                type: "uint256[]",
-                            },
-                        ],
-                        internalType: "struct ResourceData.ValuePayload[]",
-                        name: "payloads",
-                        type: "tuple[]",
+                        internalType: "uint256[]",
+                        name: "values",
+                        type: "uint256[]",
                     },
                 ],
-                internalType: "struct IDstChainPayment.PaymentPayload",
-                name: "payload",
-                type: "tuple",
+                internalType: "struct ResourceData.ValuePayload[]",
+                name: "payloads",
+                type: "tuple[]",
             },
         ],
-        name: "pay",
+        name: "payV2",
         outputs: [
             {
                 internalType: "uint256",
@@ -310,29 +249,6 @@ var _abi = [
                 type: "uint256",
             },
         ],
-        stateMutability: "nonpayable",
-        type: "function",
-    },
-    {
-        inputs: [
-            {
-                internalType: "contract IERC20Upgradeable",
-                name: "_token",
-                type: "address",
-            },
-            {
-                internalType: "uint256",
-                name: "dstAmount",
-                type: "uint256",
-            },
-            {
-                internalType: "bytes",
-                name: "message",
-                type: "bytes",
-            },
-        ],
-        name: "payFromSourceChain",
-        outputs: [],
         stateMutability: "nonpayable",
         type: "function",
     },
