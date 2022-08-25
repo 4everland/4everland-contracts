@@ -52,23 +52,6 @@ interface IMessageSender {
 		bytes calldata message
 	) external view returns (bytes32);
 
-	/// @dev send message with transfer to dst chain
-	/// @param token pay token
-	/// @param amount token amount
-	/// @param nonce nonce
-	/// @param maxSlippage max slippage for cBridge in sgn
-	/// @param message message for dst chain
-	/// @param bridgeSendType bridge send type for cBridge
-	/// @return messageId message id for messageBus in sgn
-	function sendMessageWithTransfer(
-		address token,
-		uint256 amount,
-		uint64 nonce,
-		uint32 maxSlippage,
-		bytes memory message,
-		MsgDataTypes.BridgeSendType bridgeSendType
-	) external payable returns (bytes32);
-
 	/// @dev send message to dst chain
 	/// @param message message for dst chain
 	function sendMessage(bytes memory message) external payable;

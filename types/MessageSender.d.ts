@@ -34,7 +34,6 @@ interface MessageSenderInterface extends ethers.utils.Interface {
     "receiver()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "sendMessage(bytes)": FunctionFragment;
-    "sendMessageWithTransfer(address,uint256,uint64,uint32,bytes,uint8)": FunctionFragment;
     "setDstChainId(uint64)": FunctionFragment;
     "setMessageBus(address)": FunctionFragment;
     "setReceiver(address)": FunctionFragment;
@@ -92,17 +91,6 @@ interface MessageSenderInterface extends ethers.utils.Interface {
     values: [BytesLike]
   ): string;
   encodeFunctionData(
-    functionFragment: "sendMessageWithTransfer",
-    values: [
-      string,
-      BigNumberish,
-      BigNumberish,
-      BigNumberish,
-      BytesLike,
-      BigNumberish
-    ]
-  ): string;
-  encodeFunctionData(
     functionFragment: "setDstChainId",
     values: [BigNumberish]
   ): string;
@@ -149,10 +137,6 @@ interface MessageSenderInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "sendMessage",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "sendMessageWithTransfer",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -359,16 +343,6 @@ export class MessageSender extends BaseContract {
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    sendMessageWithTransfer(
-      token: string,
-      amount: BigNumberish,
-      nonce: BigNumberish,
-      maxSlippage: BigNumberish,
-      message: BytesLike,
-      bridgeSendType: BigNumberish,
-      overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
     setDstChainId(
       dstChainId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -457,16 +431,6 @@ export class MessageSender extends BaseContract {
     overrides?: PayableOverrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  sendMessageWithTransfer(
-    token: string,
-    amount: BigNumberish,
-    nonce: BigNumberish,
-    maxSlippage: BigNumberish,
-    message: BytesLike,
-    bridgeSendType: BigNumberish,
-    overrides?: PayableOverrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
   setDstChainId(
     dstChainId: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -549,16 +513,6 @@ export class MessageSender extends BaseContract {
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
     sendMessage(message: BytesLike, overrides?: CallOverrides): Promise<void>;
-
-    sendMessageWithTransfer(
-      token: string,
-      amount: BigNumberish,
-      nonce: BigNumberish,
-      maxSlippage: BigNumberish,
-      message: BytesLike,
-      bridgeSendType: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<string>;
 
     setDstChainId(
       dstChainId: BigNumberish,
@@ -783,16 +737,6 @@ export class MessageSender extends BaseContract {
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    sendMessageWithTransfer(
-      token: string,
-      amount: BigNumberish,
-      nonce: BigNumberish,
-      maxSlippage: BigNumberish,
-      message: BytesLike,
-      bridgeSendType: BigNumberish,
-      overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
     setDstChainId(
       dstChainId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -882,16 +826,6 @@ export class MessageSender extends BaseContract {
 
     sendMessage(
       message: BytesLike,
-      overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    sendMessageWithTransfer(
-      token: string,
-      amount: BigNumberish,
-      nonce: BigNumberish,
-      maxSlippage: BigNumberish,
-      message: BytesLike,
-      bridgeSendType: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

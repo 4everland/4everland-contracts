@@ -37,26 +37,6 @@ contract DstChainPayment is IDstChainPayment, ReentrancyGuardUpgradeable, OwnerW
 	}
 
 	/// @dev pay from source chain only called by message receiver
-	/// @param _token token address
-	/// @param dstAmount token amount
-	/// @param message payment payload message bytes
-	function payFromSourceChain(
-		IERC20Upgradeable _token,
-		uint256 dstAmount,
-		bytes calldata message
-	) external override onlyMessageReceiver whenNotPaused nonReentrant {
-		IERC20Upgradeable token = router.Token();
-		require(token == _token, 'DstChainPayment: invalid token');
-		(address provider, uint64 nonce, bytes32 account, ResourceData.ValuePayload[] memory payloads) = decodeSourceChainMessage(message);
-		uint256 value = ResourceData.matchTokenToResource(token, dstAmount);
-		PaymentPayload memory payload = PaymentPayload(provider, nonce, account, ResourceData.ValuePayloads(payloads).convertSourceChainPayloads(value));
-		_processPayloads(provider, payload.account, payload.payloads);
-		_pay(provider, account, token, dstAmount);
-
-		emit Paid(token, payload);
-	}
-
-	/// @dev pay from source chain only called by message receiver
 	/// @param message payment payload message bytes
 	function celerExec(bytes calldata message) external override onlyMessageReceiver whenNotPaused {
 		(address provider, bytes32 account, ResourceData.ValuePayload[] memory payloads) = decodeMessage(message);
@@ -64,18 +44,6 @@ contract DstChainPayment is IDstChainPayment, ReentrancyGuardUpgradeable, OwnerW
 		_payV2(token, provider, account, payloads);
 
 		emit PaidV2(provider, account, payloads);
-	}
-
-	/// @dev pay on dst chain
-	/// @param payload payment payload
-	/// @return value payment value
-	function pay(PaymentPayload memory payload) external override whenNotPaused nonReentrant returns (uint256 value) {
-		value = _processPayloads(payload.provider, payload.account, payload.payloads);
-		IERC20Upgradeable token = router.Token();
-		value = ResourceData.matchResourceToToken(token, value);
-		_pay(payload.provider, payload.account, token, value);
-
-		emit Paid(token, payload);
 	}
 
 	/// @dev pay on dst chain
@@ -89,17 +57,6 @@ contract DstChainPayment is IDstChainPayment, ReentrancyGuardUpgradeable, OwnerW
 		token.safeTransferFrom(msg.sender, address(this), value);
 
 		emit PaidV2(provider, account, payloads);
-	}
-
-	function _pay(
-		address provider,
-		bytes32 account,
-		IERC20Upgradeable token,
-		uint256 amount
-	) internal {
-		require(router.ProviderController().accountExists(provider, account), 'DstChainPayment: nonexistent account');
-		providerBalances[provider] = providerBalances[provider].add(amount);
-		token.safeTransferFrom(msg.sender, address(this), amount);
 	}
 
 	function _payV2(IERC20Upgradeable token, address provider, bytes32 account, ResourceData.ValuePayload[] memory payloads) internal returns(uint256 value){
@@ -155,25 +112,6 @@ contract DstChainPayment is IDstChainPayment, ReentrancyGuardUpgradeable, OwnerW
 		)
 	{
 		(provider, account, payloads) = abi.decode(message, (address, bytes32, ResourceData.ValuePayload[]));
-	}
-
-	/// @dev decode source chain message
-	/// @param message message bytes
-	/// @return provider provider address
-	/// @return nonce nonce
-	/// @return account user account
-	/// @return payloads payment payloads
-	function decodeSourceChainMessage(bytes memory message)
-		public
-		view
-		returns (
-			address provider,
-			uint64 nonce,
-			bytes32 account,
-			ResourceData.ValuePayload[] memory payloads
-		)
-	{
-		(provider, nonce, account, payloads) = abi.decode(message, (address, uint64, bytes32, ResourceData.ValuePayload[]));
 	}
 
 	/// @dev calculate fee for ipfs storage and expiration

@@ -105,33 +105,6 @@ contract MessageReceiver is RouterWrapper, OwnerWithdrawable {
 		__Init_Router(router);
 	}
 
-	/// @dev execute message with transfer
-	/// @param sender message sender address
-	/// @param token token address
-	/// @param amount token amount
-	/// @param srcChainId src chain chainId
-	/// @param message src chain message
-	/// @param _executor executor address
-	function executeMessageWithTransfer(
-		address sender,
-		IERC20Upgradeable token,
-		uint256 amount,
-		uint64 srcChainId,
-		bytes memory message,
-		address _executor
-	) external payable onlyMessageBus returns (ExecutionStatus) {
-		require(executor == _executor, 'MessageReceiver: invalid executor');
-		IDstChainPayment dstChainPayment = router.DstChainPayment();
-		token.safeApprove(address(dstChainPayment), amount);
-		try dstChainPayment.payFromSourceChain(token, amount, message) {
-			emit MessageWithTransferExecuted(sender, token, amount, srcChainId, message, _executor);
-		} catch (bytes memory err) {
-			emit MessageWithTransferFailed(sender, token, amount, srcChainId, message, _executor, err);
-		}
-		token.safeApprove(address(dstChainPayment), 0);
-		return ExecutionStatus.Success;
-	}
-
 	/// @dev execute message
 	/// @param sender message sender address
 	/// @param srcChainId src chain chainId

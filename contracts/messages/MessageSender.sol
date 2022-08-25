@@ -62,25 +62,6 @@ contract MessageSender is IMessageSender, OwnerWithdrawable {
 		_setDstChainId(_dstChainId);
 	}
 
-	/// @dev sendMessageWithTransfer to dst chain
-	/// @param token src payment token address
-	/// @param amount token amount
-	/// @param nonce nonce
-	/// @param maxSlippage maxSlippage for sgn cBridge
-	/// @param message message to dst chain
-	/// @param bridgeSendType bridge send type for sgn cBridge
-	function sendMessageWithTransfer(
-		address token,
-		uint256 amount,
-		uint64 nonce,
-		uint32 maxSlippage,
-		bytes memory message,
-		MsgDataTypes.BridgeSendType bridgeSendType
-	) external payable onlySrcChainPayment returns (bytes32) {
-		IERC20Upgradeable(token).transferFrom(msg.sender, address(this), amount);
-		return MessageSenderLib.sendMessageWithTransfer(receiver, token, amount, dstChainId, nonce, maxSlippage, message, bridgeSendType, messageBus, msg.value);
-	}
-
 	/// @dev sendMessage to dst chain
 	/// @param message message to dst chain
 	function sendMessage(bytes memory message) external payable onlySrcChainPayment {

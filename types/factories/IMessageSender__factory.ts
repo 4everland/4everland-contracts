@@ -239,50 +239,6 @@ const _abi = [
     stateMutability: "payable",
     type: "function",
   },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "token",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-      {
-        internalType: "uint64",
-        name: "nonce",
-        type: "uint64",
-      },
-      {
-        internalType: "uint32",
-        name: "maxSlippage",
-        type: "uint32",
-      },
-      {
-        internalType: "bytes",
-        name: "message",
-        type: "bytes",
-      },
-      {
-        internalType: "enum MsgDataTypes.BridgeSendType",
-        name: "bridgeSendType",
-        type: "uint8",
-      },
-    ],
-    name: "sendMessageWithTransfer",
-    outputs: [
-      {
-        internalType: "bytes32",
-        name: "",
-        type: "bytes32",
-      },
-    ],
-    stateMutability: "payable",
-    type: "function",
-  },
 ];
 
 export class IMessageSender__factory {

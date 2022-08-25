@@ -38,14 +38,6 @@ contract SrcChainPayment is ReentrancyGuardUpgradeable, Pauser, OwnerWithdrawabl
 
 	/// @dev emit when user paid on src chain
 	/// @param provider provider address
-	/// @param nonce nonce
-	/// @param account sender
-	/// @param payloads payment payloads
-	/// @param maxSlippage maxSlippage in cBridge
-	event Paid(address provider, uint64 nonce, bytes32 account, ResourceData.ValuePayload[] payloads, uint32 maxSlippage);
-
-	/// @dev emit when user paid on src chain
-	/// @param provider provider address
 	/// @param account sender
 	/// @param payloads payment payloads
 	event PaidV2(address provider, bytes32 account, ResourceData.ValuePayload[] payloads);
@@ -77,37 +69,6 @@ contract SrcChainPayment is ReentrancyGuardUpgradeable, Pauser, OwnerWithdrawabl
 
 	function __Init_Token(IERC20Upgradeable _token) internal onlyInitializing {
 		_setToken(_token);
-	}
-
-	/// @dev pay from source chain
-	/// @param provider provider address
-	/// @param nonce nonce
-	/// @param account sender
-	/// @param payloads payment payloads
-	/// @param maxSlippage maxSlippage in cBridge
-	/// @return transferId token transfer id in cBridge
-	function pay(
-		address provider,
-		uint64 nonce,
-		bytes32 account,
-		ResourceData.ValuePayload[] memory payloads,
-		uint32 maxSlippage
-	) external payable whenNotPaused nonReentrant returns (bytes32 transferId) {
-		uint256 value = ResourceData.totalValue(payloads);
-		value = ResourceData.matchResourceToToken(token, value);
-		token.safeTransferFrom(msg.sender, address(this), value);
-		token.safeApprove(address(messageSender), value);
-		transferId = messageSender.sendMessageWithTransfer{ value: msg.value }(
-			address(token),
-			value,
-			nonce,
-			maxSlippage,
-			encodeMessage(provider, nonce, account, payloads),
-			MsgDataTypes.BridgeSendType.Liquidity
-		);
-		token.safeApprove(address(messageSender), 0);
-
-		emit Paid(provider, nonce, account, payloads, maxSlippage);
 	}
 
 	/// @dev pay from source chain
@@ -161,21 +122,6 @@ contract SrcChainPayment is ReentrancyGuardUpgradeable, Pauser, OwnerWithdrawabl
 
 	/// @dev calculate message fee
 	/// @param provider provider address
-	/// @param nonce nonce
-	/// @param account user account
-	/// @param payloads payment payloads
-	/// @return value message fee
-	function calcFee(
-		address provider,
-		uint64 nonce,
-		bytes32 account,
-		ResourceData.ValuePayload[] memory payloads
-	) public view returns (uint256 value) {
-		return messageSender.calcFee(encodeMessage(provider, nonce, account, payloads));
-	}
-
-	/// @dev calculate message fee
-	/// @param provider provider address
 	/// @param account user account
 	/// @param payloads payment payloads
 	/// @return value message fee
@@ -200,19 +146,4 @@ contract SrcChainPayment is ReentrancyGuardUpgradeable, Pauser, OwnerWithdrawabl
 		return abi.encode(provider, account, payloads);
 	}
 
-
-	/// @dev encode payment message
-	/// @param provider provider address
-	/// @param nonce nonce
-	/// @param account user account
-	/// @param payloads payment payloads
-	/// @return message message bytes
-	function encodeMessage(
-		address provider,
-		uint64 nonce,
-		bytes32 account,
-		ResourceData.ValuePayload[] memory payloads
-	) public pure returns (bytes memory) {
-		return abi.encode(provider, nonce, account, payloads);
-	}
 }

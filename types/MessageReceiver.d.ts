@@ -23,7 +23,6 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 interface MessageReceiverInterface extends ethers.utils.Interface {
   functions: {
     "executeMessage(address,uint64,bytes,address)": FunctionFragment;
-    "executeMessageWithTransfer(address,address,uint256,uint64,bytes,address)": FunctionFragment;
     "executeMessageWithTransferFallback(address,address,uint256,uint64,bytes,address)": FunctionFragment;
     "executor()": FunctionFragment;
     "initialize(address,address,address,address)": FunctionFragment;
@@ -42,10 +41,6 @@ interface MessageReceiverInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "executeMessage",
     values: [string, BigNumberish, BytesLike, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "executeMessageWithTransfer",
-    values: [string, string, BigNumberish, BigNumberish, BytesLike, string]
   ): string;
   encodeFunctionData(
     functionFragment: "executeMessageWithTransferFallback",
@@ -99,10 +94,6 @@ interface MessageReceiverInterface extends ethers.utils.Interface {
 
   decodeFunctionResult(
     functionFragment: "executeMessage",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "executeMessageWithTransfer",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -300,16 +291,6 @@ export class MessageReceiver extends BaseContract {
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    executeMessageWithTransfer(
-      sender: string,
-      token: string,
-      amount: BigNumberish,
-      srcChainId: BigNumberish,
-      message: BytesLike,
-      _executor: string,
-      overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
     executeMessageWithTransferFallback(
       _sender: string,
       _token: string,
@@ -389,16 +370,6 @@ export class MessageReceiver extends BaseContract {
     overrides?: PayableOverrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  executeMessageWithTransfer(
-    sender: string,
-    token: string,
-    amount: BigNumberish,
-    srcChainId: BigNumberish,
-    message: BytesLike,
-    _executor: string,
-    overrides?: PayableOverrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
   executeMessageWithTransferFallback(
     _sender: string,
     _token: string,
@@ -472,16 +443,6 @@ export class MessageReceiver extends BaseContract {
   callStatic: {
     executeMessage(
       sender: string,
-      srcChainId: BigNumberish,
-      message: BytesLike,
-      _executor: string,
-      overrides?: CallOverrides
-    ): Promise<number>;
-
-    executeMessageWithTransfer(
-      sender: string,
-      token: string,
-      amount: BigNumberish,
       srcChainId: BigNumberish,
       message: BytesLike,
       _executor: string,
@@ -820,16 +781,6 @@ export class MessageReceiver extends BaseContract {
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    executeMessageWithTransfer(
-      sender: string,
-      token: string,
-      amount: BigNumberish,
-      srcChainId: BigNumberish,
-      message: BytesLike,
-      _executor: string,
-      overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
     executeMessageWithTransferFallback(
       _sender: string,
       _token: string,
@@ -904,16 +855,6 @@ export class MessageReceiver extends BaseContract {
   populateTransaction: {
     executeMessage(
       sender: string,
-      srcChainId: BigNumberish,
-      message: BytesLike,
-      _executor: string,
-      overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    executeMessageWithTransfer(
-      sender: string,
-      token: string,
-      amount: BigNumberish,
       srcChainId: BigNumberish,
       message: BytesLike,
       _executor: string,
