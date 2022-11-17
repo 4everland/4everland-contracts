@@ -21,6 +21,7 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface ContentTracerInterface extends ethers.utils.Interface {
   functions: {
+    "expireAt(bytes32)": FunctionFragment;
     "initialize(address,address)": FunctionFragment;
     "insert(bytes32,string,uint256,uint256)": FunctionFragment;
     "insertMult(bytes32[],string[],uint256[],uint256[])": FunctionFragment;
@@ -31,10 +32,9 @@ interface ContentTracerInterface extends ethers.utils.Interface {
     "renounceOwnership()": FunctionFragment;
     "router()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
-    "update(bytes32,string,uint256,uint256)": FunctionFragment;
-    "updateMult(bytes32[],string[],uint256[],uint256[])": FunctionFragment;
   };
 
+  encodeFunctionData(functionFragment: "expireAt", values: [BytesLike]): string;
   encodeFunctionData(
     functionFragment: "initialize",
     values: [string, string]
@@ -69,15 +69,8 @@ interface ContentTracerInterface extends ethers.utils.Interface {
     functionFragment: "transferOwnership",
     values: [string]
   ): string;
-  encodeFunctionData(
-    functionFragment: "update",
-    values: [BytesLike, string, BigNumberish, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "updateMult",
-    values: [BytesLike[], string[], BigNumberish[], BigNumberish[]]
-  ): string;
 
+  decodeFunctionResult(functionFragment: "expireAt", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "insert", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "insertMult", data: BytesLike): Result;
@@ -94,8 +87,6 @@ interface ContentTracerInterface extends ethers.utils.Interface {
     functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "update", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "updateMult", data: BytesLike): Result;
 
   events: {
     "Initialized(uint8)": EventFragment;
@@ -103,7 +94,6 @@ interface ContentTracerInterface extends ethers.utils.Interface {
     "OwnershipTransferred(address,address)": EventFragment;
     "Remove(address,bytes32,string)": EventFragment;
     "RouterUpdated(address)": EventFragment;
-    "Update(address,bytes32,string,uint256,uint256,uint256)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "Initialized"): EventFragment;
@@ -111,7 +101,6 @@ interface ContentTracerInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Remove"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RouterUpdated"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Update"): EventFragment;
 }
 
 export type InitializedEvent = TypedEvent<[number] & { version: number }>;
@@ -140,17 +129,6 @@ export type RemoveEvent = TypedEvent<
 >;
 
 export type RouterUpdatedEvent = TypedEvent<[string] & { router: string }>;
-
-export type UpdateEvent = TypedEvent<
-  [string, string, string, BigNumber, BigNumber, BigNumber] & {
-    provider: string;
-    account: string;
-    content: string;
-    size: BigNumber;
-    count: BigNumber;
-    expiration: BigNumber;
-  }
->;
 
 export class ContentTracer extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -196,6 +174,11 @@ export class ContentTracer extends BaseContract {
   interface: ContentTracerInterface;
 
   functions: {
+    expireAt(
+      account: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
     initialize(
       owner: string,
       router: string,
@@ -249,23 +232,9 @@ export class ContentTracer extends BaseContract {
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
-
-    update(
-      account: BytesLike,
-      content: string,
-      size: BigNumberish,
-      count: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    updateMult(
-      accounts: BytesLike[],
-      contents: string[],
-      sizes: BigNumberish[],
-      counts: BigNumberish[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
   };
+
+  expireAt(account: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
 
   initialize(
     owner: string,
@@ -321,23 +290,9 @@ export class ContentTracer extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  update(
-    account: BytesLike,
-    content: string,
-    size: BigNumberish,
-    count: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  updateMult(
-    accounts: BytesLike[],
-    contents: string[],
-    sizes: BigNumberish[],
-    counts: BigNumberish[],
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
   callStatic: {
+    expireAt(account: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
+
     initialize(
       owner: string,
       router: string,
@@ -387,22 +342,6 @@ export class ContentTracer extends BaseContract {
 
     transferOwnership(
       newOwner: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    update(
-      account: BytesLike,
-      content: string,
-      size: BigNumberish,
-      count: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    updateMult(
-      accounts: BytesLike[],
-      contents: string[],
-      sizes: BigNumberish[],
-      counts: BigNumberish[],
       overrides?: CallOverrides
     ): Promise<void>;
   };
@@ -495,47 +434,11 @@ export class ContentTracer extends BaseContract {
     RouterUpdated(
       router?: null
     ): TypedEventFilter<[string], { router: string }>;
-
-    "Update(address,bytes32,string,uint256,uint256,uint256)"(
-      provider?: null,
-      account?: null,
-      content?: null,
-      size?: null,
-      count?: null,
-      expiration?: null
-    ): TypedEventFilter<
-      [string, string, string, BigNumber, BigNumber, BigNumber],
-      {
-        provider: string;
-        account: string;
-        content: string;
-        size: BigNumber;
-        count: BigNumber;
-        expiration: BigNumber;
-      }
-    >;
-
-    Update(
-      provider?: null,
-      account?: null,
-      content?: null,
-      size?: null,
-      count?: null,
-      expiration?: null
-    ): TypedEventFilter<
-      [string, string, string, BigNumber, BigNumber, BigNumber],
-      {
-        provider: string;
-        account: string;
-        content: string;
-        size: BigNumber;
-        count: BigNumber;
-        expiration: BigNumber;
-      }
-    >;
   };
 
   estimateGas: {
+    expireAt(account: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
+
     initialize(
       owner: string,
       router: string,
@@ -589,25 +492,14 @@ export class ContentTracer extends BaseContract {
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
-
-    update(
-      account: BytesLike,
-      content: string,
-      size: BigNumberish,
-      count: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    updateMult(
-      accounts: BytesLike[],
-      contents: string[],
-      sizes: BigNumberish[],
-      counts: BigNumberish[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
+    expireAt(
+      account: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     initialize(
       owner: string,
       router: string,
@@ -659,22 +551,6 @@ export class ContentTracer extends BaseContract {
 
     transferOwnership(
       newOwner: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    update(
-      account: BytesLike,
-      content: string,
-      size: BigNumberish,
-      count: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    updateMult(
-      accounts: BytesLike[],
-      contents: string[],
-      sizes: BigNumberish[],
-      counts: BigNumberish[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };
