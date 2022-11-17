@@ -53,7 +53,7 @@ contract DstChainPayment is IDstChainPayment, ReentrancyGuardUpgradeable, OwnerW
 	/// @return value total token value
 	function payV2(address provider, bytes32 account, ResourceData.ValuePayload[] memory payloads) external override whenNotPaused nonReentrant returns (uint256 value) {
 		IERC20Upgradeable token = router.Token();
-		uint256 value = _payV2(token, provider, account, payloads);
+		value = _payV2(token, provider, account, payloads);
 		token.safeTransferFrom(msg.sender, address(this), value);
 
 		emit PaidV2(provider, account, payloads);
