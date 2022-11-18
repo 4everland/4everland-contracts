@@ -22,6 +22,7 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 interface IFundPoolInterface extends ethers.utils.Interface {
   functions: {
     "balanceOf(address,bytes32)": FunctionFragment;
+    "celerExec(uint256,bytes)": FunctionFragment;
     "initWalletAndWithdraw(address,bytes32,bytes,bytes,uint256,uint64,bytes,address,uint256)": FunctionFragment;
     "recharge(address,bytes32,uint256)": FunctionFragment;
     "spend(address,bytes32,bytes,uint256,uint64,bytes)": FunctionFragment;
@@ -32,6 +33,10 @@ interface IFundPoolInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "balanceOf",
     values: [string, BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "celerExec",
+    values: [BigNumberish, BytesLike]
   ): string;
   encodeFunctionData(
     functionFragment: "initWalletAndWithdraw",
@@ -81,6 +86,7 @@ interface IFundPoolInterface extends ethers.utils.Interface {
   ): string;
 
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "celerExec", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "initWalletAndWithdraw",
     data: BytesLike
@@ -176,6 +182,12 @@ export class IFundPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
+    celerExec(
+      amount: BigNumberish,
+      message: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     initWalletAndWithdraw(
       provider: string,
       account: BytesLike,
@@ -231,6 +243,12 @@ export class IFundPool extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  celerExec(
+    amount: BigNumberish,
+    message: BytesLike,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   initWalletAndWithdraw(
     provider: string,
     account: BytesLike,
@@ -285,6 +303,12 @@ export class IFundPool extends BaseContract {
       account: BytesLike,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    celerExec(
+      amount: BigNumberish,
+      message: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     initWalletAndWithdraw(
       provider: string,
@@ -400,6 +424,12 @@ export class IFundPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    celerExec(
+      amount: BigNumberish,
+      message: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     initWalletAndWithdraw(
       provider: string,
       account: BytesLike,
@@ -454,6 +484,12 @@ export class IFundPool extends BaseContract {
       provider: string,
       account: BytesLike,
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    celerExec(
+      amount: BigNumberish,
+      message: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     initWalletAndWithdraw(

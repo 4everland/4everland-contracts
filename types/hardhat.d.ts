@@ -177,6 +177,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IProviderRegistry__factory>;
     getContractFactory(
+      name: "IRechargeMessageSender",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IRechargeMessageSender__factory>;
+    getContractFactory(
       name: "IRouter",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IRouter__factory>;
@@ -200,6 +204,18 @@ declare module "hardhat/types/runtime" {
       name: "SrcChainPayment",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.SrcChainPayment__factory>;
+    getContractFactory(
+      name: "RechargeMessageReceiver",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.RechargeMessageReceiver__factory>;
+    getContractFactory(
+      name: "RechargeMessageSender",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.RechargeMessageSender__factory>;
+    getContractFactory(
+      name: "SrcChainRecharge",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.SrcChainRecharge__factory>;
     getContractFactory(
       name: "IPFSStorageController",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -483,6 +499,11 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.IProviderRegistry>;
     getContractAt(
+      name: "IRechargeMessageSender",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IRechargeMessageSender>;
+    getContractAt(
       name: "IRouter",
       address: string,
       signer?: ethers.Signer
@@ -512,6 +533,21 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.SrcChainPayment>;
+    getContractAt(
+      name: "RechargeMessageReceiver",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.RechargeMessageReceiver>;
+    getContractAt(
+      name: "RechargeMessageSender",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.RechargeMessageSender>;
+    getContractAt(
+      name: "SrcChainRecharge",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.SrcChainRecharge>;
     getContractAt(
       name: "IPFSStorageController",
       address: string,
