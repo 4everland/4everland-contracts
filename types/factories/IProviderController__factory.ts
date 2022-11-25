@@ -65,6 +65,31 @@ const _abi = [
       },
       {
         indexed: false,
+        internalType: "uint256",
+        name: "nonce",
+        type: "uint256",
+      },
+    ],
+    name: "ProviderDripped",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "provider",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "bytes32",
+        name: "account",
+        type: "bytes32",
+      },
+      {
+        indexed: false,
         internalType: "address",
         name: "from",
         type: "address",

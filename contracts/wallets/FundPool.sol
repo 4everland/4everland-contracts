@@ -64,9 +64,9 @@ contract FundPool is IFundPool, OwnerWithdrawable, Pauser, ReentrancyGuardUpgrad
 	/// @param timeout tx timeout
 	/// @param nonce billing nonce
 	/// @param billSig bill signature
-	/// @return fee bill fee
 	/// @param to token receiver
 	/// @param amount token amount
+	/// @return fee bill fee
 	function initWalletAndWithdraw(
 		address provider,
 		bytes32 account,
