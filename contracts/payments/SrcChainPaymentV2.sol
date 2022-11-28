@@ -10,7 +10,7 @@ contract SrcChainPaymentV2 is SrcChainPayment {
 	using SafeMathUpgradeable for uint256;
 	using SafeERC20Upgradeable for IERC20Upgradeable;
 	
-	event PaidV3(address provider, bytes32 account, ResourceData.ValuePayload[] payloads, uint256 nonce, uint256 amount);
+	event Paid(address provider, bytes32 account, ResourceData.ValuePayload[] payloads, uint256 nonce, uint256 amount);
 
 	/// @dev proxy initialize function
 	/// @param owner contract owner
@@ -43,7 +43,7 @@ contract SrcChainPaymentV2 is SrcChainPayment {
 	/// @param provider provider address
 	/// @param account sender
 	/// @param payloads payment payloads
-	function payV3(
+	function pay(
 		address provider,
 		bytes32 account,
 		ResourceData.ValuePayload[] memory payloads,
@@ -61,13 +61,13 @@ contract SrcChainPaymentV2 is SrcChainPayment {
 		fees[provider][account] = fees[provider][account] + value;
 		token.safeTransferFrom(msg.sender, address(this), value);
 		messageSender.sendMessage{value: msg.value}(encodeMessage(provider, account, payloads, nonce, amount, signature));
-		emit PaidV3(provider, account, payloads, nonce, amount);
+		emit Paid(provider, account, payloads, nonce, amount);
 	}
 
 	/// @dev return payment total token value
 	/// @param payloads payment payloads
 	/// @return value payment total token value
-	function payloadsValue(ResourceData.ValuePayload[] memory payloads) public returns (uint256 value) {
+	function payloadsValue(ResourceData.ValuePayload[] memory payloads) public view returns (uint256 value) {
 		value = ResourceData.totalValue(payloads);
 		value = ResourceData.matchResourceToToken(token, value);
 	}

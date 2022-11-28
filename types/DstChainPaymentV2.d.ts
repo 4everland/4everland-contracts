@@ -40,7 +40,7 @@ interface DstChainPaymentV2Interface extends ethers.utils.Interface {
     "pause()": FunctionFragment;
     "paused()": FunctionFragment;
     "pausers(address)": FunctionFragment;
-    "payV3(address,bytes32,tuple[],uint256,uint256,bytes)": FunctionFragment;
+    "pay(address,bytes32,tuple[],uint256,uint256,bytes)": FunctionFragment;
     "priceOf(address,uint8)": FunctionFragment;
     "providerBalance(address)": FunctionFragment;
     "removePauser(address)": FunctionFragment;
@@ -109,7 +109,7 @@ interface DstChainPaymentV2Interface extends ethers.utils.Interface {
   encodeFunctionData(functionFragment: "paused", values?: undefined): string;
   encodeFunctionData(functionFragment: "pausers", values: [string]): string;
   encodeFunctionData(
-    functionFragment: "payV3",
+    functionFragment: "pay",
     values: [
       string,
       BytesLike,
@@ -200,7 +200,7 @@ interface DstChainPaymentV2Interface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "pausers", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "payV3", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "pay", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "priceOf", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "providerBalance",
@@ -234,7 +234,7 @@ interface DstChainPaymentV2Interface extends ethers.utils.Interface {
     "Initialized(uint8)": EventFragment;
     "NativeWithdrawal(address,uint256)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
-    "PaidV3(address,bytes32,tuple[],uint256,uint256,uint256)": EventFragment;
+    "Paid(address,bytes32,tuple[],uint256,uint256,uint256)": EventFragment;
     "Paused(address)": EventFragment;
     "PauserAdded(address)": EventFragment;
     "PauserRemoved(address)": EventFragment;
@@ -246,7 +246,7 @@ interface DstChainPaymentV2Interface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "Initialized"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "NativeWithdrawal"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "PaidV3"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Paid"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Paused"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "PauserAdded"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "PauserRemoved"): EventFragment;
@@ -265,7 +265,7 @@ export type OwnershipTransferredEvent = TypedEvent<
   [string, string] & { previousOwner: string; newOwner: string }
 >;
 
-export type PaidV3Event = TypedEvent<
+export type PaidEvent = TypedEvent<
   [
     string,
     string,
@@ -475,7 +475,7 @@ export class DstChainPaymentV2 extends BaseContract {
 
     pausers(arg0: string, overrides?: CallOverrides): Promise<[boolean]>;
 
-    payV3(
+    pay(
       provider: string,
       account: BytesLike,
       payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
@@ -651,7 +651,7 @@ export class DstChainPaymentV2 extends BaseContract {
 
   pausers(arg0: string, overrides?: CallOverrides): Promise<boolean>;
 
-  payV3(
+  pay(
     provider: string,
     account: BytesLike,
     payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
@@ -825,7 +825,7 @@ export class DstChainPaymentV2 extends BaseContract {
 
     pausers(arg0: string, overrides?: CallOverrides): Promise<boolean>;
 
-    payV3(
+    pay(
       provider: string,
       account: BytesLike,
       payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
@@ -905,7 +905,7 @@ export class DstChainPaymentV2 extends BaseContract {
       { previousOwner: string; newOwner: string }
     >;
 
-    "PaidV3(address,bytes32,tuple[],uint256,uint256,uint256)"(
+    "Paid(address,bytes32,tuple[],uint256,uint256,uint256)"(
       provider?: null,
       account?: null,
       payloads?: null,
@@ -937,7 +937,7 @@ export class DstChainPaymentV2 extends BaseContract {
       }
     >;
 
-    PaidV3(
+    Paid(
       provider?: null,
       account?: null,
       payloads?: null,
@@ -1124,7 +1124,7 @@ export class DstChainPaymentV2 extends BaseContract {
 
     pausers(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    payV3(
+    pay(
       provider: string,
       account: BytesLike,
       payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
@@ -1287,7 +1287,7 @@ export class DstChainPaymentV2 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    payV3(
+    pay(
       provider: string,
       account: BytesLike,
       payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],

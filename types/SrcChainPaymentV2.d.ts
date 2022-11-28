@@ -35,7 +35,7 @@ interface SrcChainPaymentV2Interface extends ethers.utils.Interface {
     "pause()": FunctionFragment;
     "paused()": FunctionFragment;
     "pausers(address)": FunctionFragment;
-    "payV3(address,bytes32,tuple[],uint256,uint256,bytes)": FunctionFragment;
+    "pay(address,bytes32,tuple[],uint256,uint256,bytes)": FunctionFragment;
     "payloadsValue(tuple[])": FunctionFragment;
     "providerBalances(address)": FunctionFragment;
     "removePauser(address)": FunctionFragment;
@@ -97,7 +97,7 @@ interface SrcChainPaymentV2Interface extends ethers.utils.Interface {
   encodeFunctionData(functionFragment: "paused", values?: undefined): string;
   encodeFunctionData(functionFragment: "pausers", values: [string]): string;
   encodeFunctionData(
-    functionFragment: "payV3",
+    functionFragment: "pay",
     values: [
       string,
       BytesLike,
@@ -164,7 +164,7 @@ interface SrcChainPaymentV2Interface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "pausers", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "payV3", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "pay", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "payloadsValue",
     data: BytesLike
@@ -202,8 +202,8 @@ interface SrcChainPaymentV2Interface extends ethers.utils.Interface {
     "MessageSenderUpdated(address)": EventFragment;
     "NativeWithdrawal(address,uint256)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
+    "Paid(address,bytes32,tuple[],uint256,uint256)": EventFragment;
     "PaidV2(address,bytes32,tuple[])": EventFragment;
-    "PaidV3(address,bytes32,tuple[],uint256,uint256)": EventFragment;
     "Paused(address)": EventFragment;
     "PauserAdded(address)": EventFragment;
     "PauserRemoved(address)": EventFragment;
@@ -216,8 +216,8 @@ interface SrcChainPaymentV2Interface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "MessageSenderUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "NativeWithdrawal"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Paid"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "PaidV2"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "PaidV3"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Paused"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "PauserAdded"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "PauserRemoved"): EventFragment;
@@ -240,22 +240,7 @@ export type OwnershipTransferredEvent = TypedEvent<
   [string, string] & { previousOwner: string; newOwner: string }
 >;
 
-export type PaidV2Event = TypedEvent<
-  [
-    string,
-    string,
-    ([number, BigNumber[]] & { resourceType: number; values: BigNumber[] })[]
-  ] & {
-    provider: string;
-    account: string;
-    payloads: ([number, BigNumber[]] & {
-      resourceType: number;
-      values: BigNumber[];
-    })[];
-  }
->;
-
-export type PaidV3Event = TypedEvent<
+export type PaidEvent = TypedEvent<
   [
     string,
     string,
@@ -271,6 +256,21 @@ export type PaidV3Event = TypedEvent<
     })[];
     nonce: BigNumber;
     amount: BigNumber;
+  }
+>;
+
+export type PaidV2Event = TypedEvent<
+  [
+    string,
+    string,
+    ([number, BigNumber[]] & { resourceType: number; values: BigNumber[] })[]
+  ] & {
+    provider: string;
+    account: string;
+    payloads: ([number, BigNumber[]] & {
+      resourceType: number;
+      values: BigNumber[];
+    })[];
   }
 >;
 
@@ -398,7 +398,7 @@ export class SrcChainPaymentV2 extends BaseContract {
 
     pausers(arg0: string, overrides?: CallOverrides): Promise<[boolean]>;
 
-    payV3(
+    pay(
       provider: string,
       account: BytesLike,
       payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
@@ -410,8 +410,8 @@ export class SrcChainPaymentV2 extends BaseContract {
 
     payloadsValue(
       payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { value: BigNumber }>;
 
     providerBalances(
       arg0: string,
@@ -519,7 +519,7 @@ export class SrcChainPaymentV2 extends BaseContract {
 
   pausers(arg0: string, overrides?: CallOverrides): Promise<boolean>;
 
-  payV3(
+  pay(
     provider: string,
     account: BytesLike,
     payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
@@ -531,8 +531,8 @@ export class SrcChainPaymentV2 extends BaseContract {
 
   payloadsValue(
     payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   providerBalances(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -632,7 +632,7 @@ export class SrcChainPaymentV2 extends BaseContract {
 
     pausers(arg0: string, overrides?: CallOverrides): Promise<boolean>;
 
-    payV3(
+    pay(
       provider: string,
       account: BytesLike,
       payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
@@ -718,6 +718,64 @@ export class SrcChainPaymentV2 extends BaseContract {
       { previousOwner: string; newOwner: string }
     >;
 
+    "Paid(address,bytes32,tuple[],uint256,uint256)"(
+      provider?: null,
+      account?: null,
+      payloads?: null,
+      nonce?: null,
+      amount?: null
+    ): TypedEventFilter<
+      [
+        string,
+        string,
+        ([number, BigNumber[]] & {
+          resourceType: number;
+          values: BigNumber[];
+        })[],
+        BigNumber,
+        BigNumber
+      ],
+      {
+        provider: string;
+        account: string;
+        payloads: ([number, BigNumber[]] & {
+          resourceType: number;
+          values: BigNumber[];
+        })[];
+        nonce: BigNumber;
+        amount: BigNumber;
+      }
+    >;
+
+    Paid(
+      provider?: null,
+      account?: null,
+      payloads?: null,
+      nonce?: null,
+      amount?: null
+    ): TypedEventFilter<
+      [
+        string,
+        string,
+        ([number, BigNumber[]] & {
+          resourceType: number;
+          values: BigNumber[];
+        })[],
+        BigNumber,
+        BigNumber
+      ],
+      {
+        provider: string;
+        account: string;
+        payloads: ([number, BigNumber[]] & {
+          resourceType: number;
+          values: BigNumber[];
+        })[];
+        nonce: BigNumber;
+        amount: BigNumber;
+      }
+    >;
+
     "PaidV2(address,bytes32,tuple[])"(
       provider?: null,
       account?: null,
@@ -761,64 +819,6 @@ export class SrcChainPaymentV2 extends BaseContract {
           resourceType: number;
           values: BigNumber[];
         })[];
-      }
-    >;
-
-    "PaidV3(address,bytes32,tuple[],uint256,uint256)"(
-      provider?: null,
-      account?: null,
-      payloads?: null,
-      nonce?: null,
-      amount?: null
-    ): TypedEventFilter<
-      [
-        string,
-        string,
-        ([number, BigNumber[]] & {
-          resourceType: number;
-          values: BigNumber[];
-        })[],
-        BigNumber,
-        BigNumber
-      ],
-      {
-        provider: string;
-        account: string;
-        payloads: ([number, BigNumber[]] & {
-          resourceType: number;
-          values: BigNumber[];
-        })[];
-        nonce: BigNumber;
-        amount: BigNumber;
-      }
-    >;
-
-    PaidV3(
-      provider?: null,
-      account?: null,
-      payloads?: null,
-      nonce?: null,
-      amount?: null
-    ): TypedEventFilter<
-      [
-        string,
-        string,
-        ([number, BigNumber[]] & {
-          resourceType: number;
-          values: BigNumber[];
-        })[],
-        BigNumber,
-        BigNumber
-      ],
-      {
-        provider: string;
-        account: string;
-        payloads: ([number, BigNumber[]] & {
-          resourceType: number;
-          values: BigNumber[];
-        })[];
-        nonce: BigNumber;
-        amount: BigNumber;
       }
     >;
 
@@ -942,7 +942,7 @@ export class SrcChainPaymentV2 extends BaseContract {
 
     pausers(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    payV3(
+    pay(
       provider: string,
       account: BytesLike,
       payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
@@ -954,7 +954,7 @@ export class SrcChainPaymentV2 extends BaseContract {
 
     payloadsValue(
       payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     providerBalances(
@@ -1070,7 +1070,7 @@ export class SrcChainPaymentV2 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    payV3(
+    pay(
       provider: string,
       account: BytesLike,
       payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
@@ -1082,7 +1082,7 @@ export class SrcChainPaymentV2 extends BaseContract {
 
     payloadsValue(
       payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     providerBalances(

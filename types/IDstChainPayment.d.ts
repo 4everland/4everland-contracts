@@ -27,7 +27,7 @@ interface IDstChainPaymentInterface extends ethers.utils.Interface {
     "getValueOf(address,uint8,uint256)": FunctionFragment;
     "ipfsAllocations(address,bytes32,uint256,uint256)": FunctionFragment;
     "ipfsAlloctionsFee(address,bytes32,uint256,uint256)": FunctionFragment;
-    "payV3(address,bytes32,tuple[],uint256,uint256,bytes)": FunctionFragment;
+    "pay(address,bytes32,tuple[],uint256,uint256,bytes)": FunctionFragment;
     "priceOf(address,uint8)": FunctionFragment;
   };
 
@@ -53,7 +53,7 @@ interface IDstChainPaymentInterface extends ethers.utils.Interface {
     values: [string, BytesLike, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "payV3",
+    functionFragment: "pay",
     values: [
       string,
       BytesLike,
@@ -83,17 +83,17 @@ interface IDstChainPaymentInterface extends ethers.utils.Interface {
     functionFragment: "ipfsAlloctionsFee",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "payV3", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "pay", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "priceOf", data: BytesLike): Result;
 
   events: {
-    "PaidV3(address,bytes32,tuple[],uint256,uint256,uint256)": EventFragment;
+    "Paid(address,bytes32,tuple[],uint256,uint256,uint256)": EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "PaidV3"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Paid"): EventFragment;
 }
 
-export type PaidV3Event = TypedEvent<
+export type PaidEvent = TypedEvent<
   [
     string,
     string,
@@ -205,7 +205,7 @@ export class IDstChainPayment extends BaseContract {
       }
     >;
 
-    payV3(
+    pay(
       provider: string,
       account: BytesLike,
       payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
@@ -263,7 +263,7 @@ export class IDstChainPayment extends BaseContract {
     [BigNumber, BigNumber] & { storageFee: BigNumber; expirationFee: BigNumber }
   >;
 
-  payV3(
+  pay(
     provider: string,
     account: BytesLike,
     payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
@@ -321,7 +321,7 @@ export class IDstChainPayment extends BaseContract {
       }
     >;
 
-    payV3(
+    pay(
       provider: string,
       account: BytesLike,
       payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
@@ -339,7 +339,7 @@ export class IDstChainPayment extends BaseContract {
   };
 
   filters: {
-    "PaidV3(address,bytes32,tuple[],uint256,uint256,uint256)"(
+    "Paid(address,bytes32,tuple[],uint256,uint256,uint256)"(
       provider?: null,
       account?: null,
       payloads?: null,
@@ -371,7 +371,7 @@ export class IDstChainPayment extends BaseContract {
       }
     >;
 
-    PaidV3(
+    Paid(
       provider?: null,
       account?: null,
       payloads?: null,
@@ -442,7 +442,7 @@ export class IDstChainPayment extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    payV3(
+    pay(
       provider: string,
       account: BytesLike,
       payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
@@ -500,7 +500,7 @@ export class IDstChainPayment extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    payV3(
+    pay(
       provider: string,
       account: BytesLike,
       payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],

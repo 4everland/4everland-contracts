@@ -16,7 +16,7 @@ contract DstChainPaymentV2 is DstChainPayment, AdminWrapper, EIP712Upgradeable {
 	// provider -> nonce -> amount
 	mapping(address => mapping(uint256 => uint256)) public vouchers;
 
-	function initializeEIP712(string memory name, string memory version, string memory types) external onlyAdmin reinitializer(8) {
+	function initializeEIP712(string memory name, string memory version, string memory types) external onlyAdmin reinitializer(10) {
 		__EIP712_init(name, version);
 		voucherTypedHash = keccak256(bytes(types));
 	}
@@ -26,23 +26,23 @@ contract DstChainPaymentV2 is DstChainPayment, AdminWrapper, EIP712Upgradeable {
 	function celerExec(bytes calldata message) external override onlyMessageReceiver whenNotPaused {
 		(address provider, bytes32 account, ResourceData.ValuePayload[] memory payloads, uint256 nonce, uint256 amount, bytes memory signature) = decodeMessage(message);
 		IERC20Upgradeable token = router.Token();
-		uint256 value = _payV3(token, provider, account, payloads, nonce, amount, signature);
-		emit PaidV3(provider, account, payloads, value, nonce, amount);
+		uint256 value = _pay(token, provider, account, payloads, nonce, amount, signature);
+		emit Paid(provider, account, payloads, value, nonce, amount);
 	}
 
-	function payV3(address provider, bytes32 account, ResourceData.ValuePayload[] memory payloads, uint256 nonce, uint256 amount, bytes memory signature) external whenNotPaused nonReentrant returns (uint256 value) {
+	function pay(address provider, bytes32 account, ResourceData.ValuePayload[] memory payloads, uint256 nonce, uint256 amount, bytes memory signature) external whenNotPaused nonReentrant returns (uint256 value) {
 		IERC20Upgradeable token = router.Token();
-		value = _payV3(token, provider, account, payloads, nonce, amount, signature);
+		value = _pay(token, provider, account, payloads, nonce, amount, signature);
 		token.safeTransferFrom(msg.sender, address(this), value);
-		emit PaidV3(provider, account, payloads, value, nonce, amount);
+		emit Paid(provider, account, payloads, value, nonce, amount);
 	}
 
-	function _payV3(IERC20Upgradeable token, address provider, bytes32 account, ResourceData.ValuePayload[] memory payloads, uint256 nonce, uint256 amount, bytes memory signature) internal returns(uint256 value){
+	function _pay(IERC20Upgradeable token, address provider, bytes32 account, ResourceData.ValuePayload[] memory payloads, uint256 nonce, uint256 amount, bytes memory signature) internal returns(uint256 value){
 		require(router.ProviderController().accountExists(provider, account), 'DstChainPayment: nonexistent account');
 		value = _processPayloads(provider, account, payloads);
 		require(value >= amount, 'DstChainPayment: voucher amount is less than resource value');
 		if (amount > 0) {
-			require(vouchers[provider][nonce] == 0, 'DstChainPayment: voucher was used');
+			require(vouchers[provider][nonce] == 0, 'DstChainPayment: nonce exists');
 			bytes32 hash = hashTypedDataV4ForVoucher(provider, nonce, amount);
 			require(router.ProviderRegistry().isValidSignature(provider, hash, signature), 'DstChainPayment: invalid signature');
 			value -= amount;

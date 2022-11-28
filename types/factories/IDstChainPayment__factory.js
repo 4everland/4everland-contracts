@@ -58,7 +58,7 @@ var _abi = [
                 type: "uint256",
             },
         ],
-        name: "PaidV3",
+        name: "Paid",
         type: "event",
     },
     {
@@ -274,7 +274,7 @@ var _abi = [
                 type: "bytes",
             },
         ],
-        name: "payV3",
+        name: "pay",
         outputs: [
             {
                 internalType: "uint256",
