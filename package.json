@@ -1,6 +1,6 @@
 {
-	"name": "4everland-contracts",
-	"version": "0.2.8",
+	"name": "@4everland/service-contracts",
+	"version": "0.2.0",
 	"description": "4everland contracts",
 	"main": "./types/index.js",
 	"types": "./types/index.ts",
