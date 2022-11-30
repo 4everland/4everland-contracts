@@ -202,7 +202,7 @@ interface SrcChainPaymentV2Interface extends ethers.utils.Interface {
     "MessageSenderUpdated(address)": EventFragment;
     "NativeWithdrawal(address,uint256)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
-    "Paid(address,bytes32,tuple[],uint256,uint256)": EventFragment;
+    "Paid(address,bytes32,tuple[],uint256,uint256,uint256)": EventFragment;
     "PaidV2(address,bytes32,tuple[])": EventFragment;
     "Paused(address)": EventFragment;
     "PauserAdded(address)": EventFragment;
@@ -246,6 +246,7 @@ export type PaidEvent = TypedEvent<
     string,
     ([number, BigNumber[]] & { resourceType: number; values: BigNumber[] })[],
     BigNumber,
+    BigNumber,
     BigNumber
   ] & {
     provider: string;
@@ -254,6 +255,7 @@ export type PaidEvent = TypedEvent<
       resourceType: number;
       values: BigNumber[];
     })[];
+    value: BigNumber;
     nonce: BigNumber;
     amount: BigNumber;
   }
@@ -718,10 +720,11 @@ export class SrcChainPaymentV2 extends BaseContract {
       { previousOwner: string; newOwner: string }
     >;
 
-    "Paid(address,bytes32,tuple[],uint256,uint256)"(
+    "Paid(address,bytes32,tuple[],uint256,uint256,uint256)"(
       provider?: null,
       account?: null,
       payloads?: null,
+      value?: null,
       nonce?: null,
       amount?: null
     ): TypedEventFilter<
@@ -733,6 +736,7 @@ export class SrcChainPaymentV2 extends BaseContract {
           values: BigNumber[];
         })[],
         BigNumber,
+        BigNumber,
         BigNumber
       ],
       {
@@ -742,6 +746,7 @@ export class SrcChainPaymentV2 extends BaseContract {
           resourceType: number;
           values: BigNumber[];
         })[];
+        value: BigNumber;
         nonce: BigNumber;
         amount: BigNumber;
       }
@@ -751,6 +756,7 @@ export class SrcChainPaymentV2 extends BaseContract {
       provider?: null,
       account?: null,
       payloads?: null,
+      value?: null,
       nonce?: null,
       amount?: null
     ): TypedEventFilter<
@@ -762,6 +768,7 @@ export class SrcChainPaymentV2 extends BaseContract {
           values: BigNumber[];
         })[],
         BigNumber,
+        BigNumber,
         BigNumber
       ],
       {
@@ -771,6 +778,7 @@ export class SrcChainPaymentV2 extends BaseContract {
           resourceType: number;
           values: BigNumber[];
         })[];
+        value: BigNumber;
         nonce: BigNumber;
         amount: BigNumber;
       }

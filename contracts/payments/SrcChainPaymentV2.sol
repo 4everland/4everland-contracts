@@ -10,7 +10,7 @@ contract SrcChainPaymentV2 is SrcChainPayment {
 	using SafeMathUpgradeable for uint256;
 	using SafeERC20Upgradeable for IERC20Upgradeable;
 	
-	event Paid(address provider, bytes32 account, ResourceData.ValuePayload[] payloads, uint256 nonce, uint256 amount);
+	event Paid(address provider, bytes32 account, ResourceData.ValuePayload[] payloads, uint256 value, uint256 nonce, uint256 amount);
 
 	/// @dev proxy initialize function
 	/// @param owner contract owner
@@ -61,7 +61,7 @@ contract SrcChainPaymentV2 is SrcChainPayment {
 		fees[provider][account] = fees[provider][account] + value;
 		token.safeTransferFrom(msg.sender, address(this), value);
 		messageSender.sendMessage{value: msg.value}(encodeMessage(provider, account, payloads, nonce, amount, signature));
-		emit Paid(provider, account, payloads, nonce, amount);
+		emit Paid(provider, account, payloads, value, nonce, amount);
 	}
 
 	/// @dev return payment total token value
