@@ -28,8 +28,8 @@ interface DstChainPaymentV2Interface extends ethers.utils.Interface {
     "fee(address,bytes32)": FunctionFragment;
     "getAmountOf(address,uint8,uint256)": FunctionFragment;
     "getValueOf(address,uint8,uint256)": FunctionFragment;
-    "hashTypedDataV4ForVoucher(address,uint256,uint256)": FunctionFragment;
-    "hashVoucherTypes(address,uint256,uint256)": FunctionFragment;
+    "hashTypedDataV4ForVoucher(address,bytes32,uint256,uint256)": FunctionFragment;
+    "hashVoucherTypes(address,bytes32,uint256,uint256)": FunctionFragment;
     "initializeEIP712(string,string,string)": FunctionFragment;
     "ipfsAllocations(address,bytes32,uint256,uint256)": FunctionFragment;
     "ipfsAlloctionsFee(address,bytes32,uint256,uint256)": FunctionFragment;
@@ -77,11 +77,11 @@ interface DstChainPaymentV2Interface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "hashTypedDataV4ForVoucher",
-    values: [string, BigNumberish, BigNumberish]
+    values: [string, BytesLike, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "hashVoucherTypes",
-    values: [string, BigNumberish, BigNumberish]
+    values: [string, BytesLike, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "initializeEIP712",
@@ -408,6 +408,7 @@ export class DstChainPaymentV2 extends BaseContract {
 
     hashTypedDataV4ForVoucher(
       provider: string,
+      account: BytesLike,
       nonce: BigNumberish,
       amount: BigNumberish,
       overrides?: CallOverrides
@@ -415,6 +416,7 @@ export class DstChainPaymentV2 extends BaseContract {
 
     hashVoucherTypes(
       provider: string,
+      account: BytesLike,
       nonce: BigNumberish,
       amount: BigNumberish,
       overrides?: CallOverrides
@@ -587,6 +589,7 @@ export class DstChainPaymentV2 extends BaseContract {
 
   hashTypedDataV4ForVoucher(
     provider: string,
+    account: BytesLike,
     nonce: BigNumberish,
     amount: BigNumberish,
     overrides?: CallOverrides
@@ -594,6 +597,7 @@ export class DstChainPaymentV2 extends BaseContract {
 
   hashVoucherTypes(
     provider: string,
+    account: BytesLike,
     nonce: BigNumberish,
     amount: BigNumberish,
     overrides?: CallOverrides
@@ -760,6 +764,7 @@ export class DstChainPaymentV2 extends BaseContract {
 
     hashTypedDataV4ForVoucher(
       provider: string,
+      account: BytesLike,
       nonce: BigNumberish,
       amount: BigNumberish,
       overrides?: CallOverrides
@@ -767,6 +772,7 @@ export class DstChainPaymentV2 extends BaseContract {
 
     hashVoucherTypes(
       provider: string,
+      account: BytesLike,
       nonce: BigNumberish,
       amount: BigNumberish,
       overrides?: CallOverrides
@@ -1064,6 +1070,7 @@ export class DstChainPaymentV2 extends BaseContract {
 
     hashTypedDataV4ForVoucher(
       provider: string,
+      account: BytesLike,
       nonce: BigNumberish,
       amount: BigNumberish,
       overrides?: CallOverrides
@@ -1071,6 +1078,7 @@ export class DstChainPaymentV2 extends BaseContract {
 
     hashVoucherTypes(
       provider: string,
+      account: BytesLike,
       nonce: BigNumberish,
       amount: BigNumberish,
       overrides?: CallOverrides
@@ -1221,6 +1229,7 @@ export class DstChainPaymentV2 extends BaseContract {
 
     hashTypedDataV4ForVoucher(
       provider: string,
+      account: BytesLike,
       nonce: BigNumberish,
       amount: BigNumberish,
       overrides?: CallOverrides
@@ -1228,6 +1237,7 @@ export class DstChainPaymentV2 extends BaseContract {
 
     hashVoucherTypes(
       provider: string,
+      account: BytesLike,
       nonce: BigNumberish,
       amount: BigNumberish,
       overrides?: CallOverrides

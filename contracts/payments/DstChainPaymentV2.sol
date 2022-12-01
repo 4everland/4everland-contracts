@@ -16,7 +16,7 @@ contract DstChainPaymentV2 is DstChainPayment, AdminWrapper, EIP712Upgradeable {
 	// provider -> nonce -> amount
 	mapping(address => mapping(uint256 => uint256)) public vouchers;
 
-	function initializeEIP712(string memory name, string memory version, string memory types) external onlyAdmin reinitializer(10) {
+	function initializeEIP712(string memory name, string memory version, string memory types) external onlyAdmin reinitializer(11) {
 		__EIP712_init(name, version);
 		voucherTypedHash = keccak256(bytes(types));
 	}
@@ -43,7 +43,7 @@ contract DstChainPaymentV2 is DstChainPayment, AdminWrapper, EIP712Upgradeable {
 		require(value >= amount, 'DstChainPayment: voucher amount is less than resource value');
 		if (amount > 0) {
 			require(vouchers[provider][nonce] == 0, 'DstChainPayment: nonce exists');
-			bytes32 hash = hashTypedDataV4ForVoucher(provider, nonce, amount);
+			bytes32 hash = hashTypedDataV4ForVoucher(provider, account, nonce, amount);
 			require(router.ProviderRegistry().isValidSignature(provider, hash, signature), 'DstChainPayment: invalid signature');
 			value -= amount;
 			vouchers[provider][nonce] = amount;
@@ -204,18 +204,20 @@ contract DstChainPaymentV2 is DstChainPayment, AdminWrapper, EIP712Upgradeable {
 
 	function hashVoucherTypes(
 		address provider,
+		bytes32 account,
 		uint256 nonce,
 		uint256 amount
 	) public view returns (bytes32) {
-		return keccak256(abi.encode(voucherTypedHash, provider, nonce, amount));
+		return keccak256(abi.encode(voucherTypedHash, provider, account, nonce, amount));
 	}
 
 	function hashTypedDataV4ForVoucher(
 		address provider,
+		bytes32 account,
 		uint256 nonce,
 		uint256 amount
 	) public view returns (bytes32) {
-		return _hashTypedDataV4(hashVoucherTypes(provider, nonce, amount));
+		return _hashTypedDataV4(hashVoucherTypes(provider, account, nonce, amount));
 	}
 
 	function providerBalance(address provider) public view returns(uint256) {
