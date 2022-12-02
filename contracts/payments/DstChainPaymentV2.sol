@@ -16,7 +16,7 @@ contract DstChainPaymentV2 is DstChainPayment, AdminWrapper, EIP712Upgradeable {
 	// provider -> nonce -> amount
 	mapping(address => mapping(uint256 => uint256)) public vouchers;
 
-	function initializeEIP712(string memory name, string memory version, string memory types) external onlyAdmin reinitializer(11) {
+	function initializeEIP712(string memory name, string memory version, string memory types) external onlyAdmin reinitializer(12) {
 		__EIP712_init(name, version);
 		voucherTypedHash = keccak256(bytes(types));
 	}
@@ -33,24 +33,31 @@ contract DstChainPaymentV2 is DstChainPayment, AdminWrapper, EIP712Upgradeable {
 	function pay(address provider, bytes32 account, ResourceData.ValuePayload[] memory payloads, uint256 nonce, uint256 amount, bytes memory signature) external whenNotPaused nonReentrant returns (uint256 value) {
 		IERC20Upgradeable token = router.Token();
 		value = _pay(token, provider, account, payloads, nonce, amount, signature);
-		token.safeTransferFrom(msg.sender, address(this), value);
+		if (value > 0) {
+			token.safeTransferFrom(msg.sender, address(this), value);
+		}
 		emit Paid(provider, account, payloads, value, nonce, amount);
 	}
 
 	function _pay(IERC20Upgradeable token, address provider, bytes32 account, ResourceData.ValuePayload[] memory payloads, uint256 nonce, uint256 amount, bytes memory signature) internal returns(uint256 value){
 		require(router.ProviderController().accountExists(provider, account), 'DstChainPayment: nonexistent account');
 		value = _processPayloads(provider, account, payloads);
-		require(value >= amount, 'DstChainPayment: voucher amount is less than resource value');
 		if (amount > 0) {
 			require(vouchers[provider][nonce] == 0, 'DstChainPayment: nonce exists');
 			bytes32 hash = hashTypedDataV4ForVoucher(provider, account, nonce, amount);
 			require(router.ProviderRegistry().isValidSignature(provider, hash, signature), 'DstChainPayment: invalid signature');
-			value -= amount;
+			if (value > amount) {
+				value -= amount;
+			} else {
+				value = 0;
+			}
 			vouchers[provider][nonce] = amount;
 		}
-		value = ResourceData.matchResourceToToken(token, value);
-		providerBalances[provider] = providerBalances[provider] + value;
-		fees[provider][account] = fees[provider][account] + value;
+		if (value > 0) {
+			value = ResourceData.matchResourceToToken(token, value);
+			providerBalances[provider] = providerBalances[provider] + value;
+			fees[provider][account] = fees[provider][account] + value;
+		}
 	}
 
 	function _processPayloads(
