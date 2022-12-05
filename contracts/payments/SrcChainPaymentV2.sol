@@ -52,11 +52,11 @@ contract SrcChainPaymentV2 is SrcChainPayment {
 		bytes memory signature
 	) external payable whenNotPaused nonReentrant {
 		uint256 value = ResourceData.totalValue(payloads);
-		require(value >= amount, 'SrcChainPayment: voucher amount is less than resource value');
-		if (amount > 0) {
-			value -= amount;
+		if (value >= amount) {
+			value = ResourceData.matchResourceToToken(token, value - amount);
+		} else {
+			value = 0;
 		}
-		value = ResourceData.matchResourceToToken(token, value);
 		providerBalances[provider] = providerBalances[provider] + value;
 		fees[provider][account] = fees[provider][account] + value;
 		token.safeTransferFrom(msg.sender, address(this), value);
