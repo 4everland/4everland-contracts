@@ -142,8 +142,8 @@ contract RechargeMessageSender is IRechargeMessageSender, OwnerWithdrawable {
 		MsgDataTypes.RouteInfo calldata route,
 		uint64 dstChainId,
 		bytes calldata message
-	) external view override returns (bytes32) {
+	) external pure override returns (bytes32) {
 		return
-			keccak256(abi.encodePacked(MsgDataTypes.MsgType.MessageOnly, route.sender, route.receiver, route.srcChainId, route.srcTxHash, dstChainId, message));
+			keccak256(abi.encodePacked(MsgDataTypes.MsgType.MessageWithTransfer, route.sender, route.receiver, route.srcChainId, route.srcTxHash, dstChainId, message));
 	}
 }
