@@ -16,7 +16,7 @@ contract DstChainPaymentV2 is DstChainPayment, AdminWrapper, EIP712Upgradeable {
 	// provider -> nonce -> amount
 	mapping(address => mapping(uint256 => uint256)) public vouchers;
 
-	function initializeEIP712(string memory name, string memory version, string memory types) external onlyAdmin reinitializer(12) {
+	function initializeEIP712(string memory name, string memory version, string memory types) external onlyAdmin reinitializer(2) {
 		__EIP712_init(name, version);
 		voucherTypedHash = keccak256(bytes(types));
 	}
