@@ -35,6 +35,8 @@ interface IFundPool {
 		uint256 amount
 	) external;
 
+	function celerExec(uint256 amount, bytes memory message) external;
+
 	/// @dev initialize wallet and recharge for account
 	/// @param provider provider address
 	/// @param account user account

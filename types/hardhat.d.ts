@@ -157,6 +157,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IDstChainPayment__factory>;
     getContractFactory(
+      name: "IERC20",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC20__factory>;
+    getContractFactory(
       name: "IFundPool",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IFundPool__factory>;
@@ -176,6 +180,10 @@ declare module "hardhat/types/runtime" {
       name: "IProviderRegistry",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IProviderRegistry__factory>;
+    getContractFactory(
+      name: "IRechargeMessageSender",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IRechargeMessageSender__factory>;
     getContractFactory(
       name: "IRouter",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -197,9 +205,29 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.DstChainPayment__factory>;
     getContractFactory(
+      name: "DstChainPaymentV2",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.DstChainPaymentV2__factory>;
+    getContractFactory(
       name: "SrcChainPayment",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.SrcChainPayment__factory>;
+    getContractFactory(
+      name: "SrcChainPaymentV2",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.SrcChainPaymentV2__factory>;
+    getContractFactory(
+      name: "RechargeMessageReceiver",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.RechargeMessageReceiver__factory>;
+    getContractFactory(
+      name: "RechargeMessageSender",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.RechargeMessageSender__factory>;
+    getContractFactory(
+      name: "SrcChainRecharge",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.SrcChainRecharge__factory>;
     getContractFactory(
       name: "IPFSStorageController",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -458,6 +486,11 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.IDstChainPayment>;
     getContractAt(
+      name: "IERC20",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC20>;
+    getContractAt(
       name: "IFundPool",
       address: string,
       signer?: ethers.Signer
@@ -482,6 +515,11 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.IProviderRegistry>;
+    getContractAt(
+      name: "IRechargeMessageSender",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IRechargeMessageSender>;
     getContractAt(
       name: "IRouter",
       address: string,
@@ -508,10 +546,35 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.DstChainPayment>;
     getContractAt(
+      name: "DstChainPaymentV2",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.DstChainPaymentV2>;
+    getContractAt(
       name: "SrcChainPayment",
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.SrcChainPayment>;
+    getContractAt(
+      name: "SrcChainPaymentV2",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.SrcChainPaymentV2>;
+    getContractAt(
+      name: "RechargeMessageReceiver",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.RechargeMessageReceiver>;
+    getContractAt(
+      name: "RechargeMessageSender",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.RechargeMessageSender>;
+    getContractAt(
+      name: "SrcChainRecharge",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.SrcChainRecharge>;
     getContractAt(
       name: "IPFSStorageController",
       address: string,

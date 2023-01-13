@@ -12,7 +12,6 @@ import {
   BaseContract,
   ContractTransaction,
   Overrides,
-  PayableOverrides,
   CallOverrides,
 } from "ethers";
 import { BytesLike } from "@ethersproject/bytes";
@@ -23,10 +22,7 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 interface SrcChainPaymentInterface extends ethers.utils.Interface {
   functions: {
     "addPauser(address)": FunctionFragment;
-    "calcFeeV2(address,bytes32,tuple[])": FunctionFragment;
-    "encodeMessageV2(address,bytes32,tuple[])": FunctionFragment;
     "fees(address,bytes32)": FunctionFragment;
-    "initialize(address,address,address,address)": FunctionFragment;
     "isPauser(address)": FunctionFragment;
     "messageSender()": FunctionFragment;
     "owner()": FunctionFragment;
@@ -35,14 +31,10 @@ interface SrcChainPaymentInterface extends ethers.utils.Interface {
     "pause()": FunctionFragment;
     "paused()": FunctionFragment;
     "pausers(address)": FunctionFragment;
-    "payV2(address,bytes32,tuple[])": FunctionFragment;
-    "payloadsValue(tuple[])": FunctionFragment;
     "providerBalances(address)": FunctionFragment;
     "removePauser(address)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "renouncePauser()": FunctionFragment;
-    "setMessageSender(address)": FunctionFragment;
-    "setToken(address)": FunctionFragment;
     "token()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "unpause()": FunctionFragment;
@@ -50,28 +42,8 @@ interface SrcChainPaymentInterface extends ethers.utils.Interface {
 
   encodeFunctionData(functionFragment: "addPauser", values: [string]): string;
   encodeFunctionData(
-    functionFragment: "calcFeeV2",
-    values: [
-      string,
-      BytesLike,
-      { resourceType: BigNumberish; values: BigNumberish[] }[]
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "encodeMessageV2",
-    values: [
-      string,
-      BytesLike,
-      { resourceType: BigNumberish; values: BigNumberish[] }[]
-    ]
-  ): string;
-  encodeFunctionData(
     functionFragment: "fees",
     values: [string, BytesLike]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "initialize",
-    values: [string, string, string, string]
   ): string;
   encodeFunctionData(functionFragment: "isPauser", values: [string]): string;
   encodeFunctionData(
@@ -91,18 +63,6 @@ interface SrcChainPaymentInterface extends ethers.utils.Interface {
   encodeFunctionData(functionFragment: "paused", values?: undefined): string;
   encodeFunctionData(functionFragment: "pausers", values: [string]): string;
   encodeFunctionData(
-    functionFragment: "payV2",
-    values: [
-      string,
-      BytesLike,
-      { resourceType: BigNumberish; values: BigNumberish[] }[]
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "payloadsValue",
-    values: [{ resourceType: BigNumberish; values: BigNumberish[] }[]]
-  ): string;
-  encodeFunctionData(
     functionFragment: "providerBalances",
     values: [string]
   ): string;
@@ -118,11 +78,6 @@ interface SrcChainPaymentInterface extends ethers.utils.Interface {
     functionFragment: "renouncePauser",
     values?: undefined
   ): string;
-  encodeFunctionData(
-    functionFragment: "setMessageSender",
-    values: [string]
-  ): string;
-  encodeFunctionData(functionFragment: "setToken", values: [string]): string;
   encodeFunctionData(functionFragment: "token", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "transferOwnership",
@@ -131,13 +86,7 @@ interface SrcChainPaymentInterface extends ethers.utils.Interface {
   encodeFunctionData(functionFragment: "unpause", values?: undefined): string;
 
   decodeFunctionResult(functionFragment: "addPauser", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "calcFeeV2", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "encodeMessageV2",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "fees", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "isPauser", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "messageSender",
@@ -155,11 +104,6 @@ interface SrcChainPaymentInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "pausers", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "payV2", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "payloadsValue",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "providerBalances",
     data: BytesLike
@@ -176,11 +120,6 @@ interface SrcChainPaymentInterface extends ethers.utils.Interface {
     functionFragment: "renouncePauser",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "setMessageSender",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "setToken", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "token", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "transferOwnership",
@@ -307,33 +246,11 @@ export class SrcChainPayment extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    calcFeeV2(
-      provider: string,
-      account: BytesLike,
-      payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { value: BigNumber }>;
-
-    encodeMessageV2(
-      provider: string,
-      account: BytesLike,
-      payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
-      overrides?: CallOverrides
-    ): Promise<[string]>;
-
     fees(
       arg0: string,
       arg1: BytesLike,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
-
-    initialize(
-      owner: string,
-      pauser: string,
-      messageSender: string,
-      token: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
 
     isPauser(account: string, overrides?: CallOverrides): Promise<[boolean]>;
 
@@ -362,18 +279,6 @@ export class SrcChainPayment extends BaseContract {
 
     pausers(arg0: string, overrides?: CallOverrides): Promise<[boolean]>;
 
-    payV2(
-      provider: string,
-      account: BytesLike,
-      payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
-      overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    payloadsValue(
-      payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
     providerBalances(
       arg0: string,
       overrides?: CallOverrides
@@ -389,16 +294,6 @@ export class SrcChainPayment extends BaseContract {
     ): Promise<ContractTransaction>;
 
     renouncePauser(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    setMessageSender(
-      _messageSender: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    setToken(
-      _token: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -419,33 +314,11 @@ export class SrcChainPayment extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  calcFeeV2(
-    provider: string,
-    account: BytesLike,
-    payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  encodeMessageV2(
-    provider: string,
-    account: BytesLike,
-    payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
-    overrides?: CallOverrides
-  ): Promise<string>;
-
   fees(
     arg0: string,
     arg1: BytesLike,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
-
-  initialize(
-    owner: string,
-    pauser: string,
-    messageSender: string,
-    token: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
 
   isPauser(account: string, overrides?: CallOverrides): Promise<boolean>;
 
@@ -474,18 +347,6 @@ export class SrcChainPayment extends BaseContract {
 
   pausers(arg0: string, overrides?: CallOverrides): Promise<boolean>;
 
-  payV2(
-    provider: string,
-    account: BytesLike,
-    payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
-    overrides?: PayableOverrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  payloadsValue(
-    payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
   providerBalances(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
   removePauser(
@@ -498,16 +359,6 @@ export class SrcChainPayment extends BaseContract {
   ): Promise<ContractTransaction>;
 
   renouncePauser(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  setMessageSender(
-    _messageSender: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  setToken(
-    _token: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -525,33 +376,11 @@ export class SrcChainPayment extends BaseContract {
   callStatic: {
     addPauser(account: string, overrides?: CallOverrides): Promise<void>;
 
-    calcFeeV2(
-      provider: string,
-      account: BytesLike,
-      payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    encodeMessageV2(
-      provider: string,
-      account: BytesLike,
-      payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
-      overrides?: CallOverrides
-    ): Promise<string>;
-
     fees(
       arg0: string,
       arg1: BytesLike,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
-
-    initialize(
-      owner: string,
-      pauser: string,
-      messageSender: string,
-      token: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
 
     isPauser(account: string, overrides?: CallOverrides): Promise<boolean>;
 
@@ -578,18 +407,6 @@ export class SrcChainPayment extends BaseContract {
 
     pausers(arg0: string, overrides?: CallOverrides): Promise<boolean>;
 
-    payV2(
-      provider: string,
-      account: BytesLike,
-      payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    payloadsValue(
-      payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     providerBalances(
       arg0: string,
       overrides?: CallOverrides
@@ -600,13 +417,6 @@ export class SrcChainPayment extends BaseContract {
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
     renouncePauser(overrides?: CallOverrides): Promise<void>;
-
-    setMessageSender(
-      _messageSender: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    setToken(_token: string, overrides?: CallOverrides): Promise<void>;
 
     token(overrides?: CallOverrides): Promise<string>;
 
@@ -766,32 +576,10 @@ export class SrcChainPayment extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    calcFeeV2(
-      provider: string,
-      account: BytesLike,
-      payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    encodeMessageV2(
-      provider: string,
-      account: BytesLike,
-      payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     fees(
       arg0: string,
       arg1: BytesLike,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    initialize(
-      owner: string,
-      pauser: string,
-      messageSender: string,
-      token: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     isPauser(account: string, overrides?: CallOverrides): Promise<BigNumber>;
@@ -821,18 +609,6 @@ export class SrcChainPayment extends BaseContract {
 
     pausers(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    payV2(
-      provider: string,
-      account: BytesLike,
-      payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
-      overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    payloadsValue(
-      payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
     providerBalances(
       arg0: string,
       overrides?: CallOverrides
@@ -848,16 +624,6 @@ export class SrcChainPayment extends BaseContract {
     ): Promise<BigNumber>;
 
     renouncePauser(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    setMessageSender(
-      _messageSender: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    setToken(
-      _token: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -879,32 +645,10 @@ export class SrcChainPayment extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    calcFeeV2(
-      provider: string,
-      account: BytesLike,
-      payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    encodeMessageV2(
-      provider: string,
-      account: BytesLike,
-      payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     fees(
       arg0: string,
       arg1: BytesLike,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    initialize(
-      owner: string,
-      pauser: string,
-      messageSender: string,
-      token: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     isPauser(
@@ -940,18 +684,6 @@ export class SrcChainPayment extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    payV2(
-      provider: string,
-      account: BytesLike,
-      payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
-      overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    payloadsValue(
-      payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
     providerBalances(
       arg0: string,
       overrides?: CallOverrides
@@ -967,16 +699,6 @@ export class SrcChainPayment extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     renouncePauser(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    setMessageSender(
-      _messageSender: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    setToken(
-      _token: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

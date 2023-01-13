@@ -15,11 +15,9 @@ interface IDstChainPayment {
 		ResourceData.ValuePayload[] payloads;
 	}
 
-	/// @dev emit when a user paid
-	/// @param provider provider address
-	/// @param account user account
-	/// @param payloads payment payloads
-	event PaidV2(address provider, bytes32 account, ResourceData.ValuePayload[] payloads);
+	// event PaidV2(address provider, bytes32 account, ResourceData.ValuePayload[] payloads);
+
+	event Paid(address provider, bytes32 account, ResourceData.ValuePayload[] payloads, uint256 value, uint256 nonce, uint256 amount);
 
 	/// @dev pay from source chain only called by message receiver
 	/// @param message payment payload message bytes
@@ -29,8 +27,11 @@ interface IDstChainPayment {
 	/// @param provider provider address
 	/// @param account user account
 	/// @param payloads payment payloads
+	/// @param nonce voucher nonce
+	/// @param amount voucher amount
+	/// @param signature vourcher signature for provider
 	/// @return value total token value
-	function payV2(address provider, bytes32 account, ResourceData.ValuePayload[] memory payloads) external returns (uint256 value);
+	function pay(address provider, bytes32 account, ResourceData.ValuePayload[] memory payloads, uint256 nonce, uint256 amount, bytes memory signature) external returns(uint256 value);
 
 	/// @dev calculate fee for ipfs storage and expiration
 	/// @param provider provider address

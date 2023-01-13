@@ -17,6 +17,11 @@ interface IProviderController {
 	/// @param account user account
 	event ProviderDripped(address provider, bytes32 account);
 
+	/// @dev emit when provider drip resource to account
+	/// @param provider provider address
+	/// @param account user account
+	event ProviderDripped(address provider, bytes32 account, uint256 nonce);
+
 	/// @dev emit when wallet types hash updated
 	/// @param hash wallet types hash
 	event WalletTypesHashUpdated(bytes32 hash);

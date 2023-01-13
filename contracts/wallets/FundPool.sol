@@ -45,7 +45,14 @@ contract FundPool is IFundPool, OwnerWithdrawable, Pauser, ReentrancyGuardUpgrad
 		uint256 amount
 	) external override whenNotPaused nonReentrant {
 		require(amount > 0, 'FundPool: zero amount');
-		require(router.ProviderController().accountExists(provider, account), 'FundPool: nonexistent account');
+		require(router.ProviderController().accountExists(provider, account), 'FundPool: nonexistent account on provider');
+		_recharge(provider, account, amount);
+	}
+
+	function celerExec(uint256 amount, bytes memory message) external override whenNotPaused nonReentrant {
+		(address provider, bytes32 account) = abi.decode(message, (address, bytes32));
+		require(amount > 0, 'FundPool: zero amount');
+		require(router.ProviderController().accountExists(provider, account), 'FundPool: nonexistent account on provider');
 		_recharge(provider, account, amount);
 	}
 
@@ -57,9 +64,9 @@ contract FundPool is IFundPool, OwnerWithdrawable, Pauser, ReentrancyGuardUpgrad
 	/// @param timeout tx timeout
 	/// @param nonce billing nonce
 	/// @param billSig bill signature
-	/// @return fee bill fee
 	/// @param to token receiver
 	/// @param amount token amount
+	/// @return fee bill fee
 	function initWalletAndWithdraw(
 		address provider,
 		bytes32 account,
