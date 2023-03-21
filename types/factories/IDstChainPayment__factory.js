@@ -39,8 +39,26 @@ var _abi = [
                 name: "payloads",
                 type: "tuple[]",
             },
+            {
+                indexed: false,
+                internalType: "uint256",
+                name: "value",
+                type: "uint256",
+            },
+            {
+                indexed: false,
+                internalType: "uint256",
+                name: "nonce",
+                type: "uint256",
+            },
+            {
+                indexed: false,
+                internalType: "uint256",
+                name: "amount",
+                type: "uint256",
+            },
         ],
-        name: "PaidV2",
+        name: "Paid",
         type: "event",
     },
     {
@@ -240,8 +258,23 @@ var _abi = [
                 name: "payloads",
                 type: "tuple[]",
             },
+            {
+                internalType: "uint256",
+                name: "nonce",
+                type: "uint256",
+            },
+            {
+                internalType: "uint256",
+                name: "amount",
+                type: "uint256",
+            },
+            {
+                internalType: "bytes",
+                name: "signature",
+                type: "bytes",
+            },
         ],
-        name: "payV2",
+        name: "pay",
         outputs: [
             {
                 internalType: "uint256",

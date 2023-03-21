@@ -115,6 +115,24 @@ const _abi = [
   {
     inputs: [
       {
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+      {
+        internalType: "bytes",
+        name: "message",
+        type: "bytes",
+      },
+    ],
+    name: "celerExec",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "address",
         name: "provider",
         type: "address",

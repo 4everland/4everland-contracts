@@ -63,7 +63,7 @@ contract ProviderController is IProviderController, EIP712Upgradeable, Pauser, R
 
 	function _registerAccount(address provider, bytes32 account) internal {
 		require(!accountExists(provider, account), 'ProviderController: account exists');
-		require(router.ProviderRegistry().isProvider(msg.sender), 'ProviderController: nonexistent provider');
+		require(router.ProviderRegistry().isProvider(provider), 'ProviderController: nonexistent provider');
 		accounts[provider][account] = true;
 
 		emit AccountRegistered(provider, account);
@@ -91,6 +91,52 @@ contract ProviderController is IProviderController, EIP712Upgradeable, Pauser, R
 		for (uint256 i = 0; i < accounts.length; i++) {
 			_drip(msg.sender, accounts[i], payloads[i]);
 		}
+	}
+
+	/// @dev provider drip resource to multiple accounts
+	/// @param accounts user accounts
+	/// @param payloads resource amount payloads
+	function dripMult(
+		bytes32[] memory accounts,
+		ResourceData.AmountPayload[][] memory payloads,
+		uint256[] memory nonces
+	) external onlyProvider {
+		require(accounts.length > 0, 'ProviderController: invalid accounts length');
+		require(payloads.length > 0, 'ProviderController: invalid payloads length');
+		require(accounts.length == payloads.length, 'ProviderController: inconsitent parameter length');
+		for (uint256 i = 0; i < accounts.length; i++) {
+			_drip(msg.sender, accounts[i], payloads[i], nonces[i]);
+		}
+	}
+
+	function _drip(
+		address provider,
+		bytes32 account,
+		ResourceData.AmountPayload[] memory payloads,
+		uint256 nonce
+	) internal {
+		require(accountExists(provider, account), 'ProviderController: nonexistent account');
+		require(payloads.length > 0, 'ProviderController: empty payloads');
+		for (uint256 i = 0; i < payloads.length; i++) {
+			ResourceData.AmountPayload memory payload = payloads[i];
+			ResourceData.ResourceType resourceType = payload.resourceType;
+			if (resourceType == ResourceData.ResourceType.BuildingTime) {
+				require(payload.amounts.length == 1, 'ProviderController: invalid amounts length for building time');
+				router.BuildingTimeController().drip(provider, account, payload.amounts[0]);
+			} else if (resourceType == ResourceData.ResourceType.Bandwidth) {
+				require(payload.amounts.length == 1, 'ProviderController: invalid amounts length for bandwidth');
+				router.BandwidthController().drip(provider, account, payload.amounts[0]);
+			} else if (resourceType == ResourceData.ResourceType.ARStorage) {
+				require(payload.amounts.length == 1, 'ProviderController: invalid amounts length for ar storage');
+				router.ARStorageController().drip(provider, account, payload.amounts[0]);
+			} else if (resourceType == ResourceData.ResourceType.IPFSStorage) {
+				require(payload.amounts.length == 2, 'ProviderController: invalid amounts length for ipfs storage');
+				router.IPFSStorageController().drip(provider, account, payload.amounts[0], payload.amounts[1]);
+			} else {
+				revert('ProviderController: unknown resource type');
+			}
+		}
+		emit ProviderDripped(provider, account, nonce);
 	}
 
 	/// @dev provider drip resource to user account

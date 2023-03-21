@@ -27,7 +27,7 @@ interface IDstChainPaymentInterface extends ethers.utils.Interface {
     "getValueOf(address,uint8,uint256)": FunctionFragment;
     "ipfsAllocations(address,bytes32,uint256,uint256)": FunctionFragment;
     "ipfsAlloctionsFee(address,bytes32,uint256,uint256)": FunctionFragment;
-    "payV2(address,bytes32,tuple[])": FunctionFragment;
+    "pay(address,bytes32,tuple[],uint256,uint256,bytes)": FunctionFragment;
     "priceOf(address,uint8)": FunctionFragment;
   };
 
@@ -53,11 +53,14 @@ interface IDstChainPaymentInterface extends ethers.utils.Interface {
     values: [string, BytesLike, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "payV2",
+    functionFragment: "pay",
     values: [
       string,
       BytesLike,
-      { resourceType: BigNumberish; values: BigNumberish[] }[]
+      { resourceType: BigNumberish; values: BigNumberish[] }[],
+      BigNumberish,
+      BigNumberish,
+      BytesLike
     ]
   ): string;
   encodeFunctionData(
@@ -80,21 +83,24 @@ interface IDstChainPaymentInterface extends ethers.utils.Interface {
     functionFragment: "ipfsAlloctionsFee",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "payV2", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "pay", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "priceOf", data: BytesLike): Result;
 
   events: {
-    "PaidV2(address,bytes32,tuple[])": EventFragment;
+    "Paid(address,bytes32,tuple[],uint256,uint256,uint256)": EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "PaidV2"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Paid"): EventFragment;
 }
 
-export type PaidV2Event = TypedEvent<
+export type PaidEvent = TypedEvent<
   [
     string,
     string,
-    ([number, BigNumber[]] & { resourceType: number; values: BigNumber[] })[]
+    ([number, BigNumber[]] & { resourceType: number; values: BigNumber[] })[],
+    BigNumber,
+    BigNumber,
+    BigNumber
   ] & {
     provider: string;
     account: string;
@@ -102,6 +108,9 @@ export type PaidV2Event = TypedEvent<
       resourceType: number;
       values: BigNumber[];
     })[];
+    value: BigNumber;
+    nonce: BigNumber;
+    amount: BigNumber;
   }
 >;
 
@@ -196,10 +205,13 @@ export class IDstChainPayment extends BaseContract {
       }
     >;
 
-    payV2(
+    pay(
       provider: string,
       account: BytesLike,
       payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
+      nonce: BigNumberish,
+      amount: BigNumberish,
+      signature: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -251,10 +263,13 @@ export class IDstChainPayment extends BaseContract {
     [BigNumber, BigNumber] & { storageFee: BigNumber; expirationFee: BigNumber }
   >;
 
-  payV2(
+  pay(
     provider: string,
     account: BytesLike,
     payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
+    nonce: BigNumberish,
+    amount: BigNumberish,
+    signature: BytesLike,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -306,10 +321,13 @@ export class IDstChainPayment extends BaseContract {
       }
     >;
 
-    payV2(
+    pay(
       provider: string,
       account: BytesLike,
       payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
+      nonce: BigNumberish,
+      amount: BigNumberish,
+      signature: BytesLike,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -321,10 +339,13 @@ export class IDstChainPayment extends BaseContract {
   };
 
   filters: {
-    "PaidV2(address,bytes32,tuple[])"(
+    "Paid(address,bytes32,tuple[],uint256,uint256,uint256)"(
       provider?: null,
       account?: null,
-      payloads?: null
+      payloads?: null,
+      value?: null,
+      nonce?: null,
+      amount?: null
     ): TypedEventFilter<
       [
         string,
@@ -332,7 +353,10 @@ export class IDstChainPayment extends BaseContract {
         ([number, BigNumber[]] & {
           resourceType: number;
           values: BigNumber[];
-        })[]
+        })[],
+        BigNumber,
+        BigNumber,
+        BigNumber
       ],
       {
         provider: string;
@@ -341,13 +365,19 @@ export class IDstChainPayment extends BaseContract {
           resourceType: number;
           values: BigNumber[];
         })[];
+        value: BigNumber;
+        nonce: BigNumber;
+        amount: BigNumber;
       }
     >;
 
-    PaidV2(
+    Paid(
       provider?: null,
       account?: null,
-      payloads?: null
+      payloads?: null,
+      value?: null,
+      nonce?: null,
+      amount?: null
     ): TypedEventFilter<
       [
         string,
@@ -355,7 +385,10 @@ export class IDstChainPayment extends BaseContract {
         ([number, BigNumber[]] & {
           resourceType: number;
           values: BigNumber[];
-        })[]
+        })[],
+        BigNumber,
+        BigNumber,
+        BigNumber
       ],
       {
         provider: string;
@@ -364,6 +397,9 @@ export class IDstChainPayment extends BaseContract {
           resourceType: number;
           values: BigNumber[];
         })[];
+        value: BigNumber;
+        nonce: BigNumber;
+        amount: BigNumber;
       }
     >;
   };
@@ -406,10 +442,13 @@ export class IDstChainPayment extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    payV2(
+    pay(
       provider: string,
       account: BytesLike,
       payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
+      nonce: BigNumberish,
+      amount: BigNumberish,
+      signature: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -461,10 +500,13 @@ export class IDstChainPayment extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    payV2(
+    pay(
       provider: string,
       account: BytesLike,
       payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
+      nonce: BigNumberish,
+      amount: BigNumberish,
+      signature: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

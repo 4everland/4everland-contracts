@@ -14,6 +14,7 @@
 		"const-name-snakecase": "off",
 		"func-name-mixedcase": "off",
 		"constructor-syntax": "error",
+		"no-global-import": "off",
 		"func-visibility": [
 			"error",
 			{

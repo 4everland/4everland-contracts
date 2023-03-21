@@ -24,7 +24,7 @@ interface ProviderControllerInterface extends ethers.utils.Interface {
     "accountExists(address,bytes32)": FunctionFragment;
     "addPauser(address)": FunctionFragment;
     "drip(bytes32,tuple[])": FunctionFragment;
-    "dripMult(bytes32[],tuple[][])": FunctionFragment;
+    "dripMult(bytes32[],tuple[][],uint256[])": FunctionFragment;
     "hashTypedDataV4ForWallet(address,bytes32,address)": FunctionFragment;
     "hashWalletTypes(address,bytes32,address)": FunctionFragment;
     "initWallet(address,bytes32,address,bytes)": FunctionFragment;
@@ -66,7 +66,8 @@ interface ProviderControllerInterface extends ethers.utils.Interface {
     functionFragment: "dripMult",
     values: [
       BytesLike[],
-      { resourceType: BigNumberish; amounts: BigNumberish[] }[][]
+      { resourceType: BigNumberish; amounts: BigNumberish[] }[][],
+      BigNumberish[]
     ]
   ): string;
   encodeFunctionData(
@@ -257,8 +258,16 @@ export type PauserAddedEvent = TypedEvent<[string] & { account: string }>;
 
 export type PauserRemovedEvent = TypedEvent<[string] & { account: string }>;
 
-export type ProviderDrippedEvent = TypedEvent<
+export type ProviderDripped_address_bytes32_Event = TypedEvent<
   [string, string] & { provider: string; account: string }
+>;
+
+export type ProviderDripped_address_bytes32_uint256_Event = TypedEvent<
+  [string, string, BigNumber] & {
+    provider: string;
+    account: string;
+    nonce: BigNumber;
+  }
 >;
 
 export type RouterUpdatedEvent = TypedEvent<[string] & { router: string }>;
@@ -339,7 +348,14 @@ export class ProviderController extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    dripMult(
+    "dripMult(bytes32[],tuple[][],uint256[])"(
+      accounts: BytesLike[],
+      payloads: { resourceType: BigNumberish; amounts: BigNumberish[] }[][],
+      nonces: BigNumberish[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    "dripMult(bytes32[],tuple[][])"(
       accounts: BytesLike[],
       payloads: { resourceType: BigNumberish; amounts: BigNumberish[] }[][],
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -476,7 +492,14 @@ export class ProviderController extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  dripMult(
+  "dripMult(bytes32[],tuple[][],uint256[])"(
+    accounts: BytesLike[],
+    payloads: { resourceType: BigNumberish; amounts: BigNumberish[] }[][],
+    nonces: BigNumberish[],
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  "dripMult(bytes32[],tuple[][])"(
     accounts: BytesLike[],
     payloads: { resourceType: BigNumberish; amounts: BigNumberish[] }[][],
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -610,7 +633,14 @@ export class ProviderController extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    dripMult(
+    "dripMult(bytes32[],tuple[][],uint256[])"(
+      accounts: BytesLike[],
+      payloads: { resourceType: BigNumberish; amounts: BigNumberish[] }[][],
+      nonces: BigNumberish[],
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "dripMult(bytes32[],tuple[][])"(
       accounts: BytesLike[],
       payloads: { resourceType: BigNumberish; amounts: BigNumberish[] }[][],
       overrides?: CallOverrides
@@ -790,12 +820,13 @@ export class ProviderController extends BaseContract {
       { provider: string; account: string }
     >;
 
-    ProviderDripped(
+    "ProviderDripped(address,bytes32,uint256)"(
       provider?: null,
-      account?: null
+      account?: null,
+      nonce?: null
     ): TypedEventFilter<
-      [string, string],
-      { provider: string; account: string }
+      [string, string, BigNumber],
+      { provider: string; account: string; nonce: BigNumber }
     >;
 
     "RouterUpdated(address)"(
@@ -859,7 +890,14 @@ export class ProviderController extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    dripMult(
+    "dripMult(bytes32[],tuple[][],uint256[])"(
+      accounts: BytesLike[],
+      payloads: { resourceType: BigNumberish; amounts: BigNumberish[] }[][],
+      nonces: BigNumberish[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    "dripMult(bytes32[],tuple[][])"(
       accounts: BytesLike[],
       payloads: { resourceType: BigNumberish; amounts: BigNumberish[] }[][],
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -997,7 +1035,14 @@ export class ProviderController extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    dripMult(
+    "dripMult(bytes32[],tuple[][],uint256[])"(
+      accounts: BytesLike[],
+      payloads: { resourceType: BigNumberish; amounts: BigNumberish[] }[][],
+      nonces: BigNumberish[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    "dripMult(bytes32[],tuple[][])"(
       accounts: BytesLike[],
       payloads: { resourceType: BigNumberish; amounts: BigNumberish[] }[][],
       overrides?: Overrides & { from?: string | Promise<string> }

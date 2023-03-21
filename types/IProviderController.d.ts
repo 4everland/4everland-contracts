@@ -147,8 +147,16 @@ export type AccountRegisteredEvent = TypedEvent<
   [string, string] & { provider: string; account: string }
 >;
 
-export type ProviderDrippedEvent = TypedEvent<
+export type ProviderDripped_address_bytes32_Event = TypedEvent<
   [string, string] & { provider: string; account: string }
+>;
+
+export type ProviderDripped_address_bytes32_uint256_Event = TypedEvent<
+  [string, string, BigNumber] & {
+    provider: string;
+    account: string;
+    nonce: BigNumber;
+  }
 >;
 
 export type WalletTransferredEvent = TypedEvent<
@@ -449,12 +457,13 @@ export class IProviderController extends BaseContract {
       { provider: string; account: string }
     >;
 
-    ProviderDripped(
+    "ProviderDripped(address,bytes32,uint256)"(
       provider?: null,
-      account?: null
+      account?: null,
+      nonce?: null
     ): TypedEventFilter<
-      [string, string],
-      { provider: string; account: string }
+      [string, string, BigNumber],
+      { provider: string; account: string; nonce: BigNumber }
     >;
 
     "WalletTransferred(address,bytes32,address,address)"(

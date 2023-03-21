@@ -45,8 +45,15 @@ contract FundPool is IFundPool, OwnerWithdrawable, Pauser, ReentrancyGuardUpgrad
 		uint256 amount
 	) external override whenNotPaused nonReentrant {
 		require(amount > 0, 'FundPool: zero amount');
-		require(router.ProviderController().accountExists(provider, account), 'FundPool: nonexistent account');
-		_recharge(provider, account, amount);
+		require(router.ProviderController().accountExists(provider, account), 'FundPool: nonexistent account on provider');
+		_recharge(msg.sender, provider, account, amount);
+	}
+
+	function celerExec(uint256 amount, bytes memory message) external override whenNotPaused nonReentrant {
+		(address provider, bytes32 account) = abi.decode(message, (address, bytes32));
+		require(amount > 0, 'FundPool: zero amount');
+		require(router.ProviderController().accountExists(provider, account), 'FundPool: nonexistent account on provider');
+		_recharge(msg.sender, provider, account, amount);
 	}
 
 	/// @dev initialize wallet and recharge for account
@@ -57,9 +64,9 @@ contract FundPool is IFundPool, OwnerWithdrawable, Pauser, ReentrancyGuardUpgrad
 	/// @param timeout tx timeout
 	/// @param nonce billing nonce
 	/// @param billSig bill signature
-	/// @return fee bill fee
 	/// @param to token receiver
 	/// @param amount token amount
+	/// @return fee bill fee
 	function initWalletAndWithdraw(
 		address provider,
 		bytes32 account,
@@ -77,12 +84,13 @@ contract FundPool is IFundPool, OwnerWithdrawable, Pauser, ReentrancyGuardUpgrad
 	}
 
 	function _recharge(
+		address from,
 		address provider,
 		bytes32 account,
 		uint256 amount
 	) internal {
 		balances[provider][account] = balances[provider][account].add(amount);
-		router.Token().safeTransferFrom(msg.sender, address(this), amount);
+		router.Token().safeTransferFrom(from, address(this), amount);
 		emit Recharged(provider, account, amount);
 	}
 
@@ -116,10 +124,12 @@ contract FundPool is IFundPool, OwnerWithdrawable, Pauser, ReentrancyGuardUpgrad
 	) internal returns (uint256 fee) {
 		IBilling billing = router.Billing();
 		fee = billing.spend(provider, account, bills, timeout, nonce, signature);
-		uint256 balance = balanceOf(provider, account);
-		require(balance >= fee, 'FundPool: insufficient balance for billing fee');
-		balances[provider][account] = balances[provider][account].sub(fee);
-		router.Token().safeTransfer(address(billing), fee);
+		if (fee > 0) {
+			uint256 balance = balanceOf(provider, account);
+			require(balance >= fee, 'FundPool: insufficient balance for billing fee');
+			balances[provider][account] = balances[provider][account].sub(fee);
+			router.Token().safeTransfer(address(billing), fee);
+		}
 		emit Spent(provider, account, fee);
 	}
 
