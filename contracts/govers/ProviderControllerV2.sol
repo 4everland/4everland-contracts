@@ -12,26 +12,24 @@ contract ProviderControllerV2 is ProviderController, AdminWrapper {
 
 	mapping(address => bytes32) public userRegistration;
 
-	function initializeEIP712(string memory name, string memory version, string memory types) external onlyAdmin reinitializer(2) {
+	function initializeEIP712(string memory name, string memory version, string memory types) external onlyAdmin reinitializer(3) {
 		__EIP712_init(name, version);
 		registerAndDripTypedHash = keccak256(bytes(types));
 	}
 
 	/// @dev provider register and drip resource for multiple accounts
 	/// @param provider provider address
-	/// @param user user account
 	/// @param account user account
 	/// @param payload resource payloads
 	/// @param signature provider signature
 	function registerAndDrip(
 		address provider,
-		address user,
 		bytes32 account,
 		bytes memory payload,
 		bytes memory signature
 	) external {
 		require(userRegistration[msg.sender] == bytes32(0), 'ProviderControllerV2: account already registered');
-		bytes32 hash = hashTypedDataV4ForRegisterAndDrip(provider, user, account, payload);
+		bytes32 hash = hashTypedDataV4ForRegisterAndDrip(provider, msg.sender, account, payload);
 		require(router.ProviderRegistry().isValidSignature(provider, hash, signature), 'ProviderControllerV2: invalid signature');
 		userRegistration[msg.sender] = account;
 		ResourceData.AmountPayload[] memory payloads = abi.decode(payload, (ResourceData.AmountPayload[]));

@@ -39,7 +39,7 @@ interface ProviderControllerV2Interface extends ethers.utils.Interface {
     "pausers(address)": FunctionFragment;
     "poolInitWallet(address,bytes32,address,bytes)": FunctionFragment;
     "registerAccount(bytes32)": FunctionFragment;
-    "registerAndDrip(address,address,bytes32,bytes,bytes)": FunctionFragment;
+    "registerAndDrip(address,bytes32,bytes,bytes)": FunctionFragment;
     "registerAndDripMult(bytes32[],tuple[][])": FunctionFragment;
     "registerAndDripTypedHash()": FunctionFragment;
     "registerMult(bytes32[])": FunctionFragment;
@@ -119,7 +119,7 @@ interface ProviderControllerV2Interface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "registerAndDrip",
-    values: [string, string, BytesLike, BytesLike, BytesLike]
+    values: [string, BytesLike, BytesLike, BytesLike]
   ): string;
   encodeFunctionData(
     functionFragment: "registerAndDripMult",
@@ -497,7 +497,6 @@ export class ProviderControllerV2 extends BaseContract {
 
     registerAndDrip(
       provider: string,
-      user: string,
       account: BytesLike,
       payload: BytesLike,
       signature: BytesLike,
@@ -680,7 +679,6 @@ export class ProviderControllerV2 extends BaseContract {
 
   registerAndDrip(
     provider: string,
-    user: string,
     account: BytesLike,
     payload: BytesLike,
     signature: BytesLike,
@@ -855,7 +853,6 @@ export class ProviderControllerV2 extends BaseContract {
 
     registerAndDrip(
       provider: string,
-      user: string,
       account: BytesLike,
       payload: BytesLike,
       signature: BytesLike,
@@ -1150,7 +1147,6 @@ export class ProviderControllerV2 extends BaseContract {
 
     registerAndDrip(
       provider: string,
-      user: string,
       account: BytesLike,
       payload: BytesLike,
       signature: BytesLike,
@@ -1340,7 +1336,6 @@ export class ProviderControllerV2 extends BaseContract {
 
     registerAndDrip(
       provider: string,
-      user: string,
       account: BytesLike,
       payload: BytesLike,
       signature: BytesLike,
