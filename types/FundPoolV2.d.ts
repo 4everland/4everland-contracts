@@ -34,7 +34,7 @@ interface FundPoolV2Interface extends ethers.utils.Interface {
     "paused()": FunctionFragment;
     "pausers(address)": FunctionFragment;
     "recharge(address,bytes32,uint256)": FunctionFragment;
-    "rechargeWithRegistration(address,bytes32,uint256)": FunctionFragment;
+    "rechargeWithRegistration(address,bytes32,uint256,bytes)": FunctionFragment;
     "removePauser(address)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "renouncePauser()": FunctionFragment;
@@ -92,7 +92,7 @@ interface FundPoolV2Interface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "rechargeWithRegistration",
-    values: [string, BytesLike, BigNumberish]
+    values: [string, BytesLike, BigNumberish, BytesLike]
   ): string;
   encodeFunctionData(
     functionFragment: "removePauser",
@@ -384,6 +384,7 @@ export class FundPoolV2 extends BaseContract {
       provider: string,
       account: BytesLike,
       amount: BigNumberish,
+      registrationSig: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -513,6 +514,7 @@ export class FundPoolV2 extends BaseContract {
     provider: string,
     account: BytesLike,
     amount: BigNumberish,
+    registrationSig: BytesLike,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -637,6 +639,7 @@ export class FundPoolV2 extends BaseContract {
       provider: string,
       account: BytesLike,
       amount: BigNumberish,
+      registrationSig: BytesLike,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -904,6 +907,7 @@ export class FundPoolV2 extends BaseContract {
       provider: string,
       account: BytesLike,
       amount: BigNumberish,
+      registrationSig: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -1040,6 +1044,7 @@ export class FundPoolV2 extends BaseContract {
       provider: string,
       account: BytesLike,
       amount: BigNumberish,
+      registrationSig: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

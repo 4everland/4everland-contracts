@@ -70,7 +70,7 @@ export type { IResourcePriceAdaptor } from "./IResourcePriceAdaptor";
 export type { ResourcePriceAdaptor } from "./ResourcePriceAdaptor";
 export type { Billing } from "./Billing";
 export type { FundPool } from "./FundPool";
-export type { FundPoolV2 } from "./FundPoolV2";
+export type { FundPoolRegistration } from "./FundPoolRegistration";
 export type { SafeWallet } from "./SafeWallet";
 export type { IBridge } from "./IBridge";
 export type { IOriginalTokenVault } from "./IOriginalTokenVault";
@@ -148,7 +148,7 @@ export { IResourcePriceAdaptor__factory } from "./factories/IResourcePriceAdapto
 export { ResourcePriceAdaptor__factory } from "./factories/ResourcePriceAdaptor__factory";
 export { Billing__factory } from "./factories/Billing__factory";
 export { FundPool__factory } from "./factories/FundPool__factory";
-export { FundPoolV2__factory } from "./factories/FundPoolV2__factory";
+export { FundPoolRegistration__factory } from "./factories/FundPoolRegistration__factory";
 export { SafeWallet__factory } from "./factories/SafeWallet__factory";
 export { IBridge__factory } from "./factories/IBridge__factory";
 export { IOriginalTokenVault__factory } from "./factories/IOriginalTokenVault__factory";

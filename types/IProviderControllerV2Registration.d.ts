@@ -27,7 +27,7 @@ interface IProviderControllerV2RegistrationInterface
     "dripMult(bytes32[],tuple[][])": FunctionFragment;
     "initWallet(address,bytes32,address,bytes)": FunctionFragment;
     "poolInitWallet(address,bytes32,address,bytes)": FunctionFragment;
-    "registerAccount(address,bytes32)": FunctionFragment;
+    "registerAccount(address,bytes32,bytes)": FunctionFragment;
     "registerAndDripMult(bytes32[],tuple[][])": FunctionFragment;
     "registerMult(bytes32[])": FunctionFragment;
     "transferWallet(address,bytes32,address)": FunctionFragment;
@@ -64,7 +64,7 @@ interface IProviderControllerV2RegistrationInterface
   ): string;
   encodeFunctionData(
     functionFragment: "registerAccount",
-    values: [string, BytesLike]
+    values: [string, BytesLike, BytesLike]
   ): string;
   encodeFunctionData(
     functionFragment: "registerAndDripMult",
@@ -251,9 +251,10 @@ export class IProviderControllerV2Registration extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    "registerAccount(address,bytes32)"(
+    "registerAccount(address,bytes32,bytes)"(
       provider: string,
       account: BytesLike,
+      signature: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -329,9 +330,10 @@ export class IProviderControllerV2Registration extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  "registerAccount(address,bytes32)"(
+  "registerAccount(address,bytes32,bytes)"(
     provider: string,
     account: BytesLike,
+    signature: BytesLike,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -407,9 +409,10 @@ export class IProviderControllerV2Registration extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "registerAccount(address,bytes32)"(
+    "registerAccount(address,bytes32,bytes)"(
       provider: string,
       account: BytesLike,
+      signature: BytesLike,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -549,9 +552,10 @@ export class IProviderControllerV2Registration extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    "registerAccount(address,bytes32)"(
+    "registerAccount(address,bytes32,bytes)"(
       provider: string,
       account: BytesLike,
+      signature: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -628,9 +632,10 @@ export class IProviderControllerV2Registration extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    "registerAccount(address,bytes32)"(
+    "registerAccount(address,bytes32,bytes)"(
       provider: string,
       account: BytesLike,
+      signature: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

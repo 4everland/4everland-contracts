@@ -19,21 +19,13 @@ import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
-interface DstChainPaymentV2RegistrationInterface
-  extends ethers.utils.Interface {
+interface FundPoolRegistrationInterface extends ethers.utils.Interface {
   functions: {
     "addPauser(address)": FunctionFragment;
-    "balanceOf(address)": FunctionFragment;
-    "celerExec(bytes)": FunctionFragment;
-    "decodeMessage(bytes)": FunctionFragment;
-    "fee(address,bytes32)": FunctionFragment;
-    "getAmountOf(address,uint8,uint256)": FunctionFragment;
-    "getValueOf(address,uint8,uint256)": FunctionFragment;
-    "hashTypedDataV4ForVoucher(address,bytes32,uint256,uint256)": FunctionFragment;
-    "hashVoucherTypes(address,bytes32,uint256,uint256)": FunctionFragment;
-    "initializeEIP712(string,string,string)": FunctionFragment;
-    "ipfsAllocations(address,bytes32,uint256,uint256)": FunctionFragment;
-    "ipfsAlloctionsFee(address,bytes32,uint256,uint256)": FunctionFragment;
+    "balanceOf(address,bytes32)": FunctionFragment;
+    "celerExec(uint256,bytes)": FunctionFragment;
+    "initWalletAndWithdraw(address,bytes32,bytes,bytes,uint256,uint64,bytes,address,uint256)": FunctionFragment;
+    "initialize(address,address,address)": FunctionFragment;
     "isPauser(address)": FunctionFragment;
     "owner()": FunctionFragment;
     "ownerWithdrawERC20(address,address,uint256)": FunctionFragment;
@@ -41,61 +33,45 @@ interface DstChainPaymentV2RegistrationInterface
     "pause()": FunctionFragment;
     "paused()": FunctionFragment;
     "pausers(address)": FunctionFragment;
-    "pay(address,bytes32,tuple[],uint256,uint256,bytes)": FunctionFragment;
-    "payWithRegistration(address,bytes32,tuple[],uint256,uint256,bytes,bytes)": FunctionFragment;
-    "priceOf(address,uint8)": FunctionFragment;
-    "providerBalance(address)": FunctionFragment;
+    "recharge(address,bytes32,uint256)": FunctionFragment;
+    "rechargeWithRegistration(address,bytes32,uint256,bytes)": FunctionFragment;
     "removePauser(address)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "renouncePauser()": FunctionFragment;
     "router()": FunctionFragment;
+    "spend(address,bytes32,bytes,uint256,uint64,bytes)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "unpause()": FunctionFragment;
-    "voucherTypedHash()": FunctionFragment;
-    "vouchers(address,uint256)": FunctionFragment;
+    "walletOf(address,bytes32)": FunctionFragment;
+    "withdraw(address,bytes32,bytes,uint256,uint64,bytes,address,uint256)": FunctionFragment;
   };
 
   encodeFunctionData(functionFragment: "addPauser", values: [string]): string;
-  encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
   encodeFunctionData(
-    functionFragment: "celerExec",
-    values: [BytesLike]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "decodeMessage",
-    values: [BytesLike]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "fee",
+    functionFragment: "balanceOf",
     values: [string, BytesLike]
   ): string;
   encodeFunctionData(
-    functionFragment: "getAmountOf",
-    values: [string, BigNumberish, BigNumberish]
+    functionFragment: "celerExec",
+    values: [BigNumberish, BytesLike]
   ): string;
   encodeFunctionData(
-    functionFragment: "getValueOf",
-    values: [string, BigNumberish, BigNumberish]
+    functionFragment: "initWalletAndWithdraw",
+    values: [
+      string,
+      BytesLike,
+      BytesLike,
+      BytesLike,
+      BigNumberish,
+      BigNumberish,
+      BytesLike,
+      string,
+      BigNumberish
+    ]
   ): string;
   encodeFunctionData(
-    functionFragment: "hashTypedDataV4ForVoucher",
-    values: [string, BytesLike, BigNumberish, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "hashVoucherTypes",
-    values: [string, BytesLike, BigNumberish, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "initializeEIP712",
+    functionFragment: "initialize",
     values: [string, string, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "ipfsAllocations",
-    values: [string, BytesLike, BigNumberish, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "ipfsAlloctionsFee",
-    values: [string, BytesLike, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "isPauser", values: [string]): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
@@ -111,35 +87,12 @@ interface DstChainPaymentV2RegistrationInterface
   encodeFunctionData(functionFragment: "paused", values?: undefined): string;
   encodeFunctionData(functionFragment: "pausers", values: [string]): string;
   encodeFunctionData(
-    functionFragment: "pay",
-    values: [
-      string,
-      BytesLike,
-      { resourceType: BigNumberish; values: BigNumberish[] }[],
-      BigNumberish,
-      BigNumberish,
-      BytesLike
-    ]
+    functionFragment: "recharge",
+    values: [string, BytesLike, BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "payWithRegistration",
-    values: [
-      string,
-      BytesLike,
-      { resourceType: BigNumberish; values: BigNumberish[] }[],
-      BigNumberish,
-      BigNumberish,
-      BytesLike,
-      BytesLike
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "priceOf",
-    values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "providerBalance",
-    values: [string]
+    functionFragment: "rechargeWithRegistration",
+    values: [string, BytesLike, BigNumberish, BytesLike]
   ): string;
   encodeFunctionData(
     functionFragment: "removePauser",
@@ -155,52 +108,47 @@ interface DstChainPaymentV2RegistrationInterface
   ): string;
   encodeFunctionData(functionFragment: "router", values?: undefined): string;
   encodeFunctionData(
+    functionFragment: "spend",
+    values: [
+      string,
+      BytesLike,
+      BytesLike,
+      BigNumberish,
+      BigNumberish,
+      BytesLike
+    ]
+  ): string;
+  encodeFunctionData(
     functionFragment: "transferOwnership",
     values: [string]
   ): string;
   encodeFunctionData(functionFragment: "unpause", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "voucherTypedHash",
-    values?: undefined
+    functionFragment: "walletOf",
+    values: [string, BytesLike]
   ): string;
   encodeFunctionData(
-    functionFragment: "vouchers",
-    values: [string, BigNumberish]
+    functionFragment: "withdraw",
+    values: [
+      string,
+      BytesLike,
+      BytesLike,
+      BigNumberish,
+      BigNumberish,
+      BytesLike,
+      string,
+      BigNumberish
+    ]
   ): string;
 
   decodeFunctionResult(functionFragment: "addPauser", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "celerExec", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "decodeMessage",
+    functionFragment: "initWalletAndWithdraw",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "fee", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "getAmountOf",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "getValueOf", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "hashTypedDataV4ForVoucher",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "hashVoucherTypes",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "initializeEIP712",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "ipfsAllocations",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "ipfsAlloctionsFee",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "isPauser", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
@@ -214,14 +162,9 @@ interface DstChainPaymentV2RegistrationInterface
   decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "pausers", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "pay", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "recharge", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "payWithRegistration",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "priceOf", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "providerBalance",
+    functionFragment: "rechargeWithRegistration",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -237,40 +180,42 @@ interface DstChainPaymentV2RegistrationInterface
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "router", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "spend", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "unpause", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "voucherTypedHash",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "vouchers", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "walletOf", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
 
   events: {
     "Initialized(uint8)": EventFragment;
     "NativeWithdrawal(address,uint256)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
-    "Paid(address,bytes32,tuple[],uint256,uint256,uint256)": EventFragment;
     "Paused(address)": EventFragment;
     "PauserAdded(address)": EventFragment;
     "PauserRemoved(address)": EventFragment;
+    "Recharged(address,bytes32,uint256)": EventFragment;
     "RouterUpdated(address)": EventFragment;
+    "Spent(address,bytes32,uint256)": EventFragment;
     "Unpaused(address)": EventFragment;
     "Withdrawal(address,address,uint256)": EventFragment;
+    "Withdrawn(address,bytes32,address,uint256)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "Initialized"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "NativeWithdrawal"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Paid"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Paused"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "PauserAdded"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "PauserRemoved"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Recharged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RouterUpdated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Spent"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Unpaused"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Withdrawal"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Withdrawn"): EventFragment;
 }
 
 export type InitializedEvent = TypedEvent<[number] & { version: number }>;
@@ -283,34 +228,29 @@ export type OwnershipTransferredEvent = TypedEvent<
   [string, string] & { previousOwner: string; newOwner: string }
 >;
 
-export type PaidEvent = TypedEvent<
-  [
-    string,
-    string,
-    ([number, BigNumber[]] & { resourceType: number; values: BigNumber[] })[],
-    BigNumber,
-    BigNumber,
-    BigNumber
-  ] & {
-    provider: string;
-    account: string;
-    payloads: ([number, BigNumber[]] & {
-      resourceType: number;
-      values: BigNumber[];
-    })[];
-    value: BigNumber;
-    nonce: BigNumber;
-    amount: BigNumber;
-  }
->;
-
 export type PausedEvent = TypedEvent<[string] & { account: string }>;
 
 export type PauserAddedEvent = TypedEvent<[string] & { account: string }>;
 
 export type PauserRemovedEvent = TypedEvent<[string] & { account: string }>;
 
+export type RechargedEvent = TypedEvent<
+  [string, string, BigNumber] & {
+    provider: string;
+    account: string;
+    amount: BigNumber;
+  }
+>;
+
 export type RouterUpdatedEvent = TypedEvent<[string] & { router: string }>;
+
+export type SpentEvent = TypedEvent<
+  [string, string, BigNumber] & {
+    provider: string;
+    account: string;
+    amount: BigNumber;
+  }
+>;
 
 export type UnpausedEvent = TypedEvent<[string] & { account: string }>;
 
@@ -318,7 +258,16 @@ export type WithdrawalEvent = TypedEvent<
   [string, string, BigNumber] & { token: string; to: string; value: BigNumber }
 >;
 
-export class DstChainPaymentV2Registration extends BaseContract {
+export type WithdrawnEvent = TypedEvent<
+  [string, string, string, BigNumber] & {
+    provider: string;
+    account: string;
+    to: string;
+    amount: BigNumber;
+  }
+>;
+
+export class FundPoolRegistration extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -359,7 +308,7 @@ export class DstChainPaymentV2Registration extends BaseContract {
     toBlock?: string | number | undefined
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
-  interface: DstChainPaymentV2RegistrationInterface;
+  interface: FundPoolRegistrationInterface;
 
   functions: {
     addPauser(
@@ -369,106 +318,35 @@ export class DstChainPaymentV2Registration extends BaseContract {
 
     balanceOf(
       provider: string,
+      account: BytesLike,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
     celerExec(
+      amount: BigNumberish,
       message: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    decodeMessage(
-      message: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<
-      [
-        string,
-        string,
-        ([number, BigNumber[]] & {
-          resourceType: number;
-          values: BigNumber[];
-        })[],
-        BigNumber,
-        BigNumber,
-        string
-      ] & {
-        provider: string;
-        account: string;
-        payloads: ([number, BigNumber[]] & {
-          resourceType: number;
-          values: BigNumber[];
-        })[];
-        nonce: BigNumber;
-        amount: BigNumber;
-        signature: string;
-      }
-    >;
-
-    fee(
+    initWalletAndWithdraw(
       provider: string,
       account: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    getAmountOf(
-      provider: string,
-      resourceType: BigNumberish,
-      value: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    getValueOf(
-      provider: string,
-      resourceType: BigNumberish,
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    hashTypedDataV4ForVoucher(
-      provider: string,
-      account: BytesLike,
+      walletSig: BytesLike,
+      bills: BytesLike,
+      timeout: BigNumberish,
       nonce: BigNumberish,
+      billSig: BytesLike,
+      to: string,
       amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
-
-    hashVoucherTypes(
-      provider: string,
-      account: BytesLike,
-      nonce: BigNumberish,
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
-
-    initializeEIP712(
-      name: string,
-      version: string,
-      types: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    ipfsAllocations(
-      provider: string,
-      account: BytesLike,
-      storageFee: BigNumberish,
-      expirationFee: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber] & { amount: BigNumber; expiration: BigNumber }
-    >;
-
-    ipfsAlloctionsFee(
-      provider: string,
-      account: BytesLike,
-      amount: BigNumberish,
-      expiration: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber] & {
-        storageFee: BigNumber;
-        expirationFee: BigNumber;
-      }
-    >;
+    initialize(
+      owner: string,
+      pauser: string,
+      router: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
 
     isPauser(account: string, overrides?: CallOverrides): Promise<[boolean]>;
 
@@ -495,37 +373,20 @@ export class DstChainPaymentV2Registration extends BaseContract {
 
     pausers(arg0: string, overrides?: CallOverrides): Promise<[boolean]>;
 
-    pay(
+    recharge(
       provider: string,
       account: BytesLike,
-      payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
-      nonce: BigNumberish,
       amount: BigNumberish,
-      signature: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    payWithRegistration(
+    rechargeWithRegistration(
       provider: string,
       account: BytesLike,
-      payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
-      nonce: BigNumberish,
       amount: BigNumberish,
-      voucherSig: BytesLike,
       registrationSig: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
-
-    priceOf(
-      provider: string,
-      resourceType: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    providerBalance(
-      provider: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
 
     removePauser(
       account: string,
@@ -542,6 +403,16 @@ export class DstChainPaymentV2Registration extends BaseContract {
 
     router(overrides?: CallOverrides): Promise<[string]>;
 
+    spend(
+      provider: string,
+      account: BytesLike,
+      bills: BytesLike,
+      timeout: BigNumberish,
+      nonce: BigNumberish,
+      signature: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     transferOwnership(
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -551,13 +422,23 @@ export class DstChainPaymentV2Registration extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    voucherTypedHash(overrides?: CallOverrides): Promise<[string]>;
-
-    vouchers(
-      arg0: string,
-      arg1: BigNumberish,
+    walletOf(
+      provider: string,
+      account: BytesLike,
       overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    ): Promise<[string]>;
+
+    withdraw(
+      provider: string,
+      account: BytesLike,
+      bills: BytesLike,
+      timeout: BigNumberish,
+      nonce: BigNumberish,
+      signature: BytesLike,
+      to: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
   };
 
   addPauser(
@@ -565,99 +446,37 @@ export class DstChainPaymentV2Registration extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  balanceOf(provider: string, overrides?: CallOverrides): Promise<BigNumber>;
+  balanceOf(
+    provider: string,
+    account: BytesLike,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   celerExec(
+    amount: BigNumberish,
     message: BytesLike,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  decodeMessage(
-    message: BytesLike,
-    overrides?: CallOverrides
-  ): Promise<
-    [
-      string,
-      string,
-      ([number, BigNumber[]] & { resourceType: number; values: BigNumber[] })[],
-      BigNumber,
-      BigNumber,
-      string
-    ] & {
-      provider: string;
-      account: string;
-      payloads: ([number, BigNumber[]] & {
-        resourceType: number;
-        values: BigNumber[];
-      })[];
-      nonce: BigNumber;
-      amount: BigNumber;
-      signature: string;
-    }
-  >;
-
-  fee(
+  initWalletAndWithdraw(
     provider: string,
     account: BytesLike,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  getAmountOf(
-    provider: string,
-    resourceType: BigNumberish,
-    value: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  getValueOf(
-    provider: string,
-    resourceType: BigNumberish,
-    amount: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  hashTypedDataV4ForVoucher(
-    provider: string,
-    account: BytesLike,
+    walletSig: BytesLike,
+    bills: BytesLike,
+    timeout: BigNumberish,
     nonce: BigNumberish,
+    billSig: BytesLike,
+    to: string,
     amount: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<string>;
-
-  hashVoucherTypes(
-    provider: string,
-    account: BytesLike,
-    nonce: BigNumberish,
-    amount: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<string>;
-
-  initializeEIP712(
-    name: string,
-    version: string,
-    types: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  ipfsAllocations(
-    provider: string,
-    account: BytesLike,
-    storageFee: BigNumberish,
-    expirationFee: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<
-    [BigNumber, BigNumber] & { amount: BigNumber; expiration: BigNumber }
-  >;
-
-  ipfsAlloctionsFee(
-    provider: string,
-    account: BytesLike,
-    amount: BigNumberish,
-    expiration: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<
-    [BigNumber, BigNumber] & { storageFee: BigNumber; expirationFee: BigNumber }
-  >;
+  initialize(
+    owner: string,
+    pauser: string,
+    router: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   isPauser(account: string, overrides?: CallOverrides): Promise<boolean>;
 
@@ -684,37 +503,20 @@ export class DstChainPaymentV2Registration extends BaseContract {
 
   pausers(arg0: string, overrides?: CallOverrides): Promise<boolean>;
 
-  pay(
+  recharge(
     provider: string,
     account: BytesLike,
-    payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
-    nonce: BigNumberish,
     amount: BigNumberish,
-    signature: BytesLike,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  payWithRegistration(
+  rechargeWithRegistration(
     provider: string,
     account: BytesLike,
-    payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
-    nonce: BigNumberish,
     amount: BigNumberish,
-    voucherSig: BytesLike,
     registrationSig: BytesLike,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
-
-  priceOf(
-    provider: string,
-    resourceType: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  providerBalance(
-    provider: string,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
 
   removePauser(
     account: string,
@@ -731,6 +533,16 @@ export class DstChainPaymentV2Registration extends BaseContract {
 
   router(overrides?: CallOverrides): Promise<string>;
 
+  spend(
+    provider: string,
+    account: BytesLike,
+    bills: BytesLike,
+    timeout: BigNumberish,
+    nonce: BigNumberish,
+    signature: BytesLike,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   transferOwnership(
     newOwner: string,
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -740,113 +552,58 @@ export class DstChainPaymentV2Registration extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  voucherTypedHash(overrides?: CallOverrides): Promise<string>;
-
-  vouchers(
-    arg0: string,
-    arg1: BigNumberish,
+  walletOf(
+    provider: string,
+    account: BytesLike,
     overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  ): Promise<string>;
+
+  withdraw(
+    provider: string,
+    account: BytesLike,
+    bills: BytesLike,
+    timeout: BigNumberish,
+    nonce: BigNumberish,
+    signature: BytesLike,
+    to: string,
+    amount: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   callStatic: {
     addPauser(account: string, overrides?: CallOverrides): Promise<void>;
 
-    balanceOf(provider: string, overrides?: CallOverrides): Promise<BigNumber>;
+    balanceOf(
+      provider: string,
+      account: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
-    celerExec(message: BytesLike, overrides?: CallOverrides): Promise<void>;
-
-    decodeMessage(
+    celerExec(
+      amount: BigNumberish,
       message: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<
-      [
-        string,
-        string,
-        ([number, BigNumber[]] & {
-          resourceType: number;
-          values: BigNumber[];
-        })[],
-        BigNumber,
-        BigNumber,
-        string
-      ] & {
-        provider: string;
-        account: string;
-        payloads: ([number, BigNumber[]] & {
-          resourceType: number;
-          values: BigNumber[];
-        })[];
-        nonce: BigNumber;
-        amount: BigNumber;
-        signature: string;
-      }
-    >;
-
-    fee(
-      provider: string,
-      account: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    getAmountOf(
-      provider: string,
-      resourceType: BigNumberish,
-      value: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    getValueOf(
-      provider: string,
-      resourceType: BigNumberish,
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    hashTypedDataV4ForVoucher(
-      provider: string,
-      account: BytesLike,
-      nonce: BigNumberish,
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<string>;
-
-    hashVoucherTypes(
-      provider: string,
-      account: BytesLike,
-      nonce: BigNumberish,
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<string>;
-
-    initializeEIP712(
-      name: string,
-      version: string,
-      types: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    ipfsAllocations(
+    initWalletAndWithdraw(
       provider: string,
       account: BytesLike,
-      storageFee: BigNumberish,
-      expirationFee: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber] & { amount: BigNumber; expiration: BigNumber }
-    >;
-
-    ipfsAlloctionsFee(
-      provider: string,
-      account: BytesLike,
+      walletSig: BytesLike,
+      bills: BytesLike,
+      timeout: BigNumberish,
+      nonce: BigNumberish,
+      billSig: BytesLike,
+      to: string,
       amount: BigNumberish,
-      expiration: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber] & {
-        storageFee: BigNumber;
-        expirationFee: BigNumber;
-      }
-    >;
+    ): Promise<BigNumber>;
+
+    initialize(
+      owner: string,
+      pauser: string,
+      router: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     isPauser(account: string, overrides?: CallOverrides): Promise<boolean>;
 
@@ -871,37 +628,20 @@ export class DstChainPaymentV2Registration extends BaseContract {
 
     pausers(arg0: string, overrides?: CallOverrides): Promise<boolean>;
 
-    pay(
+    recharge(
       provider: string,
       account: BytesLike,
-      payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
-      nonce: BigNumberish,
       amount: BigNumberish,
-      signature: BytesLike,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<void>;
 
-    payWithRegistration(
+    rechargeWithRegistration(
       provider: string,
       account: BytesLike,
-      payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
-      nonce: BigNumberish,
       amount: BigNumberish,
-      voucherSig: BytesLike,
       registrationSig: BytesLike,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    priceOf(
-      provider: string,
-      resourceType: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    providerBalance(
-      provider: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<void>;
 
     removePauser(account: string, overrides?: CallOverrides): Promise<void>;
 
@@ -911,6 +651,16 @@ export class DstChainPaymentV2Registration extends BaseContract {
 
     router(overrides?: CallOverrides): Promise<string>;
 
+    spend(
+      provider: string,
+      account: BytesLike,
+      bills: BytesLike,
+      timeout: BigNumberish,
+      nonce: BigNumberish,
+      signature: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     transferOwnership(
       newOwner: string,
       overrides?: CallOverrides
@@ -918,11 +668,21 @@ export class DstChainPaymentV2Registration extends BaseContract {
 
     unpause(overrides?: CallOverrides): Promise<void>;
 
-    voucherTypedHash(overrides?: CallOverrides): Promise<string>;
+    walletOf(
+      provider: string,
+      account: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<string>;
 
-    vouchers(
-      arg0: string,
-      arg1: BigNumberish,
+    withdraw(
+      provider: string,
+      account: BytesLike,
+      bills: BytesLike,
+      timeout: BigNumberish,
+      nonce: BigNumberish,
+      signature: BytesLike,
+      to: string,
+      amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
   };
@@ -962,70 +722,6 @@ export class DstChainPaymentV2Registration extends BaseContract {
       { previousOwner: string; newOwner: string }
     >;
 
-    "Paid(address,bytes32,tuple[],uint256,uint256,uint256)"(
-      provider?: null,
-      account?: null,
-      payloads?: null,
-      value?: null,
-      nonce?: null,
-      amount?: null
-    ): TypedEventFilter<
-      [
-        string,
-        string,
-        ([number, BigNumber[]] & {
-          resourceType: number;
-          values: BigNumber[];
-        })[],
-        BigNumber,
-        BigNumber,
-        BigNumber
-      ],
-      {
-        provider: string;
-        account: string;
-        payloads: ([number, BigNumber[]] & {
-          resourceType: number;
-          values: BigNumber[];
-        })[];
-        value: BigNumber;
-        nonce: BigNumber;
-        amount: BigNumber;
-      }
-    >;
-
-    Paid(
-      provider?: null,
-      account?: null,
-      payloads?: null,
-      value?: null,
-      nonce?: null,
-      amount?: null
-    ): TypedEventFilter<
-      [
-        string,
-        string,
-        ([number, BigNumber[]] & {
-          resourceType: number;
-          values: BigNumber[];
-        })[],
-        BigNumber,
-        BigNumber,
-        BigNumber
-      ],
-      {
-        provider: string;
-        account: string;
-        payloads: ([number, BigNumber[]] & {
-          resourceType: number;
-          values: BigNumber[];
-        })[];
-        value: BigNumber;
-        nonce: BigNumber;
-        amount: BigNumber;
-      }
-    >;
-
     "Paused(address)"(
       account?: null
     ): TypedEventFilter<[string], { account: string }>;
@@ -1048,6 +744,24 @@ export class DstChainPaymentV2Registration extends BaseContract {
       account?: null
     ): TypedEventFilter<[string], { account: string }>;
 
+    "Recharged(address,bytes32,uint256)"(
+      provider?: null,
+      account?: null,
+      amount?: null
+    ): TypedEventFilter<
+      [string, string, BigNumber],
+      { provider: string; account: string; amount: BigNumber }
+    >;
+
+    Recharged(
+      provider?: null,
+      account?: null,
+      amount?: null
+    ): TypedEventFilter<
+      [string, string, BigNumber],
+      { provider: string; account: string; amount: BigNumber }
+    >;
+
     "RouterUpdated(address)"(
       router?: null
     ): TypedEventFilter<[string], { router: string }>;
@@ -1055,6 +769,24 @@ export class DstChainPaymentV2Registration extends BaseContract {
     RouterUpdated(
       router?: null
     ): TypedEventFilter<[string], { router: string }>;
+
+    "Spent(address,bytes32,uint256)"(
+      provider?: null,
+      account?: null,
+      amount?: null
+    ): TypedEventFilter<
+      [string, string, BigNumber],
+      { provider: string; account: string; amount: BigNumber }
+    >;
+
+    Spent(
+      provider?: null,
+      account?: null,
+      amount?: null
+    ): TypedEventFilter<
+      [string, string, BigNumber],
+      { provider: string; account: string; amount: BigNumber }
+    >;
 
     "Unpaused(address)"(
       account?: null
@@ -1079,6 +811,26 @@ export class DstChainPaymentV2Registration extends BaseContract {
       [string, string, BigNumber],
       { token: string; to: string; value: BigNumber }
     >;
+
+    "Withdrawn(address,bytes32,address,uint256)"(
+      provider?: null,
+      account?: null,
+      to?: null,
+      amount?: null
+    ): TypedEventFilter<
+      [string, string, string, BigNumber],
+      { provider: string; account: string; to: string; amount: BigNumber }
+    >;
+
+    Withdrawn(
+      provider?: null,
+      account?: null,
+      to?: null,
+      amount?: null
+    ): TypedEventFilter<
+      [string, string, string, BigNumber],
+      { provider: string; account: string; to: string; amount: BigNumber }
+    >;
   };
 
   estimateGas: {
@@ -1087,75 +839,36 @@ export class DstChainPaymentV2Registration extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    balanceOf(provider: string, overrides?: CallOverrides): Promise<BigNumber>;
+    balanceOf(
+      provider: string,
+      account: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     celerExec(
+      amount: BigNumberish,
       message: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    decodeMessage(
-      message: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    fee(
+    initWalletAndWithdraw(
       provider: string,
       account: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    getAmountOf(
-      provider: string,
-      resourceType: BigNumberish,
-      value: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    getValueOf(
-      provider: string,
-      resourceType: BigNumberish,
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    hashTypedDataV4ForVoucher(
-      provider: string,
-      account: BytesLike,
+      walletSig: BytesLike,
+      bills: BytesLike,
+      timeout: BigNumberish,
       nonce: BigNumberish,
+      billSig: BytesLike,
+      to: string,
       amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    hashVoucherTypes(
-      provider: string,
-      account: BytesLike,
-      nonce: BigNumberish,
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    initializeEIP712(
-      name: string,
-      version: string,
-      types: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    ipfsAllocations(
-      provider: string,
-      account: BytesLike,
-      storageFee: BigNumberish,
-      expirationFee: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    ipfsAlloctionsFee(
-      provider: string,
-      account: BytesLike,
-      amount: BigNumberish,
-      expiration: BigNumberish,
-      overrides?: CallOverrides
+    initialize(
+      owner: string,
+      pauser: string,
+      router: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     isPauser(account: string, overrides?: CallOverrides): Promise<BigNumber>;
@@ -1183,36 +896,19 @@ export class DstChainPaymentV2Registration extends BaseContract {
 
     pausers(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    pay(
+    recharge(
       provider: string,
       account: BytesLike,
-      payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
-      nonce: BigNumberish,
       amount: BigNumberish,
-      signature: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    payWithRegistration(
+    rechargeWithRegistration(
       provider: string,
       account: BytesLike,
-      payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
-      nonce: BigNumberish,
       amount: BigNumberish,
-      voucherSig: BytesLike,
       registrationSig: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    priceOf(
-      provider: string,
-      resourceType: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    providerBalance(
-      provider: string,
-      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     removePauser(
@@ -1230,6 +926,16 @@ export class DstChainPaymentV2Registration extends BaseContract {
 
     router(overrides?: CallOverrides): Promise<BigNumber>;
 
+    spend(
+      provider: string,
+      account: BytesLike,
+      bills: BytesLike,
+      timeout: BigNumberish,
+      nonce: BigNumberish,
+      signature: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     transferOwnership(
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -1239,12 +945,22 @@ export class DstChainPaymentV2Registration extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    voucherTypedHash(overrides?: CallOverrides): Promise<BigNumber>;
-
-    vouchers(
-      arg0: string,
-      arg1: BigNumberish,
+    walletOf(
+      provider: string,
+      account: BytesLike,
       overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    withdraw(
+      provider: string,
+      account: BytesLike,
+      bills: BytesLike,
+      timeout: BigNumberish,
+      nonce: BigNumberish,
+      signature: BytesLike,
+      to: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
 
@@ -1256,76 +972,34 @@ export class DstChainPaymentV2Registration extends BaseContract {
 
     balanceOf(
       provider: string,
+      account: BytesLike,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     celerExec(
+      amount: BigNumberish,
       message: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    decodeMessage(
-      message: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    fee(
+    initWalletAndWithdraw(
       provider: string,
       account: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    getAmountOf(
-      provider: string,
-      resourceType: BigNumberish,
-      value: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    getValueOf(
-      provider: string,
-      resourceType: BigNumberish,
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    hashTypedDataV4ForVoucher(
-      provider: string,
-      account: BytesLike,
+      walletSig: BytesLike,
+      bills: BytesLike,
+      timeout: BigNumberish,
       nonce: BigNumberish,
+      billSig: BytesLike,
+      to: string,
       amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    hashVoucherTypes(
-      provider: string,
-      account: BytesLike,
-      nonce: BigNumberish,
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    initializeEIP712(
-      name: string,
-      version: string,
-      types: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    ipfsAllocations(
-      provider: string,
-      account: BytesLike,
-      storageFee: BigNumberish,
-      expirationFee: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    ipfsAlloctionsFee(
-      provider: string,
-      account: BytesLike,
-      amount: BigNumberish,
-      expiration: BigNumberish,
-      overrides?: CallOverrides
+    initialize(
+      owner: string,
+      pauser: string,
+      router: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     isPauser(
@@ -1359,36 +1033,19 @@ export class DstChainPaymentV2Registration extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    pay(
+    recharge(
       provider: string,
       account: BytesLike,
-      payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
-      nonce: BigNumberish,
       amount: BigNumberish,
-      signature: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    payWithRegistration(
+    rechargeWithRegistration(
       provider: string,
       account: BytesLike,
-      payloads: { resourceType: BigNumberish; values: BigNumberish[] }[],
-      nonce: BigNumberish,
       amount: BigNumberish,
-      voucherSig: BytesLike,
       registrationSig: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    priceOf(
-      provider: string,
-      resourceType: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    providerBalance(
-      provider: string,
-      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     removePauser(
@@ -1406,6 +1063,16 @@ export class DstChainPaymentV2Registration extends BaseContract {
 
     router(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    spend(
+      provider: string,
+      account: BytesLike,
+      bills: BytesLike,
+      timeout: BigNumberish,
+      nonce: BigNumberish,
+      signature: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     transferOwnership(
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -1415,12 +1082,22 @@ export class DstChainPaymentV2Registration extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    voucherTypedHash(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    vouchers(
-      arg0: string,
-      arg1: BigNumberish,
+    walletOf(
+      provider: string,
+      account: BytesLike,
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    withdraw(
+      provider: string,
+      account: BytesLike,
+      bills: BytesLike,
+      timeout: BigNumberish,
+      nonce: BigNumberish,
+      signature: BytesLike,
+      to: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };
 }

@@ -27,23 +27,27 @@ interface ProviderControllerV2RegistrationInterface
     "drip(bytes32,tuple[])": FunctionFragment;
     "dripMult(bytes32[],tuple[][],uint256[])": FunctionFragment;
     "hashRegisterAndDripTypes(address,address,bytes32,bytes)": FunctionFragment;
+    "hashRegisterTypes(address,bytes32)": FunctionFragment;
+    "hashTypedDataV4ForRegister(address,bytes32)": FunctionFragment;
     "hashTypedDataV4ForRegisterAndDrip(address,address,bytes32,bytes)": FunctionFragment;
     "hashTypedDataV4ForWallet(address,bytes32,address)": FunctionFragment;
     "hashWalletTypes(address,bytes32,address)": FunctionFragment;
     "initWallet(address,bytes32,address,bytes)": FunctionFragment;
     "initialize(address,address,string,string,string,address)": FunctionFragment;
     "initializeEIP712(string,string,string)": FunctionFragment;
+    "initializeRegisterTypedHash(string)": FunctionFragment;
     "isPauser(address)": FunctionFragment;
     "owner()": FunctionFragment;
     "pause()": FunctionFragment;
     "paused()": FunctionFragment;
     "pausers(address)": FunctionFragment;
     "poolInitWallet(address,bytes32,address,bytes)": FunctionFragment;
-    "registerAccount(address,bytes32)": FunctionFragment;
+    "registerAccount(address,bytes32,bytes)": FunctionFragment;
     "registerAndDrip(address,bytes32,bytes,bytes)": FunctionFragment;
     "registerAndDripMult(bytes32[],tuple[][])": FunctionFragment;
     "registerAndDripTypedHash()": FunctionFragment;
     "registerMult(bytes32[])": FunctionFragment;
+    "registerTypedHash()": FunctionFragment;
     "removePauser(address)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "renouncePauser()": FunctionFragment;
@@ -82,6 +86,14 @@ interface ProviderControllerV2RegistrationInterface
     values: [string, string, BytesLike, BytesLike]
   ): string;
   encodeFunctionData(
+    functionFragment: "hashRegisterTypes",
+    values: [string, BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "hashTypedDataV4ForRegister",
+    values: [string, BytesLike]
+  ): string;
+  encodeFunctionData(
     functionFragment: "hashTypedDataV4ForRegisterAndDrip",
     values: [string, string, BytesLike, BytesLike]
   ): string;
@@ -105,6 +117,10 @@ interface ProviderControllerV2RegistrationInterface
     functionFragment: "initializeEIP712",
     values: [string, string, string]
   ): string;
+  encodeFunctionData(
+    functionFragment: "initializeRegisterTypedHash",
+    values: [string]
+  ): string;
   encodeFunctionData(functionFragment: "isPauser", values: [string]): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(functionFragment: "pause", values?: undefined): string;
@@ -116,7 +132,7 @@ interface ProviderControllerV2RegistrationInterface
   ): string;
   encodeFunctionData(
     functionFragment: "registerAccount",
-    values: [string, BytesLike]
+    values: [string, BytesLike, BytesLike]
   ): string;
   encodeFunctionData(
     functionFragment: "registerAndDrip",
@@ -136,6 +152,10 @@ interface ProviderControllerV2RegistrationInterface
   encodeFunctionData(
     functionFragment: "registerMult",
     values: [BytesLike[]]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "registerTypedHash",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "removePauser",
@@ -188,6 +208,14 @@ interface ProviderControllerV2RegistrationInterface
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "hashRegisterTypes",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "hashTypedDataV4ForRegister",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "hashTypedDataV4ForRegisterAndDrip",
     data: BytesLike
   ): Result;
@@ -203,6 +231,10 @@ interface ProviderControllerV2RegistrationInterface
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "initializeEIP712",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "initializeRegisterTypedHash",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "isPauser", data: BytesLike): Result;
@@ -232,6 +264,10 @@ interface ProviderControllerV2RegistrationInterface
   ): Result;
   decodeFunctionResult(
     functionFragment: "registerMult",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "registerTypedHash",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -424,6 +460,18 @@ export class ProviderControllerV2Registration extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[string]>;
 
+    hashRegisterTypes(
+      provider: string,
+      account: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
+    hashTypedDataV4ForRegister(
+      provider: string,
+      account: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
     hashTypedDataV4ForRegisterAndDrip(
       provider: string,
       user: string,
@@ -471,6 +519,11 @@ export class ProviderControllerV2Registration extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    initializeRegisterTypedHash(
+      types: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     isPauser(account: string, overrides?: CallOverrides): Promise<[boolean]>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
@@ -491,9 +544,10 @@ export class ProviderControllerV2Registration extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    "registerAccount(address,bytes32)"(
+    "registerAccount(address,bytes32,bytes)"(
       provider: string,
       account: BytesLike,
+      signature: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -522,6 +576,8 @@ export class ProviderControllerV2Registration extends BaseContract {
       accounts: BytesLike[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
+
+    registerTypedHash(overrides?: CallOverrides): Promise<[string]>;
 
     removePauser(
       account: string,
@@ -612,6 +668,18 @@ export class ProviderControllerV2Registration extends BaseContract {
     overrides?: CallOverrides
   ): Promise<string>;
 
+  hashRegisterTypes(
+    provider: string,
+    account: BytesLike,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
+  hashTypedDataV4ForRegister(
+    provider: string,
+    account: BytesLike,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
   hashTypedDataV4ForRegisterAndDrip(
     provider: string,
     user: string,
@@ -659,6 +727,11 @@ export class ProviderControllerV2Registration extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  initializeRegisterTypedHash(
+    types: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   isPauser(account: string, overrides?: CallOverrides): Promise<boolean>;
 
   owner(overrides?: CallOverrides): Promise<string>;
@@ -679,9 +752,10 @@ export class ProviderControllerV2Registration extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  "registerAccount(address,bytes32)"(
+  "registerAccount(address,bytes32,bytes)"(
     provider: string,
     account: BytesLike,
+    signature: BytesLike,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -710,6 +784,8 @@ export class ProviderControllerV2Registration extends BaseContract {
     accounts: BytesLike[],
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
+
+  registerTypedHash(overrides?: CallOverrides): Promise<string>;
 
   removePauser(
     account: string,
@@ -794,6 +870,18 @@ export class ProviderControllerV2Registration extends BaseContract {
       overrides?: CallOverrides
     ): Promise<string>;
 
+    hashRegisterTypes(
+      provider: string,
+      account: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    hashTypedDataV4ForRegister(
+      provider: string,
+      account: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
     hashTypedDataV4ForRegisterAndDrip(
       provider: string,
       user: string,
@@ -841,6 +929,11 @@ export class ProviderControllerV2Registration extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    initializeRegisterTypedHash(
+      types: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     isPauser(account: string, overrides?: CallOverrides): Promise<boolean>;
 
     owner(overrides?: CallOverrides): Promise<string>;
@@ -859,9 +952,10 @@ export class ProviderControllerV2Registration extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "registerAccount(address,bytes32)"(
+    "registerAccount(address,bytes32,bytes)"(
       provider: string,
       account: BytesLike,
+      signature: BytesLike,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -890,6 +984,8 @@ export class ProviderControllerV2Registration extends BaseContract {
       accounts: BytesLike[],
       overrides?: CallOverrides
     ): Promise<void>;
+
+    registerTypedHash(overrides?: CallOverrides): Promise<string>;
 
     removePauser(account: string, overrides?: CallOverrides): Promise<void>;
 
@@ -1092,6 +1188,18 @@ export class ProviderControllerV2Registration extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    hashRegisterTypes(
+      provider: string,
+      account: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    hashTypedDataV4ForRegister(
+      provider: string,
+      account: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     hashTypedDataV4ForRegisterAndDrip(
       provider: string,
       user: string,
@@ -1139,6 +1247,11 @@ export class ProviderControllerV2Registration extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    initializeRegisterTypedHash(
+      types: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     isPauser(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1159,9 +1272,10 @@ export class ProviderControllerV2Registration extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    "registerAccount(address,bytes32)"(
+    "registerAccount(address,bytes32,bytes)"(
       provider: string,
       account: BytesLike,
+      signature: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -1190,6 +1304,8 @@ export class ProviderControllerV2Registration extends BaseContract {
       accounts: BytesLike[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
+
+    registerTypedHash(overrides?: CallOverrides): Promise<BigNumber>;
 
     removePauser(
       account: string,
@@ -1281,6 +1397,18 @@ export class ProviderControllerV2Registration extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    hashRegisterTypes(
+      provider: string,
+      account: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    hashTypedDataV4ForRegister(
+      provider: string,
+      account: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     hashTypedDataV4ForRegisterAndDrip(
       provider: string,
       user: string,
@@ -1328,6 +1456,11 @@ export class ProviderControllerV2Registration extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    initializeRegisterTypedHash(
+      types: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     isPauser(
       account: string,
       overrides?: CallOverrides
@@ -1354,9 +1487,10 @@ export class ProviderControllerV2Registration extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    "registerAccount(address,bytes32)"(
+    "registerAccount(address,bytes32,bytes)"(
       provider: string,
       account: BytesLike,
+      signature: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1387,6 +1521,8 @@ export class ProviderControllerV2Registration extends BaseContract {
       accounts: BytesLike[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
+
+    registerTypedHash(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     removePauser(
       account: string,

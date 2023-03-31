@@ -10,6 +10,6 @@ interface IProviderControllerV2Registration is IProviderController {
 	/// @dev register account
 	/// @param provider provider address
 	/// @param account user account
-	function registerAccount(address provider, bytes32 account) external;
+	function registerAccount(address provider, bytes32 account, bytes memory signature) external;
 
 }

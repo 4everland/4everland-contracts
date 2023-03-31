@@ -293,9 +293,9 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.FundPool__factory>;
     getContractFactory(
-      name: "FundPoolV2",
+      name: "FundPoolRegistration",
       signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.FundPoolV2__factory>;
+    ): Promise<Contracts.FundPoolRegistration__factory>;
     getContractFactory(
       name: "SafeWallet",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -676,10 +676,10 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.FundPool>;
     getContractAt(
-      name: "FundPoolV2",
+      name: "FundPoolRegistration",
       address: string,
       signer?: ethers.Signer
-    ): Promise<Contracts.FundPoolV2>;
+    ): Promise<Contracts.FundPoolRegistration>;
     getContractAt(
       name: "SafeWallet",
       address: string,

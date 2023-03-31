@@ -265,6 +265,11 @@ var _abi = [
                 name: "account",
                 type: "bytes32",
             },
+            {
+                internalType: "bytes",
+                name: "signature",
+                type: "bytes",
+            },
         ],
         name: "registerAccount",
         outputs: [],

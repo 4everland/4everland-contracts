@@ -10,11 +10,19 @@ contract DstChainPaymentV2Registration is DstChainPaymentV2 {
 	using SafeMathUpgradeable for uint256;
 	using SafeERC20Upgradeable for IERC20Upgradeable;
 
-	function payWithRegistration(address provider, bytes32 account, ResourceData.ValuePayload[] memory payloads, uint256 nonce, uint256 amount, bytes memory signature) external whenNotPaused nonReentrant returns (uint256 value) {
+	function payWithRegistration(
+		address provider, 
+		bytes32 account, 
+		ResourceData.ValuePayload[] memory payloads, 
+		uint256 nonce, 
+		uint256 amount, 
+		bytes memory voucherSig, 
+		bytes memory registrationSig
+	) external whenNotPaused nonReentrant returns (uint256 value) {
 		IProviderControllerV2Registration pcr = IProviderControllerV2Registration(address(router.ProviderController()));
-		pcr.registerAccount(provider, account);
+		pcr.registerAccount(provider, account, registrationSig);
 		IERC20Upgradeable token = router.Token();
-		value = _pay(token, provider, account, payloads, nonce, amount, signature);
+		value = _pay(token, provider, account, payloads, nonce, amount, voucherSig);
 		if (value > 0) {
 			token.safeTransferFrom(msg.sender, address(this), value);
 		}

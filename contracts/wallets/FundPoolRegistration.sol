@@ -8,7 +8,7 @@ import '../interfaces/IProviderControllerV2Registration.sol';
 
 /// @author Alexandas
 /// @dev FundPool contract
-contract FundPoolV2 is FundPool {
+contract FundPoolRegistration is FundPool {
 
 	/// @dev recharge for account
 	/// @param provider provider address
@@ -17,12 +17,13 @@ contract FundPoolV2 is FundPool {
 	function rechargeWithRegistration(
 		address provider,
 		bytes32 account,
-		uint256 amount
+		uint256 amount,
+		bytes memory registrationSig
 	) external whenNotPaused nonReentrant {
 		IProviderControllerV2Registration pcr = IProviderControllerV2Registration(address(router.ProviderController()));
-		pcr.registerAccount(provider, account);
-		require(amount > 0, 'FundPoolV2: zero amount');
-		require(router.ProviderController().accountExists(provider, account), 'FundPoolV2: nonexistent account on provider');
+		pcr.registerAccount(provider, account, registrationSig);
+		require(amount > 0, 'FundPoolRegistration: zero amount');
+		require(router.ProviderController().accountExists(provider, account), 'FundPoolRegistration: nonexistent account on provider');
 		_recharge(msg.sender, provider, account, amount);
 	}
 }
