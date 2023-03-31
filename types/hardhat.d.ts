@@ -141,6 +141,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ProviderControllerV2__factory>;
     getContractFactory(
+      name: "ProviderControllerV2Registration",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ProviderControllerV2Registration__factory>;
+    getContractFactory(
       name: "ProviderRegistry",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ProviderRegistry__factory>;
@@ -181,6 +185,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IProviderController__factory>;
     getContractFactory(
+      name: "IProviderControllerV2Registration",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IProviderControllerV2Registration__factory>;
+    getContractFactory(
       name: "IProviderRegistry",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IProviderRegistry__factory>;
@@ -212,6 +220,10 @@ declare module "hardhat/types/runtime" {
       name: "DstChainPaymentV2",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.DstChainPaymentV2__factory>;
+    getContractFactory(
+      name: "DstChainPaymentV2Registration",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.DstChainPaymentV2Registration__factory>;
     getContractFactory(
       name: "SrcChainPayment",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -280,6 +292,10 @@ declare module "hardhat/types/runtime" {
       name: "FundPool",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.FundPool__factory>;
+    getContractFactory(
+      name: "FundPoolV2",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.FundPoolV2__factory>;
     getContractFactory(
       name: "SafeWallet",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -470,6 +486,11 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.ProviderControllerV2>;
     getContractAt(
+      name: "ProviderControllerV2Registration",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ProviderControllerV2Registration>;
+    getContractAt(
       name: "ProviderRegistry",
       address: string,
       signer?: ethers.Signer
@@ -520,6 +541,11 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.IProviderController>;
     getContractAt(
+      name: "IProviderControllerV2Registration",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IProviderControllerV2Registration>;
+    getContractAt(
       name: "IProviderRegistry",
       address: string,
       signer?: ethers.Signer
@@ -559,6 +585,11 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.DstChainPaymentV2>;
+    getContractAt(
+      name: "DstChainPaymentV2Registration",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.DstChainPaymentV2Registration>;
     getContractAt(
       name: "SrcChainPayment",
       address: string,
@@ -644,6 +675,11 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.FundPool>;
+    getContractAt(
+      name: "FundPoolV2",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.FundPoolV2>;
     getContractAt(
       name: "SafeWallet",
       address: string,
