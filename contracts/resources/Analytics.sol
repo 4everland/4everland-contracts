@@ -8,12 +8,13 @@ import '../libraries/ResourceData.sol';
 /// @author Alexandas
 /// @dev send provider analytic data, will be removed in the future
 contract Analytics is RouterWrapper {
-	mapping (address => uint256) public nonces;
+	mapping(uint256 => bool) public nonces;
 
 	event Drip(address provider, uint256 nonce, ResourceData.AmountPayload payload);
 
 	function send(uint256 nonce, ResourceData.AmountPayload memory payload) external onlyProvider {
-		require(nonce == nonces[msg.sender], 'Analytics: invalid nonce');
+		require(!nonces[nonce], 'Analytics: nonce exists');
+		nonces[nonce] = true;
 		emit Drip(msg.sender, nonce, payload);
 	}
 }
