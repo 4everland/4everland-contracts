@@ -245,6 +245,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.SrcChainRecharge__factory>;
     getContractFactory(
+      name: "Analytics",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.Analytics__factory>;
+    getContractFactory(
       name: "IPFSStorageController",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IPFSStorageController__factory>;
@@ -615,6 +619,11 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.SrcChainRecharge>;
+    getContractAt(
+      name: "Analytics",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.Analytics>;
     getContractAt(
       name: "IPFSStorageController",
       address: string,

@@ -58,6 +58,7 @@ export type { SrcChainPaymentV2 } from "./SrcChainPaymentV2";
 export type { RechargeMessageReceiver } from "./RechargeMessageReceiver";
 export type { RechargeMessageSender } from "./RechargeMessageSender";
 export type { SrcChainRecharge } from "./SrcChainRecharge";
+export type { Analytics } from "./Analytics";
 export type { IPFSStorageController } from "./IPFSStorageController";
 export type { ARStorageController } from "./ARStorageController";
 export type { BandwidthController } from "./BandwidthController";
@@ -136,6 +137,7 @@ export { SrcChainPaymentV2__factory } from "./factories/SrcChainPaymentV2__facto
 export { RechargeMessageReceiver__factory } from "./factories/RechargeMessageReceiver__factory";
 export { RechargeMessageSender__factory } from "./factories/RechargeMessageSender__factory";
 export { SrcChainRecharge__factory } from "./factories/SrcChainRecharge__factory";
+export { Analytics__factory } from "./factories/Analytics__factory";
 export { IPFSStorageController__factory } from "./factories/IPFSStorageController__factory";
 export { ARStorageController__factory } from "./factories/ARStorageController__factory";
 export { BandwidthController__factory } from "./factories/BandwidthController__factory";
