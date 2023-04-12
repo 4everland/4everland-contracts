@@ -21,12 +21,17 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface AnalyticsInterface extends ethers.utils.Interface {
   functions: {
-    "nonces(address)": FunctionFragment;
+    "initialize(address)": FunctionFragment;
+    "nonces(uint256)": FunctionFragment;
     "router()": FunctionFragment;
     "send(uint256,(uint8,uint256[]))": FunctionFragment;
   };
 
-  encodeFunctionData(functionFragment: "nonces", values: [string]): string;
+  encodeFunctionData(functionFragment: "initialize", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "nonces",
+    values: [BigNumberish]
+  ): string;
   encodeFunctionData(functionFragment: "router", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "send",
@@ -36,6 +41,7 @@ interface AnalyticsInterface extends ethers.utils.Interface {
     ]
   ): string;
 
+  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "nonces", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "router", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "send", data: BytesLike): Result;
@@ -114,7 +120,12 @@ export class Analytics extends BaseContract {
   interface: AnalyticsInterface;
 
   functions: {
-    nonces(arg0: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+    initialize(
+      router: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    nonces(arg0: BigNumberish, overrides?: CallOverrides): Promise<[boolean]>;
 
     router(overrides?: CallOverrides): Promise<[string]>;
 
@@ -125,7 +136,12 @@ export class Analytics extends BaseContract {
     ): Promise<ContractTransaction>;
   };
 
-  nonces(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+  initialize(
+    router: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  nonces(arg0: BigNumberish, overrides?: CallOverrides): Promise<boolean>;
 
   router(overrides?: CallOverrides): Promise<string>;
 
@@ -136,7 +152,9 @@ export class Analytics extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    nonces(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+    initialize(router: string, overrides?: CallOverrides): Promise<void>;
+
+    nonces(arg0: BigNumberish, overrides?: CallOverrides): Promise<boolean>;
 
     router(overrides?: CallOverrides): Promise<string>;
 
@@ -206,7 +224,12 @@ export class Analytics extends BaseContract {
   };
 
   estimateGas: {
-    nonces(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+    initialize(
+      router: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    nonces(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     router(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -218,8 +241,13 @@ export class Analytics extends BaseContract {
   };
 
   populateTransaction: {
+    initialize(
+      router: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     nonces(
-      arg0: string,
+      arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

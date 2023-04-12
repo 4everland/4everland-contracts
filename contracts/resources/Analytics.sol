@@ -12,6 +12,10 @@ contract Analytics is RouterWrapper {
 
 	event Drip(address provider, uint256 nonce, ResourceData.AmountPayload payload);
 
+	function initialize(IRouter router) external initializer {
+		__Init_Router(router);
+	}
+
 	function send(uint256 nonce, ResourceData.AmountPayload memory payload) external onlyProvider {
 		require(!nonces[nonce], 'Analytics: nonce exists');
 		nonces[nonce] = true;
