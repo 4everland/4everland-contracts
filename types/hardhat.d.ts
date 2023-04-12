@@ -225,6 +225,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.DstChainPaymentV2Registration__factory>;
     getContractFactory(
+      name: "DstChainPaymentV2Src",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.DstChainPaymentV2Src__factory>;
+    getContractFactory(
       name: "SrcChainPayment",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.SrcChainPayment__factory>;
@@ -594,6 +598,11 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.DstChainPaymentV2Registration>;
+    getContractAt(
+      name: "DstChainPaymentV2Src",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.DstChainPaymentV2Src>;
     getContractAt(
       name: "SrcChainPayment",
       address: string,
