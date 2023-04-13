@@ -24,7 +24,7 @@ interface AnalyticsInterface extends ethers.utils.Interface {
     "initialize(address)": FunctionFragment;
     "nonces(uint256)": FunctionFragment;
     "router()": FunctionFragment;
-    "send(uint256,(uint8,uint256[]))": FunctionFragment;
+    "send(uint256,tuple[])": FunctionFragment;
   };
 
   encodeFunctionData(functionFragment: "initialize", values: [string]): string;
@@ -37,7 +37,7 @@ interface AnalyticsInterface extends ethers.utils.Interface {
     functionFragment: "send",
     values: [
       BigNumberish,
-      { resourceType: BigNumberish; amounts: BigNumberish[] }
+      { resourceType: BigNumberish; amounts: BigNumberish[] }[]
     ]
   ): string;
 
@@ -47,7 +47,7 @@ interface AnalyticsInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "send", data: BytesLike): Result;
 
   events: {
-    "Drip(address,uint256,tuple)": EventFragment;
+    "Drip(address,uint256,tuple[])": EventFragment;
     "Initialized(uint8)": EventFragment;
     "RouterUpdated(address)": EventFragment;
   };
@@ -61,14 +61,14 @@ export type DripEvent = TypedEvent<
   [
     string,
     BigNumber,
-    [number, BigNumber[]] & { resourceType: number; amounts: BigNumber[] }
+    ([number, BigNumber[]] & { resourceType: number; amounts: BigNumber[] })[]
   ] & {
     provider: string;
     nonce: BigNumber;
-    payload: [number, BigNumber[]] & {
+    payload: ([number, BigNumber[]] & {
       resourceType: number;
       amounts: BigNumber[];
-    };
+    })[];
   }
 >;
 
@@ -131,7 +131,7 @@ export class Analytics extends BaseContract {
 
     send(
       nonce: BigNumberish,
-      payload: { resourceType: BigNumberish; amounts: BigNumberish[] },
+      payload: { resourceType: BigNumberish; amounts: BigNumberish[] }[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
@@ -147,7 +147,7 @@ export class Analytics extends BaseContract {
 
   send(
     nonce: BigNumberish,
-    payload: { resourceType: BigNumberish; amounts: BigNumberish[] },
+    payload: { resourceType: BigNumberish; amounts: BigNumberish[] }[],
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -160,13 +160,13 @@ export class Analytics extends BaseContract {
 
     send(
       nonce: BigNumberish,
-      payload: { resourceType: BigNumberish; amounts: BigNumberish[] },
+      payload: { resourceType: BigNumberish; amounts: BigNumberish[] }[],
       overrides?: CallOverrides
     ): Promise<void>;
   };
 
   filters: {
-    "Drip(address,uint256,tuple)"(
+    "Drip(address,uint256,tuple[])"(
       provider?: null,
       nonce?: null,
       payload?: null
@@ -174,15 +174,18 @@ export class Analytics extends BaseContract {
       [
         string,
         BigNumber,
-        [number, BigNumber[]] & { resourceType: number; amounts: BigNumber[] }
+        ([number, BigNumber[]] & {
+          resourceType: number;
+          amounts: BigNumber[];
+        })[]
       ],
       {
         provider: string;
         nonce: BigNumber;
-        payload: [number, BigNumber[]] & {
+        payload: ([number, BigNumber[]] & {
           resourceType: number;
           amounts: BigNumber[];
-        };
+        })[];
       }
     >;
 
@@ -194,15 +197,18 @@ export class Analytics extends BaseContract {
       [
         string,
         BigNumber,
-        [number, BigNumber[]] & { resourceType: number; amounts: BigNumber[] }
+        ([number, BigNumber[]] & {
+          resourceType: number;
+          amounts: BigNumber[];
+        })[]
       ],
       {
         provider: string;
         nonce: BigNumber;
-        payload: [number, BigNumber[]] & {
+        payload: ([number, BigNumber[]] & {
           resourceType: number;
           amounts: BigNumber[];
-        };
+        })[];
       }
     >;
 
@@ -235,7 +241,7 @@ export class Analytics extends BaseContract {
 
     send(
       nonce: BigNumberish,
-      payload: { resourceType: BigNumberish; amounts: BigNumberish[] },
+      payload: { resourceType: BigNumberish; amounts: BigNumberish[] }[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
@@ -255,7 +261,7 @@ export class Analytics extends BaseContract {
 
     send(
       nonce: BigNumberish,
-      payload: { resourceType: BigNumberish; amounts: BigNumberish[] },
+      payload: { resourceType: BigNumberish; amounts: BigNumberish[] }[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };
