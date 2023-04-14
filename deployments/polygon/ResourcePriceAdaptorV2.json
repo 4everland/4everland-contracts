@@ -1,0 +1,765 @@
+{
+  "address": "0x331009ed3018Fc0CB379c652Fe0758e9939f4a7F",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint8",
+          "name": "version",
+          "type": "uint8"
+        }
+      ],
+      "name": "Initialized",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "previousOwner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnershipTransferred",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "provider",
+          "type": "address"
+        },
+        {
+          "components": [
+            {
+              "internalType": "enum ResourceData.ResourceType",
+              "name": "resourceType",
+              "type": "uint8"
+            },
+            {
+              "internalType": "uint256",
+              "name": "price",
+              "type": "uint256"
+            }
+          ],
+          "indexed": false,
+          "internalType": "struct IResourcePriceAdaptor.PriceAdaptor[]",
+          "name": "adaptors",
+          "type": "tuple[]"
+        }
+      ],
+      "name": "PriceAdaptorsUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "provider",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "priceIndexBlock",
+          "type": "uint256"
+        }
+      ],
+      "name": "PriceIndexBlockUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "contract IRouter",
+          "name": "router",
+          "type": "address"
+        }
+      ],
+      "name": "RouterUpdated",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "provider",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "index",
+          "type": "uint256"
+        },
+        {
+          "components": [
+            {
+              "internalType": "enum ResourceData.ResourceType",
+              "name": "resourceType",
+              "type": "uint8"
+            },
+            {
+              "internalType": "uint256",
+              "name": "price",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct IResourcePriceAdaptor.PriceAdaptor[]",
+          "name": "adaptors",
+          "type": "tuple[]"
+        }
+      ],
+      "name": "fixPriceIndex",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "provider",
+          "type": "address"
+        },
+        {
+          "internalType": "enum ResourceData.ResourceType",
+          "name": "resourceType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "value",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "priceIndexBlock",
+          "type": "uint256"
+        }
+      ],
+      "name": "getAmountAt",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "provider",
+          "type": "address"
+        },
+        {
+          "internalType": "enum ResourceData.ResourceType",
+          "name": "resourceType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "name": "getAmountOf",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "provider",
+          "type": "address"
+        },
+        {
+          "internalType": "enum ResourceData.ResourceType",
+          "name": "resourceType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "priceIndexBlock",
+          "type": "uint256"
+        }
+      ],
+      "name": "getValueAt",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "provider",
+          "type": "address"
+        },
+        {
+          "internalType": "enum ResourceData.ResourceType",
+          "name": "resourceType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "getValueOf",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "enum ResourceData.ResourceType",
+          "name": "",
+          "type": "uint8"
+        }
+      ],
+      "name": "indexBlocks",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "internalType": "contract IRouter",
+          "name": "router",
+          "type": "address"
+        }
+      ],
+      "name": "initialize",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "provider",
+          "type": "address"
+        },
+        {
+          "internalType": "enum ResourceData.ResourceType",
+          "name": "resourceType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "priceIndexBlock",
+          "type": "uint256"
+        }
+      ],
+      "name": "priceAt",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "priceIndexBlocks",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "provider",
+          "type": "address"
+        },
+        {
+          "internalType": "enum ResourceData.ResourceType",
+          "name": "resourceType",
+          "type": "uint8"
+        }
+      ],
+      "name": "priceOf",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "renounceOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "router",
+      "outputs": [
+        {
+          "internalType": "contract IRouter",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "enum ResourceData.ResourceType",
+              "name": "resourceType",
+              "type": "uint8"
+            },
+            {
+              "internalType": "uint256",
+              "name": "price",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct IResourcePriceAdaptor.PriceAdaptor[]",
+          "name": "adaptors",
+          "type": "tuple[]"
+        }
+      ],
+      "name": "setPriceAdaptors",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0xc03231e48dc6ed65411e3505c4b0d54cf8e4d3ee3876614666ea188a8fc3b09c",
+  "receipt": {
+    "to": null,
+    "from": "0xe5bab2D79EB833FA25906Cd90540339C9aB8AE70",
+    "contractAddress": "0x331009ed3018Fc0CB379c652Fe0758e9939f4a7F",
+    "transactionIndex": 31,
+    "gasUsed": "1290076",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000020000000000000000000009000000000000000000000008000000000000000000000000000000080000000000000200000000000800000000000000000000100000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000080000010000000080000200000000000040000000000000400000000000000000000000000000000004000000000000000000001000000040000000000000000000000100000000000000000000000000000000000000000000000000100000000000000000000100000",
+    "blockHash": "0xee576e61edbc9353644658d20229b6b958be73e5184e375c16090cc70177d529",
+    "transactionHash": "0xc03231e48dc6ed65411e3505c4b0d54cf8e4d3ee3876614666ea188a8fc3b09c",
+    "logs": [
+      {
+        "transactionIndex": 31,
+        "blockNumber": 41512981,
+        "transactionHash": "0xc03231e48dc6ed65411e3505c4b0d54cf8e4d3ee3876614666ea188a8fc3b09c",
+        "address": "0x331009ed3018Fc0CB379c652Fe0758e9939f4a7F",
+        "topics": [
+          "0x7f26b83ff96e1f2b6a682f133852f6798a09c465da95921460cefb3847402498"
+        ],
+        "data": "0x0000000000000000000000000000000000000000000000000000000000000001",
+        "logIndex": 140,
+        "blockHash": "0xee576e61edbc9353644658d20229b6b958be73e5184e375c16090cc70177d529"
+      },
+      {
+        "transactionIndex": 31,
+        "blockNumber": 41512981,
+        "transactionHash": "0xc03231e48dc6ed65411e3505c4b0d54cf8e4d3ee3876614666ea188a8fc3b09c",
+        "address": "0x0000000000000000000000000000000000001010",
+        "topics": [
+          "0x4dfe1bbbcf077ddc3e01291eea2d5c70c2b422b415d95645b9adcfd678cb1d63",
+          "0x0000000000000000000000000000000000000000000000000000000000001010",
+          "0x000000000000000000000000e5bab2d79eb833fa25906cd90540339c9ab8ae70",
+          "0x000000000000000000000000f0245f6251bef9447a08766b9da2b07b28ad80b0"
+        ],
+        "data": "0x00000000000000000000000000000000000000000000000000c14470c5851650000000000000000000000000000000000000000000000000c1335dcd4161ebf700000000000000000000000000000000000000000000053e08c1c59365a3607d000000000000000000000000000000000000000000000000c072195c7bdcd5a700000000000000000000000000000000000000000000053e09830a042b2876cd",
+        "logIndex": 141,
+        "blockHash": "0xee576e61edbc9353644658d20229b6b958be73e5184e375c16090cc70177d529"
+      }
+    ],
+    "blockNumber": 41512981,
+    "cumulativeGasUsed": "7058867",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "numDeployments": 1,
+  "solcInputHash": "e3af331bb9993fbc81c5c9d3a73b9226",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.9+commit.e5eed63a\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"provider\",\"type\":\"address\"},{\"components\":[{\"internalType\":\"enum ResourceData.ResourceType\",\"name\":\"resourceType\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"price\",\"type\":\"uint256\"}],\"indexed\":false,\"internalType\":\"struct IResourcePriceAdaptor.PriceAdaptor[]\",\"name\":\"adaptors\",\"type\":\"tuple[]\"}],\"name\":\"PriceAdaptorsUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"provider\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"priceIndexBlock\",\"type\":\"uint256\"}],\"name\":\"PriceIndexBlockUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"contract IRouter\",\"name\":\"router\",\"type\":\"address\"}],\"name\":\"RouterUpdated\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"provider\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"enum ResourceData.ResourceType\",\"name\":\"resourceType\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"price\",\"type\":\"uint256\"}],\"internalType\":\"struct IResourcePriceAdaptor.PriceAdaptor[]\",\"name\":\"adaptors\",\"type\":\"tuple[]\"}],\"name\":\"fixPriceIndex\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"provider\",\"type\":\"address\"},{\"internalType\":\"enum ResourceData.ResourceType\",\"name\":\"resourceType\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"priceIndexBlock\",\"type\":\"uint256\"}],\"name\":\"getAmountAt\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"provider\",\"type\":\"address\"},{\"internalType\":\"enum ResourceData.ResourceType\",\"name\":\"resourceType\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"getAmountOf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"provider\",\"type\":\"address\"},{\"internalType\":\"enum ResourceData.ResourceType\",\"name\":\"resourceType\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"priceIndexBlock\",\"type\":\"uint256\"}],\"name\":\"getValueAt\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"provider\",\"type\":\"address\"},{\"internalType\":\"enum ResourceData.ResourceType\",\"name\":\"resourceType\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"getValueOf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"enum ResourceData.ResourceType\",\"name\":\"\",\"type\":\"uint8\"}],\"name\":\"indexBlocks\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"contract IRouter\",\"name\":\"router\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"provider\",\"type\":\"address\"},{\"internalType\":\"enum ResourceData.ResourceType\",\"name\":\"resourceType\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"priceIndexBlock\",\"type\":\"uint256\"}],\"name\":\"priceAt\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"priceIndexBlocks\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"provider\",\"type\":\"address\"},{\"internalType\":\"enum ResourceData.ResourceType\",\"name\":\"resourceType\",\"type\":\"uint8\"}],\"name\":\"priceOf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"router\",\"outputs\":[{\"internalType\":\"contract IRouter\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"enum ResourceData.ResourceType\",\"name\":\"resourceType\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"price\",\"type\":\"uint256\"}],\"internalType\":\"struct IResourcePriceAdaptor.PriceAdaptor[]\",\"name\":\"adaptors\",\"type\":\"tuple[]\"}],\"name\":\"setPriceAdaptors\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"author\":\"Alexandas\",\"details\":\"Resource price adaptor contract\",\"kind\":\"dev\",\"methods\":{\"getAmountAt(address,uint8,uint256,uint256)\":{\"details\":\"get amount resource with value at a specific block\",\"params\":{\"priceIndexBlock\":\"block numer\",\"provider\":\"provider address\",\"resourceType\":\"resource type\",\"value\":\"token value\"},\"returns\":{\"_0\":\"resource amount\"}},\"getAmountOf(address,uint8,uint256)\":{\"details\":\"return resource amount with value\",\"params\":{\"provider\":\"provider address\",\"resourceType\":\"resource type\",\"value\":\"token value in resource decimals(18)\"},\"returns\":{\"_0\":\"resource amount\"}},\"getValueAt(address,uint8,uint256,uint256)\":{\"details\":\"get value for `amount` resource at a specific block\",\"params\":{\"amount\":\"resource amount\",\"priceIndexBlock\":\"block number\",\"provider\":\"provider address\",\"resourceType\":\"resource type\"},\"returns\":{\"_0\":\"token value in resource decimals(18)\"}},\"getValueOf(address,uint8,uint256)\":{\"details\":\"return value of amount resource\",\"params\":{\"amount\":\"resource amount\",\"provider\":\"provider address\",\"resourceType\":\"resource type\"},\"returns\":{\"_0\":\"token value in resource decimals(18)\"}},\"initialize(address,address)\":{\"details\":\"proxy initialize function\",\"params\":{\"owner\":\"contract owner\",\"router\":\"router contract address\"}},\"owner()\":{\"details\":\"Returns the address of the current owner.\"},\"priceAt(address,uint8,uint256)\":{\"details\":\"get price for resource at a specific block\",\"params\":{\"priceIndexBlock\":\"block number\",\"provider\":\"provider address\",\"resourceType\":\"resource type\"},\"returns\":{\"_0\":\"price for resource at a specific block\"}},\"priceOf(address,uint8)\":{\"details\":\"return resource price\",\"params\":{\"provider\":\"provider address\",\"resourceType\":\"resource type\"},\"returns\":{\"_0\":\"resource price\"}},\"renounceOwnership()\":{\"details\":\"Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner.\"},\"setPriceAdaptors((uint8,uint256)[])\":{\"details\":\"update price adaptors\",\"params\":{\"adaptors\":\"price adaptors\"}},\"transferOwnership(address)\":{\"details\":\"Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner.\"}},\"stateVariables\":{\"indexBlocks\":{\"details\":\"return current price index blocks\"}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/resources/ResourcePriceAdaptorV2.sol\":\"ResourcePriceAdaptorV2\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"details\":{\"constantOptimizer\":true,\"cse\":true,\"deduplicate\":true,\"inliner\":true,\"jumpdestRemover\":true,\"orderLiterals\":true,\"peephole\":true,\"yul\":false},\"runs\":200},\"remappings\":[]},\"sources\":{\"@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts v4.4.1 (access/Ownable.sol)\\n\\npragma solidity ^0.8.0;\\n\\nimport \\\"../utils/ContextUpgradeable.sol\\\";\\nimport \\\"../proxy/utils/Initializable.sol\\\";\\n\\n/**\\n * @dev Contract module which provides a basic access control mechanism, where\\n * there is an account (an owner) that can be granted exclusive access to\\n * specific functions.\\n *\\n * By default, the owner account will be the one that deploys the contract. This\\n * can later be changed with {transferOwnership}.\\n *\\n * This module is used through inheritance. It will make available the modifier\\n * `onlyOwner`, which can be applied to your functions to restrict their use to\\n * the owner.\\n */\\nabstract contract OwnableUpgradeable is Initializable, ContextUpgradeable {\\n    address private _owner;\\n\\n    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);\\n\\n    /**\\n     * @dev Initializes the contract setting the deployer as the initial owner.\\n     */\\n    function __Ownable_init() internal onlyInitializing {\\n        __Ownable_init_unchained();\\n    }\\n\\n    function __Ownable_init_unchained() internal onlyInitializing {\\n        _transferOwnership(_msgSender());\\n    }\\n\\n    /**\\n     * @dev Returns the address of the current owner.\\n     */\\n    function owner() public view virtual returns (address) {\\n        return _owner;\\n    }\\n\\n    /**\\n     * @dev Throws if called by any account other than the owner.\\n     */\\n    modifier onlyOwner() {\\n        require(owner() == _msgSender(), \\\"Ownable: caller is not the owner\\\");\\n        _;\\n    }\\n\\n    /**\\n     * @dev Leaves the contract without owner. It will not be possible to call\\n     * `onlyOwner` functions anymore. Can only be called by the current owner.\\n     *\\n     * NOTE: Renouncing ownership will leave the contract without an owner,\\n     * thereby removing any functionality that is only available to the owner.\\n     */\\n    function renounceOwnership() public virtual onlyOwner {\\n        _transferOwnership(address(0));\\n    }\\n\\n    /**\\n     * @dev Transfers ownership of the contract to a new account (`newOwner`).\\n     * Can only be called by the current owner.\\n     */\\n    function transferOwnership(address newOwner) public virtual onlyOwner {\\n        require(newOwner != address(0), \\\"Ownable: new owner is the zero address\\\");\\n        _transferOwnership(newOwner);\\n    }\\n\\n    /**\\n     * @dev Transfers ownership of the contract to a new account (`newOwner`).\\n     * Internal function without access restriction.\\n     */\\n    function _transferOwnership(address newOwner) internal virtual {\\n        address oldOwner = _owner;\\n        _owner = newOwner;\\n        emit OwnershipTransferred(oldOwner, newOwner);\\n    }\\n\\n    /**\\n     * @dev This empty reserved space is put in place to allow future versions to add new\\n     * variables without shifting down storage in the inheritance chain.\\n     * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps\\n     */\\n    uint256[49] private __gap;\\n}\\n\",\"keccak256\":\"0x652fee292f698d8dba81bf287cb71f1682f6483b67ebe601a5f7387dcfc30b34\",\"license\":\"MIT\"},\"@openzeppelin/contracts-upgradeable/interfaces/IERC20Upgradeable.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts v4.4.1 (interfaces/IERC20.sol)\\n\\npragma solidity ^0.8.0;\\n\\nimport \\\"../token/ERC20/IERC20Upgradeable.sol\\\";\\n\",\"keccak256\":\"0xe73087c5001a37cf7186b3709377c7ceb01a0d38fb908723d1464cea66b4958c\",\"license\":\"MIT\"},\"@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v4.6.0) (proxy/utils/Initializable.sol)\\n\\npragma solidity ^0.8.2;\\n\\nimport \\\"../../utils/AddressUpgradeable.sol\\\";\\n\\n/**\\n * @dev This is a base contract to aid in writing upgradeable contracts, or any kind of contract that will be deployed\\n * behind a proxy. Since proxied contracts do not make use of a constructor, it's common to move constructor logic to an\\n * external initializer function, usually called `initialize`. It then becomes necessary to protect this initializer\\n * function so it can only be called once. The {initializer} modifier provided by this contract will have this effect.\\n *\\n * The initialization functions use a version number. Once a version number is used, it is consumed and cannot be\\n * reused. This mechanism prevents re-execution of each \\\"step\\\" but allows the creation of new initialization steps in\\n * case an upgrade adds a module that needs to be initialized.\\n *\\n * For example:\\n *\\n * [.hljs-theme-light.nopadding]\\n * ```\\n * contract MyToken is ERC20Upgradeable {\\n *     function initialize() initializer public {\\n *         __ERC20_init(\\\"MyToken\\\", \\\"MTK\\\");\\n *     }\\n * }\\n * contract MyTokenV2 is MyToken, ERC20PermitUpgradeable {\\n *     function initializeV2() reinitializer(2) public {\\n *         __ERC20Permit_init(\\\"MyToken\\\");\\n *     }\\n * }\\n * ```\\n *\\n * TIP: To avoid leaving the proxy in an uninitialized state, the initializer function should be called as early as\\n * possible by providing the encoded function call as the `_data` argument to {ERC1967Proxy-constructor}.\\n *\\n * CAUTION: When used with inheritance, manual care must be taken to not invoke a parent initializer twice, or to ensure\\n * that all initializers are idempotent. This is not verified automatically as constructors are by Solidity.\\n *\\n * [CAUTION]\\n * ====\\n * Avoid leaving a contract uninitialized.\\n *\\n * An uninitialized contract can be taken over by an attacker. This applies to both a proxy and its implementation\\n * contract, which may impact the proxy. To prevent the implementation contract from being used, you should invoke\\n * the {_disableInitializers} function in the constructor to automatically lock it when it is deployed:\\n *\\n * [.hljs-theme-light.nopadding]\\n * ```\\n * /// @custom:oz-upgrades-unsafe-allow constructor\\n * constructor() {\\n *     _disableInitializers();\\n * }\\n * ```\\n * ====\\n */\\nabstract contract Initializable {\\n    /**\\n     * @dev Indicates that the contract has been initialized.\\n     * @custom:oz-retyped-from bool\\n     */\\n    uint8 private _initialized;\\n\\n    /**\\n     * @dev Indicates that the contract is in the process of being initialized.\\n     */\\n    bool private _initializing;\\n\\n    /**\\n     * @dev Triggered when the contract has been initialized or reinitialized.\\n     */\\n    event Initialized(uint8 version);\\n\\n    /**\\n     * @dev A modifier that defines a protected initializer function that can be invoked at most once. In its scope,\\n     * `onlyInitializing` functions can be used to initialize parent contracts. Equivalent to `reinitializer(1)`.\\n     */\\n    modifier initializer() {\\n        bool isTopLevelCall = _setInitializedVersion(1);\\n        if (isTopLevelCall) {\\n            _initializing = true;\\n        }\\n        _;\\n        if (isTopLevelCall) {\\n            _initializing = false;\\n            emit Initialized(1);\\n        }\\n    }\\n\\n    /**\\n     * @dev A modifier that defines a protected reinitializer function that can be invoked at most once, and only if the\\n     * contract hasn't been initialized to a greater version before. In its scope, `onlyInitializing` functions can be\\n     * used to initialize parent contracts.\\n     *\\n     * `initializer` is equivalent to `reinitializer(1)`, so a reinitializer may be used after the original\\n     * initialization step. This is essential to configure modules that are added through upgrades and that require\\n     * initialization.\\n     *\\n     * Note that versions can jump in increments greater than 1; this implies that if multiple reinitializers coexist in\\n     * a contract, executing them in the right order is up to the developer or operator.\\n     */\\n    modifier reinitializer(uint8 version) {\\n        bool isTopLevelCall = _setInitializedVersion(version);\\n        if (isTopLevelCall) {\\n            _initializing = true;\\n        }\\n        _;\\n        if (isTopLevelCall) {\\n            _initializing = false;\\n            emit Initialized(version);\\n        }\\n    }\\n\\n    /**\\n     * @dev Modifier to protect an initialization function so that it can only be invoked by functions with the\\n     * {initializer} and {reinitializer} modifiers, directly or indirectly.\\n     */\\n    modifier onlyInitializing() {\\n        require(_initializing, \\\"Initializable: contract is not initializing\\\");\\n        _;\\n    }\\n\\n    /**\\n     * @dev Locks the contract, preventing any future reinitialization. This cannot be part of an initializer call.\\n     * Calling this in the constructor of a contract will prevent that contract from being initialized or reinitialized\\n     * to any version. It is recommended to use this to lock implementation contracts that are designed to be called\\n     * through proxies.\\n     */\\n    function _disableInitializers() internal virtual {\\n        _setInitializedVersion(type(uint8).max);\\n    }\\n\\n    function _setInitializedVersion(uint8 version) private returns (bool) {\\n        // If the contract is initializing we ignore whether _initialized is set in order to support multiple\\n        // inheritance patterns, but we only do this in the context of a constructor, and for the lowest level\\n        // of initializers, because in other contexts the contract may have been reentered.\\n        if (_initializing) {\\n            require(\\n                version == 1 && !AddressUpgradeable.isContract(address(this)),\\n                \\\"Initializable: contract is already initialized\\\"\\n            );\\n            return false;\\n        } else {\\n            require(_initialized < version, \\\"Initializable: contract is already initialized\\\");\\n            _initialized = version;\\n            return true;\\n        }\\n    }\\n}\\n\",\"keccak256\":\"0x7454006cccb737612b00104d2f606d728e2818b778e7e55542f063c614ce46ba\",\"license\":\"MIT\"},\"@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v4.6.0) (token/ERC20/IERC20.sol)\\n\\npragma solidity ^0.8.0;\\n\\n/**\\n * @dev Interface of the ERC20 standard as defined in the EIP.\\n */\\ninterface IERC20Upgradeable {\\n    /**\\n     * @dev Emitted when `value` tokens are moved from one account (`from`) to\\n     * another (`to`).\\n     *\\n     * Note that `value` may be zero.\\n     */\\n    event Transfer(address indexed from, address indexed to, uint256 value);\\n\\n    /**\\n     * @dev Emitted when the allowance of a `spender` for an `owner` is set by\\n     * a call to {approve}. `value` is the new allowance.\\n     */\\n    event Approval(address indexed owner, address indexed spender, uint256 value);\\n\\n    /**\\n     * @dev Returns the amount of tokens in existence.\\n     */\\n    function totalSupply() external view returns (uint256);\\n\\n    /**\\n     * @dev Returns the amount of tokens owned by `account`.\\n     */\\n    function balanceOf(address account) external view returns (uint256);\\n\\n    /**\\n     * @dev Moves `amount` tokens from the caller's account to `to`.\\n     *\\n     * Returns a boolean value indicating whether the operation succeeded.\\n     *\\n     * Emits a {Transfer} event.\\n     */\\n    function transfer(address to, uint256 amount) external returns (bool);\\n\\n    /**\\n     * @dev Returns the remaining number of tokens that `spender` will be\\n     * allowed to spend on behalf of `owner` through {transferFrom}. This is\\n     * zero by default.\\n     *\\n     * This value changes when {approve} or {transferFrom} are called.\\n     */\\n    function allowance(address owner, address spender) external view returns (uint256);\\n\\n    /**\\n     * @dev Sets `amount` as the allowance of `spender` over the caller's tokens.\\n     *\\n     * Returns a boolean value indicating whether the operation succeeded.\\n     *\\n     * IMPORTANT: Beware that changing an allowance with this method brings the risk\\n     * that someone may use both the old and the new allowance by unfortunate\\n     * transaction ordering. One possible solution to mitigate this race\\n     * condition is to first reduce the spender's allowance to 0 and set the\\n     * desired value afterwards:\\n     * https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729\\n     *\\n     * Emits an {Approval} event.\\n     */\\n    function approve(address spender, uint256 amount) external returns (bool);\\n\\n    /**\\n     * @dev Moves `amount` tokens from `from` to `to` using the\\n     * allowance mechanism. `amount` is then deducted from the caller's\\n     * allowance.\\n     *\\n     * Returns a boolean value indicating whether the operation succeeded.\\n     *\\n     * Emits a {Transfer} event.\\n     */\\n    function transferFrom(\\n        address from,\\n        address to,\\n        uint256 amount\\n    ) external returns (bool);\\n}\\n\",\"keccak256\":\"0x4e733d3164f73f461eaf9d8087a7ad1ea180bdc8ba0d3d61b0e1ae16d8e63dff\",\"license\":\"MIT\"},\"@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v4.5.0) (utils/Address.sol)\\n\\npragma solidity ^0.8.1;\\n\\n/**\\n * @dev Collection of functions related to the address type\\n */\\nlibrary AddressUpgradeable {\\n    /**\\n     * @dev Returns true if `account` is a contract.\\n     *\\n     * [IMPORTANT]\\n     * ====\\n     * It is unsafe to assume that an address for which this function returns\\n     * false is an externally-owned account (EOA) and not a contract.\\n     *\\n     * Among others, `isContract` will return false for the following\\n     * types of addresses:\\n     *\\n     *  - an externally-owned account\\n     *  - a contract in construction\\n     *  - an address where a contract will be created\\n     *  - an address where a contract lived, but was destroyed\\n     * ====\\n     *\\n     * [IMPORTANT]\\n     * ====\\n     * You shouldn't rely on `isContract` to protect against flash loan attacks!\\n     *\\n     * Preventing calls from contracts is highly discouraged. It breaks composability, breaks support for smart wallets\\n     * like Gnosis Safe, and does not provide security since it can be circumvented by calling from a contract\\n     * constructor.\\n     * ====\\n     */\\n    function isContract(address account) internal view returns (bool) {\\n        // This method relies on extcodesize/address.code.length, which returns 0\\n        // for contracts in construction, since the code is only stored at the end\\n        // of the constructor execution.\\n\\n        return account.code.length > 0;\\n    }\\n\\n    /**\\n     * @dev Replacement for Solidity's `transfer`: sends `amount` wei to\\n     * `recipient`, forwarding all available gas and reverting on errors.\\n     *\\n     * https://eips.ethereum.org/EIPS/eip-1884[EIP1884] increases the gas cost\\n     * of certain opcodes, possibly making contracts go over the 2300 gas limit\\n     * imposed by `transfer`, making them unable to receive funds via\\n     * `transfer`. {sendValue} removes this limitation.\\n     *\\n     * https://diligence.consensys.net/posts/2019/09/stop-using-soliditys-transfer-now/[Learn more].\\n     *\\n     * IMPORTANT: because control is transferred to `recipient`, care must be\\n     * taken to not create reentrancy vulnerabilities. Consider using\\n     * {ReentrancyGuard} or the\\n     * https://solidity.readthedocs.io/en/v0.5.11/security-considerations.html#use-the-checks-effects-interactions-pattern[checks-effects-interactions pattern].\\n     */\\n    function sendValue(address payable recipient, uint256 amount) internal {\\n        require(address(this).balance >= amount, \\\"Address: insufficient balance\\\");\\n\\n        (bool success, ) = recipient.call{value: amount}(\\\"\\\");\\n        require(success, \\\"Address: unable to send value, recipient may have reverted\\\");\\n    }\\n\\n    /**\\n     * @dev Performs a Solidity function call using a low level `call`. A\\n     * plain `call` is an unsafe replacement for a function call: use this\\n     * function instead.\\n     *\\n     * If `target` reverts with a revert reason, it is bubbled up by this\\n     * function (like regular Solidity function calls).\\n     *\\n     * Returns the raw returned data. To convert to the expected return value,\\n     * use https://solidity.readthedocs.io/en/latest/units-and-global-variables.html?highlight=abi.decode#abi-encoding-and-decoding-functions[`abi.decode`].\\n     *\\n     * Requirements:\\n     *\\n     * - `target` must be a contract.\\n     * - calling `target` with `data` must not revert.\\n     *\\n     * _Available since v3.1._\\n     */\\n    function functionCall(address target, bytes memory data) internal returns (bytes memory) {\\n        return functionCall(target, data, \\\"Address: low-level call failed\\\");\\n    }\\n\\n    /**\\n     * @dev Same as {xref-Address-functionCall-address-bytes-}[`functionCall`], but with\\n     * `errorMessage` as a fallback revert reason when `target` reverts.\\n     *\\n     * _Available since v3.1._\\n     */\\n    function functionCall(\\n        address target,\\n        bytes memory data,\\n        string memory errorMessage\\n    ) internal returns (bytes memory) {\\n        return functionCallWithValue(target, data, 0, errorMessage);\\n    }\\n\\n    /**\\n     * @dev Same as {xref-Address-functionCall-address-bytes-}[`functionCall`],\\n     * but also transferring `value` wei to `target`.\\n     *\\n     * Requirements:\\n     *\\n     * - the calling contract must have an ETH balance of at least `value`.\\n     * - the called Solidity function must be `payable`.\\n     *\\n     * _Available since v3.1._\\n     */\\n    function functionCallWithValue(\\n        address target,\\n        bytes memory data,\\n        uint256 value\\n    ) internal returns (bytes memory) {\\n        return functionCallWithValue(target, data, value, \\\"Address: low-level call with value failed\\\");\\n    }\\n\\n    /**\\n     * @dev Same as {xref-Address-functionCallWithValue-address-bytes-uint256-}[`functionCallWithValue`], but\\n     * with `errorMessage` as a fallback revert reason when `target` reverts.\\n     *\\n     * _Available since v3.1._\\n     */\\n    function functionCallWithValue(\\n        address target,\\n        bytes memory data,\\n        uint256 value,\\n        string memory errorMessage\\n    ) internal returns (bytes memory) {\\n        require(address(this).balance >= value, \\\"Address: insufficient balance for call\\\");\\n        require(isContract(target), \\\"Address: call to non-contract\\\");\\n\\n        (bool success, bytes memory returndata) = target.call{value: value}(data);\\n        return verifyCallResult(success, returndata, errorMessage);\\n    }\\n\\n    /**\\n     * @dev Same as {xref-Address-functionCall-address-bytes-}[`functionCall`],\\n     * but performing a static call.\\n     *\\n     * _Available since v3.3._\\n     */\\n    function functionStaticCall(address target, bytes memory data) internal view returns (bytes memory) {\\n        return functionStaticCall(target, data, \\\"Address: low-level static call failed\\\");\\n    }\\n\\n    /**\\n     * @dev Same as {xref-Address-functionCall-address-bytes-string-}[`functionCall`],\\n     * but performing a static call.\\n     *\\n     * _Available since v3.3._\\n     */\\n    function functionStaticCall(\\n        address target,\\n        bytes memory data,\\n        string memory errorMessage\\n    ) internal view returns (bytes memory) {\\n        require(isContract(target), \\\"Address: static call to non-contract\\\");\\n\\n        (bool success, bytes memory returndata) = target.staticcall(data);\\n        return verifyCallResult(success, returndata, errorMessage);\\n    }\\n\\n    /**\\n     * @dev Tool to verifies that a low level call was successful, and revert if it wasn't, either by bubbling the\\n     * revert reason using the provided one.\\n     *\\n     * _Available since v4.3._\\n     */\\n    function verifyCallResult(\\n        bool success,\\n        bytes memory returndata,\\n        string memory errorMessage\\n    ) internal pure returns (bytes memory) {\\n        if (success) {\\n            return returndata;\\n        } else {\\n            // Look for revert reason and bubble it up if present\\n            if (returndata.length > 0) {\\n                // The easiest way to bubble the revert reason is using memory via assembly\\n\\n                assembly {\\n                    let returndata_size := mload(returndata)\\n                    revert(add(32, returndata), returndata_size)\\n                }\\n            } else {\\n                revert(errorMessage);\\n            }\\n        }\\n    }\\n}\\n\",\"keccak256\":\"0x55cf2bd9fc76704ddcdc19834cd288b7de00fc0f298a40ea16a954ae8991db2d\",\"license\":\"MIT\"},\"@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts v4.4.1 (utils/Context.sol)\\n\\npragma solidity ^0.8.0;\\nimport \\\"../proxy/utils/Initializable.sol\\\";\\n\\n/**\\n * @dev Provides information about the current execution context, including the\\n * sender of the transaction and its data. While these are generally available\\n * via msg.sender and msg.data, they should not be accessed in such a direct\\n * manner, since when dealing with meta-transactions the account sending and\\n * paying for execution may not be the actual sender (as far as an application\\n * is concerned).\\n *\\n * This contract is only required for intermediate, library-like contracts.\\n */\\nabstract contract ContextUpgradeable is Initializable {\\n    function __Context_init() internal onlyInitializing {\\n    }\\n\\n    function __Context_init_unchained() internal onlyInitializing {\\n    }\\n    function _msgSender() internal view virtual returns (address) {\\n        return msg.sender;\\n    }\\n\\n    function _msgData() internal view virtual returns (bytes calldata) {\\n        return msg.data;\\n    }\\n\\n    /**\\n     * @dev This empty reserved space is put in place to allow future versions to add new\\n     * variables without shifting down storage in the inheritance chain.\\n     * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps\\n     */\\n    uint256[50] private __gap;\\n}\\n\",\"keccak256\":\"0x963ea7f0b48b032eef72fe3a7582edf78408d6f834115b9feadd673a4d5bd149\",\"license\":\"MIT\"},\"@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v4.6.0) (utils/math/SafeMath.sol)\\n\\npragma solidity ^0.8.0;\\n\\n// CAUTION\\n// This version of SafeMath should only be used with Solidity 0.8 or later,\\n// because it relies on the compiler's built in overflow checks.\\n\\n/**\\n * @dev Wrappers over Solidity's arithmetic operations.\\n *\\n * NOTE: `SafeMath` is generally not needed starting with Solidity 0.8, since the compiler\\n * now has built in overflow checking.\\n */\\nlibrary SafeMathUpgradeable {\\n    /**\\n     * @dev Returns the addition of two unsigned integers, with an overflow flag.\\n     *\\n     * _Available since v3.4._\\n     */\\n    function tryAdd(uint256 a, uint256 b) internal pure returns (bool, uint256) {\\n        unchecked {\\n            uint256 c = a + b;\\n            if (c < a) return (false, 0);\\n            return (true, c);\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns the subtraction of two unsigned integers, with an overflow flag.\\n     *\\n     * _Available since v3.4._\\n     */\\n    function trySub(uint256 a, uint256 b) internal pure returns (bool, uint256) {\\n        unchecked {\\n            if (b > a) return (false, 0);\\n            return (true, a - b);\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns the multiplication of two unsigned integers, with an overflow flag.\\n     *\\n     * _Available since v3.4._\\n     */\\n    function tryMul(uint256 a, uint256 b) internal pure returns (bool, uint256) {\\n        unchecked {\\n            // Gas optimization: this is cheaper than requiring 'a' not being zero, but the\\n            // benefit is lost if 'b' is also tested.\\n            // See: https://github.com/OpenZeppelin/openzeppelin-contracts/pull/522\\n            if (a == 0) return (true, 0);\\n            uint256 c = a * b;\\n            if (c / a != b) return (false, 0);\\n            return (true, c);\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns the division of two unsigned integers, with a division by zero flag.\\n     *\\n     * _Available since v3.4._\\n     */\\n    function tryDiv(uint256 a, uint256 b) internal pure returns (bool, uint256) {\\n        unchecked {\\n            if (b == 0) return (false, 0);\\n            return (true, a / b);\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns the remainder of dividing two unsigned integers, with a division by zero flag.\\n     *\\n     * _Available since v3.4._\\n     */\\n    function tryMod(uint256 a, uint256 b) internal pure returns (bool, uint256) {\\n        unchecked {\\n            if (b == 0) return (false, 0);\\n            return (true, a % b);\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns the addition of two unsigned integers, reverting on\\n     * overflow.\\n     *\\n     * Counterpart to Solidity's `+` operator.\\n     *\\n     * Requirements:\\n     *\\n     * - Addition cannot overflow.\\n     */\\n    function add(uint256 a, uint256 b) internal pure returns (uint256) {\\n        return a + b;\\n    }\\n\\n    /**\\n     * @dev Returns the subtraction of two unsigned integers, reverting on\\n     * overflow (when the result is negative).\\n     *\\n     * Counterpart to Solidity's `-` operator.\\n     *\\n     * Requirements:\\n     *\\n     * - Subtraction cannot overflow.\\n     */\\n    function sub(uint256 a, uint256 b) internal pure returns (uint256) {\\n        return a - b;\\n    }\\n\\n    /**\\n     * @dev Returns the multiplication of two unsigned integers, reverting on\\n     * overflow.\\n     *\\n     * Counterpart to Solidity's `*` operator.\\n     *\\n     * Requirements:\\n     *\\n     * - Multiplication cannot overflow.\\n     */\\n    function mul(uint256 a, uint256 b) internal pure returns (uint256) {\\n        return a * b;\\n    }\\n\\n    /**\\n     * @dev Returns the integer division of two unsigned integers, reverting on\\n     * division by zero. The result is rounded towards zero.\\n     *\\n     * Counterpart to Solidity's `/` operator.\\n     *\\n     * Requirements:\\n     *\\n     * - The divisor cannot be zero.\\n     */\\n    function div(uint256 a, uint256 b) internal pure returns (uint256) {\\n        return a / b;\\n    }\\n\\n    /**\\n     * @dev Returns the remainder of dividing two unsigned integers. (unsigned integer modulo),\\n     * reverting when dividing by zero.\\n     *\\n     * Counterpart to Solidity's `%` operator. This function uses a `revert`\\n     * opcode (which leaves remaining gas untouched) while Solidity uses an\\n     * invalid opcode to revert (consuming all remaining gas).\\n     *\\n     * Requirements:\\n     *\\n     * - The divisor cannot be zero.\\n     */\\n    function mod(uint256 a, uint256 b) internal pure returns (uint256) {\\n        return a % b;\\n    }\\n\\n    /**\\n     * @dev Returns the subtraction of two unsigned integers, reverting with custom message on\\n     * overflow (when the result is negative).\\n     *\\n     * CAUTION: This function is deprecated because it requires allocating memory for the error\\n     * message unnecessarily. For custom revert reasons use {trySub}.\\n     *\\n     * Counterpart to Solidity's `-` operator.\\n     *\\n     * Requirements:\\n     *\\n     * - Subtraction cannot overflow.\\n     */\\n    function sub(\\n        uint256 a,\\n        uint256 b,\\n        string memory errorMessage\\n    ) internal pure returns (uint256) {\\n        unchecked {\\n            require(b <= a, errorMessage);\\n            return a - b;\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns the integer division of two unsigned integers, reverting with custom message on\\n     * division by zero. The result is rounded towards zero.\\n     *\\n     * Counterpart to Solidity's `/` operator. Note: this function uses a\\n     * `revert` opcode (which leaves remaining gas untouched) while Solidity\\n     * uses an invalid opcode to revert (consuming all remaining gas).\\n     *\\n     * Requirements:\\n     *\\n     * - The divisor cannot be zero.\\n     */\\n    function div(\\n        uint256 a,\\n        uint256 b,\\n        string memory errorMessage\\n    ) internal pure returns (uint256) {\\n        unchecked {\\n            require(b > 0, errorMessage);\\n            return a / b;\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns the remainder of dividing two unsigned integers. (unsigned integer modulo),\\n     * reverting with custom message when dividing by zero.\\n     *\\n     * CAUTION: This function is deprecated because it requires allocating memory for the error\\n     * message unnecessarily. For custom revert reasons use {tryMod}.\\n     *\\n     * Counterpart to Solidity's `%` operator. This function uses a `revert`\\n     * opcode (which leaves remaining gas untouched) while Solidity uses an\\n     * invalid opcode to revert (consuming all remaining gas).\\n     *\\n     * Requirements:\\n     *\\n     * - The divisor cannot be zero.\\n     */\\n    function mod(\\n        uint256 a,\\n        uint256 b,\\n        string memory errorMessage\\n    ) internal pure returns (uint256) {\\n        unchecked {\\n            require(b > 0, errorMessage);\\n            return a % b;\\n        }\\n    }\\n}\\n\",\"keccak256\":\"0xcaa8b7861115ea691c77ddbeac140a444e0edcd1d9812a43942c0f6b42b36a49\",\"license\":\"MIT\"},\"@openzeppelin/contracts/utils/StorageSlot.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts v4.4.1 (utils/StorageSlot.sol)\\n\\npragma solidity ^0.8.0;\\n\\n/**\\n * @dev Library for reading and writing primitive types to specific storage slots.\\n *\\n * Storage slots are often used to avoid storage conflict when dealing with upgradeable contracts.\\n * This library helps with reading and writing to such slots without the need for inline assembly.\\n *\\n * The functions in this library return Slot structs that contain a `value` member that can be used to read or write.\\n *\\n * Example usage to set ERC1967 implementation slot:\\n * ```\\n * contract ERC1967 {\\n *     bytes32 internal constant _IMPLEMENTATION_SLOT = 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc;\\n *\\n *     function _getImplementation() internal view returns (address) {\\n *         return StorageSlot.getAddressSlot(_IMPLEMENTATION_SLOT).value;\\n *     }\\n *\\n *     function _setImplementation(address newImplementation) internal {\\n *         require(Address.isContract(newImplementation), \\\"ERC1967: new implementation is not a contract\\\");\\n *         StorageSlot.getAddressSlot(_IMPLEMENTATION_SLOT).value = newImplementation;\\n *     }\\n * }\\n * ```\\n *\\n * _Available since v4.1 for `address`, `bool`, `bytes32`, and `uint256`._\\n */\\nlibrary StorageSlot {\\n    struct AddressSlot {\\n        address value;\\n    }\\n\\n    struct BooleanSlot {\\n        bool value;\\n    }\\n\\n    struct Bytes32Slot {\\n        bytes32 value;\\n    }\\n\\n    struct Uint256Slot {\\n        uint256 value;\\n    }\\n\\n    /**\\n     * @dev Returns an `AddressSlot` with member `value` located at `slot`.\\n     */\\n    function getAddressSlot(bytes32 slot) internal pure returns (AddressSlot storage r) {\\n        assembly {\\n            r.slot := slot\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns an `BooleanSlot` with member `value` located at `slot`.\\n     */\\n    function getBooleanSlot(bytes32 slot) internal pure returns (BooleanSlot storage r) {\\n        assembly {\\n            r.slot := slot\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns an `Bytes32Slot` with member `value` located at `slot`.\\n     */\\n    function getBytes32Slot(bytes32 slot) internal pure returns (Bytes32Slot storage r) {\\n        assembly {\\n            r.slot := slot\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns an `Uint256Slot` with member `value` located at `slot`.\\n     */\\n    function getUint256Slot(bytes32 slot) internal pure returns (Uint256Slot storage r) {\\n        assembly {\\n            r.slot := slot\\n        }\\n    }\\n}\\n\",\"keccak256\":\"0xfe1b7a9aa2a530a9e705b220e26cd584e2fbdc9602a3a1066032b12816b46aca\",\"license\":\"MIT\"},\"contracts/govers/RouterWrapper.sol\":{\"content\":\"// SPDX-License-Identifier: UNLICENSE\\n\\npragma solidity >=0.8.0;\\nimport '@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol';\\nimport '../interfaces/IRouter.sol';\\n\\n/// @author Alexandas\\n/// @dev Router wrapper contract\\nabstract contract RouterWrapper is Initializable {\\n\\t/// @dev router contract address\\n\\tIRouter public router;\\n\\n\\t/// @dev emit when provider registry contract updated\\n\\t/// @param router contract address\\n\\tevent RouterUpdated(IRouter router);\\n\\n\\tmodifier onlyGovernance() {\\n\\t\\tIGovernance governance = router.Governance();\\n\\t\\trequire(msg.sender == address(governance), 'RouterWrapper: caller is not the governance');\\n\\t\\t_;\\n\\t}\\n\\n\\tmodifier onlyProviderController() {\\n\\t\\tIProviderController controller = router.ProviderController();\\n\\t\\trequire(msg.sender == address(controller), 'RouterWrapper: caller is not the provider controller');\\n\\t\\t_;\\n\\t}\\n\\n\\tmodifier onlyProvider() {\\n\\t\\tIProviderRegistry providerRegistry = router.ProviderRegistry();\\n\\t\\trequire(providerRegistry.isProvider(msg.sender), 'RouterWrapper: caller is not the provider');\\n\\t\\t_;\\n\\t}\\n\\n\\tmodifier onlyMessageReceiver() {\\n\\t\\taddress messageReceiver = router.MessageReceiver();\\n\\t\\trequire(msg.sender == messageReceiver, 'RouterWrapper: caller is not message receiver');\\n\\t\\t_;\\n\\t}\\n\\n\\tmodifier onlyDstChainPayment() {\\n\\t\\tIDstChainPayment dstChainPayment = router.DstChainPayment();\\n\\t\\trequire(msg.sender == address(dstChainPayment), 'RouterWrapper: caller is not dst chain payment');\\n\\t\\t_;\\n\\t}\\n\\n\\tmodifier onlyFundPool() {\\n\\t\\tIFundPool pool = router.FundPool();\\n\\t\\trequire(msg.sender == address(pool), 'RouterWrapper: caller is not fund pool');\\n\\t\\t_;\\n\\t}\\n\\n\\t/// @dev initialize provider registry contract\\n\\t/// @param _router contract address\\n\\tfunction __Init_Router(IRouter _router) internal onlyInitializing {\\n\\t\\t_setRouter(_router);\\n\\t}\\n\\n\\tfunction _setRouter(IRouter _router) internal {\\n\\t\\trequire(address(_router) != address(0), 'RouterWrapper: zero address');\\n\\t\\trouter = _router;\\n\\t\\temit RouterUpdated(_router);\\n\\t}\\n}\\n\",\"keccak256\":\"0x0867787020dc7ff95048c08570a69761ebdb8608517829cd122ef9677da8c45f\",\"license\":\"UNLICENSE\"},\"contracts/interfaces/IBilling.sol\":{\"content\":\"// SPDX-License-Identifier: UNLICENSE\\n\\npragma solidity >=0.8.0;\\n\\nimport '@openzeppelin/contracts-upgradeable/interfaces/IERC20Upgradeable.sol';\\nimport '../libraries/ResourceData.sol';\\nimport '../resources/interfaces/IResourcePriceAdaptor.sol';\\n\\n/// @author Alexandas\\n/// @dev Billing interface\\ninterface IBilling {\\n\\tstruct BillEntry {\\n\\t\\tResourceData.ResourceType resourceType;\\n\\t\\tuint256 amount;\\n\\t}\\n\\n\\tstruct Bill {\\n\\t\\tuint256 indexBlock;\\n\\t\\tBillEntry[] entries;\\n\\t}\\n\\n\\t/// @dev emit when billing types hash updated\\n\\t/// @param hash billing types Hash\\n\\tevent BillingTypesHashUpdated(bytes32 hash);\\n\\n\\t/// @dev emit when bills finalized\\n\\t/// @param provider provider address\\n\\t/// @param account user account\\n\\t/// @param bills bills data\\n\\t/// @param amount fee\\n\\t/// @param nonce nonce\\n\\tevent Billing(address provider, bytes32 account, bytes bills, uint256 amount, uint64 nonce);\\n\\n\\t/// @dev get billing types hash\\n\\t/// @return billing types hash\\n\\tfunction billingTypesHash() external view returns (bytes32);\\n\\n\\t/// @dev spend bills\\n\\t/// @param provider provider address\\n\\t/// @param account user account\\n\\t/// @param bills billing data\\n\\t/// @param timeout tx timeout\\n\\t/// @param nonce billing nonce\\n\\t/// @param signature billing signature\\n\\t/// @return fee billing fee\\n\\tfunction spend(\\n\\t\\taddress provider,\\n\\t\\tbytes32 account,\\n\\t\\tbytes memory bills,\\n\\t\\tuint256 timeout,\\n\\t\\tuint64 nonce,\\n\\t\\tbytes memory signature\\n\\t) external returns (uint256 fee);\\n\\n\\t/// @dev return balance of provider\\n\\t/// @param provider provider address\\n\\t/// @return balance of provider\\n\\tfunction balanceOf(address provider) external view returns (uint256);\\n\\n\\t/// @dev provider nonces for account\\n\\t/// @param provider provider address\\n\\t/// @param account user account\\n\\t/// @param nonce nonce\\n\\t/// @return whether nonce exists\\n\\tfunction nonceExists(\\n\\t\\taddress provider,\\n\\t\\tbytes32 account,\\n\\t\\tuint64 nonce\\n\\t) external view returns (bool);\\n}\\n\",\"keccak256\":\"0x28413ecc2f7477ad5f216bc9e6d543fc567af662ee6a278abad15505ddf19597\",\"license\":\"UNLICENSE\"},\"contracts/interfaces/IDstChainPayment.sol\":{\"content\":\"// SPDX-License-Identifier: UNLICENSE\\n\\npragma solidity >=0.8.0;\\n\\nimport '@openzeppelin/contracts-upgradeable/interfaces/IERC20Upgradeable.sol';\\nimport '../libraries/ResourceData.sol';\\n\\n/// @author Alexandas\\n/// @dev DstChainPayment interface\\ninterface IDstChainPayment {\\n\\tstruct PaymentPayload {\\n\\t\\taddress provider;\\n\\t\\tuint64 nonce;\\n\\t\\tbytes32 account;\\n\\t\\tResourceData.ValuePayload[] payloads;\\n\\t}\\n\\n\\t// event PaidV2(address provider, bytes32 account, ResourceData.ValuePayload[] payloads);\\n\\n\\tevent Paid(address provider, bytes32 account, ResourceData.ValuePayload[] payloads, uint256 value, uint256 nonce, uint256 amount);\\n\\n\\t/// @dev pay from source chain only called by message receiver\\n\\t/// @param message payment payload message bytes\\n\\tfunction celerExec(bytes calldata message) external;\\n\\n\\t/// @dev pay on dst chain\\n\\t/// @param provider provider address\\n\\t/// @param account user account\\n\\t/// @param payloads payment payloads\\n\\t/// @param nonce voucher nonce\\n\\t/// @param amount voucher amount\\n\\t/// @param signature vourcher signature for provider\\n\\t/// @return value total token value\\n\\tfunction pay(address provider, bytes32 account, ResourceData.ValuePayload[] memory payloads, uint256 nonce, uint256 amount, bytes memory signature) external returns(uint256 value);\\n\\n\\t/// @dev calculate fee for ipfs storage and expiration\\n\\t/// @param provider provider address\\n\\t/// @param account user account\\n\\t/// @param amount ipfs storage amount\\n\\t/// @param expiration ipfs expiration(in seconds)\\n\\t/// @return storageFee ipfs storage fee\\n\\t/// @return expirationFee ipfs expiration fee\\n\\tfunction ipfsAlloctionsFee(\\n\\t\\taddress provider,\\n\\t\\tbytes32 account,\\n\\t\\tuint256 amount,\\n\\t\\tuint256 expiration\\n\\t) external view returns (uint256 storageFee, uint256 expirationFee);\\n\\n\\t/// @dev calculate ipfs storage and expiration with storage fee and expiration fee\\n\\t/// @param provider provider address\\n\\t/// @param account user account\\n\\t/// @param storageFee storage fee\\n\\t/// @param expirationFee expiration fee\\n\\t/// @return amount ipfs storage amount\\n\\t/// @return expiration ipfs expiration(in seconds)\\n\\tfunction ipfsAllocations(\\n\\t\\taddress provider,\\n\\t\\tbytes32 account,\\n\\t\\tuint256 storageFee,\\n\\t\\tuint256 expirationFee\\n\\t) external view returns (uint256 amount, uint256 expiration);\\n\\n\\t/// @dev return balance of provider\\n\\t/// @param provider provider address\\n\\t/// @return balance of provider\\n\\tfunction balanceOf(address provider) external view returns (uint256);\\n\\n\\t/// @dev return resource price\\n\\t/// @param provider provider address\\n\\t/// @param resourceType resource type\\n\\t/// @return resource price\\n\\tfunction priceOf(address provider, ResourceData.ResourceType resourceType) external view returns (uint256);\\n\\n\\t/// @dev return value of amount resource\\n\\t/// @param provider provider address\\n\\t/// @param resourceType resource type\\n\\t/// @param amount resource amount\\n\\t/// @return token value\\n\\tfunction getValueOf(\\n\\t\\taddress provider,\\n\\t\\tResourceData.ResourceType resourceType,\\n\\t\\tuint256 amount\\n\\t) external view returns (uint256);\\n\\n\\t/// @dev return resource amount with value\\n\\t/// @param provider provider address\\n\\t/// @param resourceType resource type\\n\\t/// @param value token value\\n\\t/// @return resource amount\\n\\tfunction getAmountOf(\\n\\t\\taddress provider,\\n\\t\\tResourceData.ResourceType resourceType,\\n\\t\\tuint256 value\\n\\t) external view returns (uint256);\\n}\\n\",\"keccak256\":\"0x32c0b099390e3fb0add639fd7ad51d53d6e39ed2d9180d9d62bc5e4a6e1ce0df\",\"license\":\"UNLICENSE\"},\"contracts/interfaces/IFundPool.sol\":{\"content\":\"// SPDX-License-Identifier: UNLICENSE\\n\\npragma solidity >=0.8.0;\\n\\n/// @author Alexandas\\n/// @dev FundPool interface\\ninterface IFundPool {\\n\\n\\t/// @dev emit when bill spent\\n\\t/// @param provider provider address\\n\\t/// @param account user account\\n\\t/// @param amount token amount\\n\\tevent Spent(address provider, bytes32 account, uint256 amount);\\n\\n\\t/// @dev emit when account recharged\\n\\t/// @param provider provider address\\n\\t/// @param account user account\\n\\t/// @param amount token amount\\n\\tevent Recharged(address provider, bytes32 account, uint256 amount);\\n\\n\\t/// @dev emit when user withdrawn\\n\\t/// @param provider provider address\\n\\t/// @param account user account\\n\\t/// @param to token receiver\\n\\t/// @param amount token amount\\n\\tevent Withdrawn(address provider, bytes32 account, address to, uint256 amount);\\n\\n\\t/// @dev recharge for account\\n\\t/// @param provider provider address\\n\\t/// @param account user account\\n\\t/// @param amount token amount\\n\\tfunction recharge(\\n\\t\\taddress provider,\\n\\t\\tbytes32 account,\\n\\t\\tuint256 amount\\n\\t) external;\\n\\n\\tfunction celerExec(uint256 amount, bytes memory message) external;\\n\\n\\t/// @dev initialize wallet and recharge for account\\n\\t/// @param provider provider address\\n\\t/// @param account user account\\n\\t/// @param walletSig wallet signature\\n\\t/// @param bills billing data\\n\\t/// @param timeout tx timeout\\n\\t/// @param nonce billing nonce\\n\\t/// @param billSig bill signature\\n\\t/// @return fee bill fee\\n\\t/// @param to token receiver\\n\\t/// @param amount token amount\\n\\tfunction initWalletAndWithdraw(\\n\\t\\taddress provider,\\n\\t\\tbytes32 account,\\n\\t\\tbytes memory walletSig,\\n\\t\\tbytes memory bills,\\n\\t\\tuint256 timeout,\\n\\t\\tuint64 nonce,\\n\\t\\tbytes memory billSig,\\n\\t\\taddress to,\\n\\t\\tuint256 amount\\n\\t) external returns (uint256 fee);\\n\\n\\t/// @dev spend bills for account\\n\\t/// @param provider provider address\\n\\t/// @param account user account\\n\\t/// @param bills billing data\\n\\t/// @param timeout tx timeout\\n\\t/// @param nonce billing nonce\\n\\t/// @param signature provider signature\\n\\t/// @return fee bills fee\\n\\tfunction spend(\\n\\t\\taddress provider,\\n\\t\\tbytes32 account,\\n\\t\\tbytes memory bills,\\n\\t\\tuint256 timeout,\\n\\t\\tuint64 nonce,\\n\\t\\tbytes memory signature\\n\\t) external returns (uint256 fee);\\n\\n\\t/// @dev withdraw token for account\\n\\t/// @param provider provider address\\n\\t/// @param account user account\\n\\t/// @param bills billing data\\n\\t/// @param timeout tx timeout\\n\\t/// @param nonce billing nonce\\n\\t/// @param signature billing signature\\n\\t/// @param to token receiver\\n\\t/// @param amount token amount\\n\\t/// @param signature provider signature\\n\\t/// @return fee bill fee\\n\\tfunction withdraw(\\n\\t\\taddress provider,\\n\\t\\tbytes32 account,\\n\\t\\tbytes memory bills,\\n\\t\\tuint256 timeout,\\n\\t\\tuint64 nonce,\\n\\t\\tbytes memory signature,\\n\\t\\taddress to,\\n\\t\\tuint256 amount\\n\\t) external returns (uint256 fee);\\n\\n\\t/// @dev return wallet of the account\\n\\t/// @param provider provider address\\n\\t/// @param account user account\\n\\t/// @return wallet of the account\\n\\tfunction walletOf(address provider, bytes32 account) external view returns (address);\\n\\n\\t/// @dev return balance of account\\n\\t/// @param provider provider address\\n\\t/// @param account user account\\n\\t/// @return balance of account account\\n\\tfunction balanceOf(address provider, bytes32 account) external view returns (uint256);\\n}\\n\",\"keccak256\":\"0x450de2cd3b0d94955479c791a4e3ea4430d9917c9033b9259dc70c9a827808ac\",\"license\":\"UNLICENSE\"},\"contracts/interfaces/IGovernance.sol\":{\"content\":\"// SPDX-License-Identifier: UNLICENSE\\n\\npragma solidity >=0.8.0;\\n\\nimport './IProviderRegistry.sol';\\nimport '../libraries/ResourceData.sol';\\n\\n/// @author Alexandas\\n/// @dev Governance interface\\ninterface IGovernance {\\n\\t/// @dev emit when governance drip resource to provider\\n\\t/// @param provider provider address\\n\\tevent GovernanceDrip(address provider);\\n\\n\\t/// @dev add a provider\\n\\t/// @param provider address\\n\\tfunction addProvider(address provider) external;\\n\\n\\t/// @dev remove a provider\\n\\t/// @param provider address\\n\\tfunction removeProvider(address provider) external;\\n\\n\\t/// @dev drip resource to provider\\n\\t/// @param provider provider address\\n\\t/// @param payloads resource payloads\\n\\tfunction drip(address provider, ResourceData.AmountPayload[] memory payloads) external;\\n}\\n\",\"keccak256\":\"0xfa284b7879ce25372f1f6c74ee8c7df6d41dedae6f3298b788086473c0d4c215\",\"license\":\"UNLICENSE\"},\"contracts/interfaces/IProviderController.sol\":{\"content\":\"// SPDX-License-Identifier: UNLICENSE\\n\\npragma solidity >=0.8.0;\\n\\nimport '../libraries/ResourceData.sol';\\n\\n/// @author Alexandas\\n/// @dev provider controller interface\\ninterface IProviderController {\\n\\t/// @dev emit when account registered in provider\\n\\t/// @param provider provider address\\n\\t/// @param account user account\\n\\tevent AccountRegistered(address provider, bytes32 account);\\n\\n\\t/// @dev emit when provider drip resource to account\\n\\t/// @param provider provider address\\n\\t/// @param account user account\\n\\tevent ProviderDripped(address provider, bytes32 account);\\n\\n\\t/// @dev emit when provider drip resource to account\\n\\t/// @param provider provider address\\n\\t/// @param account user account\\n\\tevent ProviderDripped(address provider, bytes32 account, uint256 nonce);\\n\\n\\t/// @dev emit when wallet types hash updated\\n\\t/// @param hash wallet types hash\\n\\tevent WalletTypesHashUpdated(bytes32 hash);\\n\\n\\t/// @dev emit when wallet transferred\\n\\t/// @param provider provider address\\n\\t/// @param account user account\\n\\t/// @param from original wallet address\\n\\t/// @param to new wallet address\\n\\tevent WalletTransferred(address provider, bytes32 account, address from, address to);\\n\\n\\t/// @dev keccak256(\\\"Wallet(address provider,bytes32 account,address wallet)\\\")\\n\\tfunction walletTypesHash() external view returns (bytes32);\\n\\n\\t/// @dev register account\\n\\t/// @param account user account\\n\\tfunction registerAccount(bytes32 account) external;\\n\\n\\t/// @dev register multiple account\\n\\t/// @param accounts user accounts\\n\\tfunction registerMult(bytes32[] memory accounts) external;\\n\\n\\t/// @dev Explain to a developer any extra details\\n\\t/// @param provider provider address\\n\\t/// @param account user account\\n\\t/// @return whether account exists\\n\\tfunction accountExists(address provider, bytes32 account) external view returns (bool);\\n\\n\\t/// @dev provider drip resource to multiple accounts\\n\\t/// @param accounts user accounts\\n\\t/// @param payloads resource amount payloads\\n\\tfunction dripMult(\\n\\t\\tbytes32[] memory accounts,\\n\\t\\tResourceData.AmountPayload[][] memory payloads\\n\\t) external;\\n\\n\\t/// @dev provider drip resource to user account\\n\\t/// @param account user account\\n\\t/// @param payloads resource amount payloads\\n\\tfunction drip(\\n\\t\\tbytes32 account,\\n\\t\\tResourceData.AmountPayload[] memory payloads\\n\\t) external;\\n\\n\\t/// @dev provider register and drip resource for multiple accounts\\n\\t/// @param accounts user accounts\\n\\t/// @param payloads resource amount payloads\\n\\tfunction registerAndDripMult(\\n\\t\\tbytes32[] memory accounts,\\n\\t\\tResourceData.AmountPayload[][] memory payloads\\n\\t) external;\\n\\n\\t/// @dev initialize wallet for the given account\\n\\t/// @param provider provider address\\n\\t/// @param account user account\\n\\t/// @param wallet account wallet\\n\\t/// @param signature provider signature\\n\\tfunction initWallet(\\n\\t\\taddress provider,\\n\\t\\tbytes32 account,\\n\\t\\taddress wallet,\\n\\t\\tbytes memory signature\\n\\t) external;\\n\\n\\t/// @dev initialize wallet for the given account called by fund pool\\n\\t/// @param provider provider address\\n\\t/// @param account user account\\n\\t/// @param wallet account wallet\\n\\t/// @param signature provider signature\\n\\tfunction poolInitWallet(\\n\\t\\taddress provider,\\n\\t\\tbytes32 account,\\n\\t\\taddress wallet,\\n\\t\\tbytes memory signature\\n\\t) external;\\n\\n\\t/// @dev transfer wallet for the account\\n\\t/// @param provider provider address\\n\\t/// @param account user account\\n\\t/// @param newWallet account wallet\\n\\tfunction transferWallet(\\n\\t\\taddress provider,\\n\\t\\tbytes32 account,\\n\\t\\taddress newWallet\\n\\t) external;\\n\\n\\t/// @dev return wallet for the account\\n\\t/// @param provider provider address\\n\\t/// @param account user account\\n\\t/// @return wallet for the account\\n\\tfunction walletOf(address provider, bytes32 account) external view returns (address);\\n\\n\\t/// @dev return whether wallet exists\\n\\t/// @param provider provider address\\n\\t/// @param account user account\\n\\t/// @return whether wallet exists\\n\\tfunction walletExists(address provider, bytes32 account) external view returns (bool);\\n}\\n\",\"keccak256\":\"0x60430a866da94f91e7f8d451e01ec6915537596b6bb4909ce1ddc3212b0999fc\",\"license\":\"UNLICENSE\"},\"contracts/interfaces/IProviderRegistry.sol\":{\"content\":\"// SPDX-License-Identifier: UNLICENSE\\n\\npragma solidity >=0.8.0;\\n\\n/// @author Alexandas\\n/// @dev provider registry interface\\ninterface IProviderRegistry {\\n\\t/// @dev emit when provider is added\\n\\t/// @param provider provider address\\n\\tevent AddProvider(address provider);\\n\\n\\t/// @dev emit when provider removed\\n\\t/// @param provider provider address\\n\\tevent RemoveProvider(address provider);\\n\\n\\tevent AddProivderWallet(address provider, address wallet);\\n\\n\\tevent RemoveProviderWallet(address provider, address wallet);\\n\\n\\t/// @dev add a provider\\n\\t/// @param provider address\\n\\tfunction addProvider(address provider) external;\\n\\n\\t/// @dev remove a provider\\n\\t/// @param provider address\\n\\tfunction removeProvider(address provider) external;\\n\\n\\t/// @dev return whether address is a provider\\n\\t/// @param provider address\\n\\tfunction isProvider(address provider) external view returns (bool);\\n\\n\\t/// @dev return provider wallet\\n\\t/// @param provider address\\n\\t/// @return provider wallet\\n\\tfunction providerWallet(address provider) external view returns (address);\\n\\n\\t/// @dev return provider wallet exists\\n\\t/// @param provider address\\n\\t/// @return whether provider wallet exists\\n\\tfunction providerWalletExists(address provider) external view returns (bool);\\n\\n\\t/// @dev return whether a valid signature\\n\\t/// @param provider address\\n\\t/// @param hash message hash\\n\\t/// @param signature provider signature for message hash\\n\\t/// @return is valid signature\\n\\tfunction isValidSignature(\\n\\t\\taddress provider,\\n\\t\\tbytes32 hash,\\n\\t\\tbytes memory signature\\n\\t) external returns (bool);\\n}\\n\",\"keccak256\":\"0xa51e867c83ef543d6aa67facb3df5952b83ed6aea7fc9c2129a4105377d29bf2\",\"license\":\"UNLICENSE\"},\"contracts/interfaces/IRouter.sol\":{\"content\":\"// SPDX-License-Identifier: UNLICENSE\\n\\npragma solidity >=0.8.0;\\n\\nimport '@openzeppelin/contracts-upgradeable/interfaces/IERC20Upgradeable.sol';\\n\\nimport '../interfaces/IGovernance.sol';\\nimport '../interfaces/IProviderRegistry.sol';\\nimport '../interfaces/IProviderController.sol';\\nimport '../interfaces/IDstChainPayment.sol';\\nimport '../interfaces/IBilling.sol';\\nimport '../interfaces/IFundPool.sol';\\nimport '../resources/interfaces/INormalResourceController.sol';\\nimport '../resources/interfaces/IIPFSStorageController.sol';\\nimport '../resources/interfaces/IResourcePriceAdaptor.sol';\\n\\n/// @author Alexandas\\n/// @dev Router interface\\ninterface IRouter {\\n\\t/// @dev emit when governance contract address updated\\n\\t/// @param governance governance contract address\\n\\tevent GovernanceUpdated(IGovernance governance);\\n\\n\\t/// @dev emit when message receiver updated\\n\\t/// @param messageReceiver message receiver contract address\\n\\tevent MessageReceiverUpdated(address messageReceiver);\\n\\n\\t/// @dev emit when provider registry contract updated\\n\\t/// @param _providerRegistry provider registry contract\\n\\tevent ProviderRegistryUpdated(IProviderRegistry _providerRegistry);\\n\\n\\t/// @dev emit when dst ProviderController contract address updated\\n\\t/// @param providerController ProviderController contract address\\n\\tevent ProviderControllerUpdated(IProviderController providerController);\\n\\n\\t/// @dev emit when token updated\\n\\t/// @param token token address\\n\\tevent TokenUpdated(IERC20Upgradeable token);\\n\\n\\t/// @dev emit when building time controller updated\\n\\t/// @param buildingTimeController building time controller contract\\n\\tevent BuildingTimeControllerUpdated(INormalResourceController buildingTimeController);\\n\\n\\t/// @dev emit when bandwidth controller updated\\n\\t/// @param bandwidthController bandwidth controller contract\\n\\tevent BandwidthControllerUpdated(INormalResourceController bandwidthController);\\n\\n\\t/// @dev emit when AR storage controller updated\\n\\t/// @param arStorageController AR storage controller contract\\n\\tevent ARStorageControllerUpdated(INormalResourceController arStorageController);\\n\\n\\t/// @dev emit when ipfs storage controller updated\\n\\t/// @param ipfsStorageController IPFS storage controller contract\\n\\tevent IPFSStorageControllerUpdated(IIPFSStorageController ipfsStorageController);\\n\\n\\t/// @dev emit when resource price adaptor updated\\n\\t/// @param resourcePriceAdaptor resource price adaptor contract\\n\\tevent ResourcePriceAdaptorUpdated(IResourcePriceAdaptor resourcePriceAdaptor);\\n\\n\\t/// @dev emit when dst chain payment contract address updated\\n\\t/// @param dstChainPayment dst chain payment contract address\\n\\tevent DstChainPaymentUpdated(IDstChainPayment dstChainPayment);\\n\\n\\t/// @dev emit when billing contract updated\\n\\t/// @param billing billing contract\\n\\tevent BillingUpdated(IBilling billing);\\n\\n\\t/// @dev emit when fund pool contract updated\\n\\t/// @param fundPool fund pool contract\\n\\tevent FundPoolUpdated(IFundPool fundPool);\\n\\n\\t/// @dev message receiver contract address\\n\\tfunction MessageReceiver() external view returns (address);\\n\\n\\t/// @dev Governance contract address\\n\\tfunction Governance() external view returns (IGovernance);\\n\\n\\t/// @dev providers contract address\\n\\tfunction ProviderRegistry() external view returns (IProviderRegistry);\\n\\n\\t/// @dev provider controller contract address\\n\\tfunction ProviderController() external view returns (IProviderController);\\n\\n\\t/// @dev token address\\n\\tfunction Token() external view returns (IERC20Upgradeable);\\n\\n\\t/// @dev return building time controller\\n\\tfunction BuildingTimeController() external view returns (INormalResourceController);\\n\\n\\t/// @dev return bandwidth controller\\n\\tfunction BandwidthController() external view returns (INormalResourceController);\\n\\n\\t/// @dev return AR storage controller\\n\\tfunction ARStorageController() external view returns (INormalResourceController);\\n\\n\\t/// @dev return ipfs storage controller\\n\\tfunction IPFSStorageController() external view returns (IIPFSStorageController);\\n\\n\\t/// @dev return resource price adaptor contract address\\n\\tfunction ResourcePriceAdaptor() external view returns (IResourcePriceAdaptor);\\n\\n\\t/// @dev dst chain payment contract address\\n\\tfunction DstChainPayment() external view returns (IDstChainPayment);\\n\\n\\t/// @dev billing contract address\\n\\tfunction Billing() external view returns (IBilling);\\n\\n\\t/// @dev fund pool contract address\\n\\tfunction FundPool() external view returns (IFundPool);\\n}\\n\",\"keccak256\":\"0x32c01e0f705a5c96ad7550e7cb0e885c5479fa9353445c256eab4e8c0e14e8cf\",\"license\":\"UNLICENSE\"},\"contracts/libraries/ResourceData.sol\":{\"content\":\"// SPDX-License-Identifier: UNLICENSE\\n\\npragma solidity >=0.8.0;\\nimport '@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol';\\nimport '@openzeppelin/contracts-upgradeable/interfaces/IERC20Upgradeable.sol';\\n\\n/// @author Alexandas\\n/// @dev resource data library\\nlibrary ResourceData {\\n\\tusing SafeMathUpgradeable for uint256;\\n\\n\\tenum ResourceType {\\n\\t\\tNull,\\n\\t\\tBuildingTime,\\n\\t\\tBandwidth,\\n\\t\\tARStorage,\\n\\t\\tIPFSStorage\\n\\t}\\n\\n\\tstruct ValuePayload {\\n\\t\\tResourceData.ResourceType resourceType;\\n\\t\\tuint256[] values;\\n\\t}\\n\\n\\tstruct AmountPayload {\\n\\t\\tResourceData.ResourceType resourceType;\\n\\t\\tuint256[] amounts;\\n\\t}\\n\\n\\tstruct ValuePayloads {\\n\\t\\tResourceData.ValuePayload[] payloads;\\n\\t}\\n\\n\\tfunction convertSourceChainPayloads(ValuePayloads memory valuePayloads, uint256 dstAmount)\\n\\t\\tinternal\\n\\t\\tpure\\n\\t\\treturns (ResourceData.ValuePayload[] memory newPayloads)\\n\\t{\\n\\t\\tResourceData.ValuePayload[] memory payloads = valuePayloads.payloads;\\n\\t\\trequire(payloads.length > 0, 'ResourceData: invalid payload length');\\n\\t\\tuint256 total = totalValue(payloads);\\n\\t\\trequire(total > 0, 'ResourceData: zero total value');\\n\\t\\tfor (uint256 i = 0; i < payloads.length; i++) {\\n\\t\\t\\trequire(payloads[i].values.length > 0, 'ResourceData: invalid value length');\\n\\t\\t\\tfor (uint256 j = 0; j < payloads[i].values.length; j++) {\\n\\t\\t\\t\\tpayloads[i].values[j] = payloads[i].values[j].mul(dstAmount).div(total);\\n\\t\\t\\t}\\n\\t\\t}\\n\\t\\treturn payloads;\\n\\t}\\n\\n\\t/// @dev payment payload total value\\n\\t/// @param payloads payment payloads\\n\\t/// @return value total value\\n\\tfunction totalValue(ResourceData.ValuePayload[] memory payloads) internal pure returns (uint256 value) {\\n\\t\\trequire(payloads.length > 0, 'ResourceData: invalid payloads length');\\n\\t\\tfor (uint256 i = 0; i < payloads.length; i++) {\\n\\t\\t\\tfor (uint256 j = 0; j < payloads[i].values.length; j++) {\\n\\t\\t\\t\\tvalue = value.add(payloads[i].values[j]);\\n\\t\\t\\t}\\n\\t\\t}\\n\\t}\\n\\n\\t/// @dev match token amount to resource decimals\\n\\t/// @param token token contract address\\n\\t/// @param value token amount with resource decimals\\n\\t/// @return resource value\\n\\tfunction matchTokenToResource(IERC20Upgradeable token, uint256 value) internal view returns (uint256) {\\n\\t\\tuint256 _tokenDecimals = tokenDecimals(token);\\n\\t\\tuint256 _resourceDecimals = decimals();\\n\\t\\tif (_tokenDecimals <= _resourceDecimals) {\\n\\t\\t\\treturn value.mul(10**(_resourceDecimals.sub(_tokenDecimals)));\\n\\t\\t}\\n\\t\\treturn value.div(10**(_tokenDecimals.sub(_resourceDecimals)));\\n\\t}\\n\\n\\t/// @dev match value to token decimals\\n\\t/// @param token token contract address\\n\\t/// @param value resource value\\n\\t/// @return token value\\n\\tfunction matchResourceToToken(IERC20Upgradeable token, uint256 value) internal view returns (uint256) {\\n\\t\\tuint256 _tokenDecimals = tokenDecimals(token);\\n\\t\\tuint256 _resourceDecimals = decimals();\\n\\t\\tif (_tokenDecimals <= _resourceDecimals) {\\n\\t\\t\\treturn value.div(10**(_resourceDecimals.sub(_tokenDecimals)));\\n\\t\\t}\\n\\t\\treturn value.mul(10**(_tokenDecimals.sub(_resourceDecimals)));\\n\\t}\\n\\n\\t/// @dev return resource decimals\\n\\t/// @return resource decimals\\n\\tfunction decimals() internal pure returns (uint256) {\\n\\t\\treturn 18;\\n\\t}\\n\\n\\t/// @dev return token decimals\\n\\t/// @return token decimals\\n\\tfunction tokenDecimals(IERC20Upgradeable token) internal view returns (uint256) {\\n\\t\\t// keccak256(bytes4('decimals()'))\\n\\t\\t(bool success, bytes memory data) = address(token).staticcall(hex'313ce567');\\n\\t\\trequire(success, 'ResourceData: invalid token');\\n\\t\\treturn abi.decode(data, (uint256));\\n\\t}\\n}\\n\",\"keccak256\":\"0x0a952dc446468e24ad4fed971632b1c8408818ed86649ff01e662aa93decb050\",\"license\":\"UNLICENSE\"},\"contracts/proxy/AdminWrapper.sol\":{\"content\":\"// SPDX-License-Identifier: UNLICENSE\\n\\npragma solidity >=0.8.0;\\n\\nimport '@openzeppelin/contracts/utils/StorageSlot.sol';\\n\\n/// @author Alexandas\\n/// @dev proxy admin wrapper\\ncontract AdminWrapper {\\n\\t/// @dev return admin address from storage slot\\n\\t/// @return admin admin contract address\\n\\tfunction _getAdmin() internal view returns (address) {\\n\\t\\t// bytes32(uint256(keccak256(\\\"eip1967.proxy.admin\\\")) - 1))\\n\\t\\tbytes32 _ADMIN_SLOT = 0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103;\\n\\t\\treturn StorageSlot.getAddressSlot(_ADMIN_SLOT).value;\\n\\t}\\n\\n\\tmodifier onlyAdmin() {\\n\\t\\trequire(msg.sender == _getAdmin(), 'AdminWrapper: caller is not the admin');\\n\\t\\t_;\\n\\t}\\n}\\n\",\"keccak256\":\"0xbb850da58260942952188061decf7dc2c4246e7e699dc129f28924702c6d389d\",\"license\":\"UNLICENSE\"},\"contracts/resources/ResourcePriceAdaptor.sol\":{\"content\":\"// SPDX-License-Identifier: UNLICENSE\\n\\npragma solidity >=0.8.0;\\n\\nimport '@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol';\\nimport '@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol';\\n\\nimport '../govers/RouterWrapper.sol';\\n\\n/// @author Alexandas\\n/// @dev Resource price adaptor contract\\nabstract contract ResourcePriceAdaptor is IResourcePriceAdaptor, RouterWrapper, OwnableUpgradeable {\\n\\tusing SafeMathUpgradeable for uint256;\\n\\n\\t/// @dev return current price index blocks\\n\\tmapping(address => uint256) public priceIndexBlocks;\\n\\n\\t/// @dev return all resource price\\n\\tmapping(address => mapping(ResourceData.ResourceType => mapping(uint256 => uint256))) internal prices;\\n\\n\\tmodifier ValidateType(ResourceData.ResourceType resourceType) {\\n\\t\\trequire(\\n\\t\\t\\tresourceType == ResourceData.ResourceType.BuildingTime ||\\n\\t\\t\\tresourceType == ResourceData.ResourceType.Bandwidth ||\\n\\t\\t\\tresourceType == ResourceData.ResourceType.ARStorage ||\\n\\t\\t\\tresourceType == ResourceData.ResourceType.IPFSStorage, \\n\\t\\t\\t'ResourcePriceAdaptor: invalid resource type'\\n\\t\\t);\\n\\t\\t_;\\n\\t}\\n\\n\\tconstructor() initializer {}\\n\\n\\t/// @dev proxy initialize function\\n\\t/// @param owner contract owner\\n\\t/// @param router router contract address\\n\\tfunction initialize(address owner, IRouter router) external initializer {\\n\\t\\t_transferOwnership(owner);\\n\\t\\t__Init_Router(router);\\n\\t}\\n\\n\\t// /// @dev update price adaptors\\n\\t// /// @param adaptors price adaptors\\n\\t// function setPriceAdaptors(PriceAdaptor[] memory adaptors) external onlyProvider {\\n\\t// \\t_setPriceAdaptors(msg.sender, adaptors);\\n\\t// \\t_setPriceIndexBlock(msg.sender, block.number);\\n\\t// }\\n\\n\\t// function _setPriceAdaptors(address provider, PriceAdaptor[] memory adaptors) internal {\\n\\t// \\trequire(adaptors.length > 0, 'ResourcePriceAdaptor: invalid pricers');\\n\\t// \\tfor (uint256 i = 0; i < adaptors.length; i++) {\\n\\t// \\t\\tuint256 price = adaptors[i].price;\\n\\t// \\t\\trequire(price > 0, 'ResourcePriceAdaptor: invalid price');\\n\\t// \\t\\tResourceData.ResourceType resourceType = adaptors[i].resourceType;\\n\\t// \\t\\trequire(resourceType != ResourceData.ResourceType.Null, 'ResourcePriceAdaptor: invalid resource type');\\n\\t// \\t\\tprices[provider][resourceType][block.number] = price;\\n\\t// \\t}\\n\\t// \\temit PriceAdaptorsUpdated(provider, adaptors);\\n\\t// }\\n\\n\\t// function _setPriceIndexBlock(address provider, uint256 indexBlock) internal {\\n\\t// \\tpriceIndexBlocks[provider] = indexBlock;\\n\\t// \\temit PriceIndexBlockUpdated(provider, indexBlock);\\n\\t// }\\n\\n\\t// /// @dev get price for resource at a specific block\\n\\t// /// @param provider provider address\\n\\t// /// @param resourceType resource type\\n\\t// /// @param priceIndexBlock block number\\n\\t// /// @return price for resource at a specific block\\n\\t// function priceAt(address provider, ResourceData.ResourceType resourceType, uint256 priceIndexBlock) public view override ValidateType(resourceType) returns (uint256) {\\n\\t// \\trequire(router.ProviderRegistry().isProvider(provider), 'ResourcePriceAdaptor: nonexistent provider');\\n\\t// \\trequire(prices[provider][resourceType][priceIndexBlock] != 0, 'ResourcePriceAdaptor: zero price');\\n\\t// \\treturn prices[provider][resourceType][priceIndexBlock];\\n\\t// }\\n\\n\\t// /// @dev get value for `amount` resource at a specific block\\n\\t// /// @param provider provider address\\n\\t// /// @param resourceType resource type\\n\\t// /// @param amount resource amount\\n\\t// /// @param priceIndexBlock block number\\n\\t// /// @return token value in resource decimals(18)\\n\\t// function getValueAt(\\n\\t// \\taddress provider,\\n\\t// \\tResourceData.ResourceType resourceType,\\n\\t// \\tuint256 amount,\\n\\t// \\tuint256 priceIndexBlock\\n\\t// ) public view override returns (uint256) {\\n\\t// \\treturn priceAt(provider, resourceType, priceIndexBlock).mul(amount);\\n\\t// }\\n\\n\\t// /// @dev get amount resource with value at a specific block\\n\\t// /// @param provider provider address\\n\\t// /// @param resourceType resource type\\n\\t// /// @param value token value\\n\\t// /// @param priceIndexBlock block numer\\n\\t// /// @return resource amount\\n\\t// function getAmountAt(\\n\\t// \\taddress provider,\\n\\t// \\tResourceData.ResourceType resourceType,\\n\\t// \\tuint256 value,\\n\\t// \\tuint256 priceIndexBlock\\n\\t// ) public view override returns (uint256) {\\n\\t// \\treturn value.div(priceAt(provider, resourceType, priceIndexBlock));\\n\\t// }\\n\\n\\t// /// @dev return resource price\\n\\t// /// @param provider provider address\\n\\t// /// @param resourceType resource type\\n\\t// /// @return resource price\\n\\t// function priceOf(address provider, ResourceData.ResourceType resourceType) public view override returns (uint256) {\\n\\t// \\treturn priceAt(provider, resourceType, priceIndexBlocks[provider]);\\n\\t// }\\n\\n\\t// /// @dev return value of amount resource\\n\\t// /// @param provider provider address\\n\\t// /// @param resourceType resource type\\n\\t// /// @param amount resource amount\\n\\t// /// @return token value in resource decimals(18)\\n\\t// function getValueOf(address provider, ResourceData.ResourceType resourceType, uint256 amount) public view override returns (uint256) {\\n\\t// \\treturn priceOf(provider, resourceType).mul(amount);\\n\\t// }\\n\\n\\t// /// @dev return resource amount with value\\n\\t// /// @param provider provider address\\n\\t// /// @param resourceType resource type\\n\\t// /// @param value token value in resource decimals(18)\\n\\t// /// @return resource amount\\n\\t// function getAmountOf(address provider, ResourceData.ResourceType resourceType, uint256 value) public view override returns (uint256) {\\n\\t// \\treturn value.div(priceOf(provider, resourceType));\\n\\t// }\\n\\n}\\n\",\"keccak256\":\"0x74351977f3c3d12e773f1159344df2331ee92c677eb28c1d6534269c59633bb8\",\"license\":\"UNLICENSE\"},\"contracts/resources/ResourcePriceAdaptorV2.sol\":{\"content\":\"// SPDX-License-Identifier: UNLICENSE\\n\\npragma solidity >=0.8.0;\\n\\nimport './ResourcePriceAdaptor.sol';\\nimport '../proxy/AdminWrapper.sol';\\n\\n/// @author Alexandas\\n/// @dev Resource price adaptor contract\\ncontract ResourcePriceAdaptorV2 is ResourcePriceAdaptor, AdminWrapper {\\n\\tusing SafeMathUpgradeable for uint256;\\n\\n\\t/// @dev return current price index blocks\\n\\tmapping(address => mapping(ResourceData.ResourceType => uint256)) public indexBlocks;\\n\\n\\tfunction fixPriceIndex(address provider, uint256 index, PriceAdaptor[] memory adaptors) external onlyAdmin {\\n\\t\\tpriceIndexBlocks[provider] = index;\\n\\t\\t_setPriceAdaptors(provider, adaptors);\\n\\t}\\n\\n\\t/// @dev update price adaptors\\n\\t/// @param adaptors price adaptors\\n\\tfunction setPriceAdaptors(PriceAdaptor[] memory adaptors) external onlyProvider {\\n\\t\\t_setPriceAdaptors(msg.sender, adaptors);\\n\\t}\\n\\n\\tfunction _setPriceAdaptors(address provider, PriceAdaptor[] memory adaptors) internal {\\n\\t\\trequire(adaptors.length > 0, 'ResourcePriceAdaptor: invalid pricers');\\n\\t\\tfor (uint256 i = 0; i < adaptors.length; i++) {\\n\\t\\t\\tuint256 price = adaptors[i].price;\\n\\t\\t\\trequire(price > 0, 'ResourcePriceAdaptor: invalid price');\\n\\t\\t\\tResourceData.ResourceType resourceType = adaptors[i].resourceType;\\n\\t\\t\\trequire(resourceType != ResourceData.ResourceType.Null, 'ResourcePriceAdaptor: invalid resource type');\\n\\t\\t\\tprices[provider][resourceType][block.number] = price;\\n\\t\\t\\tindexBlocks[provider][resourceType] = block.number;\\n\\t\\t}\\n\\t\\temit PriceAdaptorsUpdated(provider, adaptors);\\n\\t}\\n\\n\\t/// @dev get price for resource at a specific block\\n\\t/// @param provider provider address\\n\\t/// @param resourceType resource type\\n\\t/// @param priceIndexBlock block number\\n\\t/// @return price for resource at a specific block\\n\\tfunction priceAt(address provider, ResourceData.ResourceType resourceType, uint256 priceIndexBlock) public view override ValidateType(resourceType) returns (uint256) {\\n\\t\\trequire(router.ProviderRegistry().isProvider(provider), 'ResourcePriceAdaptor: nonexistent provider');\\n\\t\\trequire(prices[provider][resourceType][priceIndexBlock] != 0, 'ResourcePriceAdaptor: zero price');\\n\\t\\treturn prices[provider][resourceType][priceIndexBlock];\\n\\t}\\n\\n\\t/// @dev get value for `amount` resource at a specific block\\n\\t/// @param provider provider address\\n\\t/// @param resourceType resource type\\n\\t/// @param amount resource amount\\n\\t/// @param priceIndexBlock block number\\n\\t/// @return token value in resource decimals(18)\\n\\tfunction getValueAt(\\n\\t\\taddress provider,\\n\\t\\tResourceData.ResourceType resourceType,\\n\\t\\tuint256 amount,\\n\\t\\tuint256 priceIndexBlock\\n\\t) public view override returns (uint256) {\\n\\t\\treturn priceAt(provider, resourceType, priceIndexBlock).mul(amount);\\n\\t}\\n\\n\\t/// @dev get amount resource with value at a specific block\\n\\t/// @param provider provider address\\n\\t/// @param resourceType resource type\\n\\t/// @param value token value\\n\\t/// @param priceIndexBlock block numer\\n\\t/// @return resource amount\\n\\tfunction getAmountAt(\\n\\t\\taddress provider,\\n\\t\\tResourceData.ResourceType resourceType,\\n\\t\\tuint256 value,\\n\\t\\tuint256 priceIndexBlock\\n\\t) public view override returns (uint256) {\\n\\t\\treturn value.div(priceAt(provider, resourceType, priceIndexBlock));\\n\\t}\\n\\n\\t/// @dev return resource price\\n\\t/// @param provider provider address\\n\\t/// @param resourceType resource type\\n\\t/// @return resource price\\n\\tfunction priceOf(address provider, ResourceData.ResourceType resourceType) public view override returns (uint256) {\\n\\t\\treturn priceAt(provider, resourceType, indexBlocks[provider][resourceType]);\\n\\t}\\n\\n\\t/// @dev return value of amount resource\\n\\t/// @param provider provider address\\n\\t/// @param resourceType resource type\\n\\t/// @param amount resource amount\\n\\t/// @return token value in resource decimals(18)\\n\\tfunction getValueOf(address provider, ResourceData.ResourceType resourceType, uint256 amount) public view override returns (uint256) {\\n\\t\\treturn priceOf(provider, resourceType).mul(amount);\\n\\t}\\n\\n\\t/// @dev return resource amount with value\\n\\t/// @param provider provider address\\n\\t/// @param resourceType resource type\\n\\t/// @param value token value in resource decimals(18)\\n\\t/// @return resource amount\\n\\tfunction getAmountOf(address provider, ResourceData.ResourceType resourceType, uint256 value) public view override returns (uint256) {\\n\\t\\treturn value.div(priceOf(provider, resourceType));\\n\\t}\\n\\n}\\n\",\"keccak256\":\"0xb07e16e739fc759dab0298bd9752f483ac7c55f29923c2a654466fbc0e6c2fdc\",\"license\":\"UNLICENSE\"},\"contracts/resources/interfaces/IIPFSStorageController.sol\":{\"content\":\"// SPDX-License-Identifier: UNLICENSE\\n\\npragma solidity >=0.8.0;\\nimport '@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol';\\n\\n/// @author Alexandas\\n/// @dev IPFS storage controller interface\\ninterface IIPFSStorageController {\\n\\tstruct Storage {\\n\\t\\tuint256 startTime;\\n\\t\\tuint256 expiration;\\n\\t\\tuint256 amount;\\n\\t}\\n\\n\\t/// @dev emit when ipfs storage allocated for the provider\\n\\t/// @param provider provider address\\n\\t/// @param amount ipfs storage amount\\n\\t/// @param expiration ipfs storage expiration\\n\\tevent ProviderAllocated(address provider, uint256 amount, uint256 expiration);\\n\\n\\t/// @dev emit when ipfs storage allocated for the account\\n\\t/// @param provider provider address\\n\\t/// @param account user account\\n\\t/// @param amount ipfs storage amount\\n\\t/// @param expiration ipfs storage expiration\\n\\tevent AccountAllocated(address provider, bytes32 account, uint256 amount, uint256 expiration);\\n\\n\\t/// @dev emit when provider recovered ipfs storage\\n\\t/// @param provider provider address\\n\\t/// @param account user account\\n\\t/// @param amount ipfs storage amount\\n\\tevent ProviderRecovered(address provider, bytes32 account, uint256 amount);\\n\\n\\t/// @dev allocate user's normal resource balance\\n\\t/// @param provider provider address\\n\\t/// @param amount resource amount\\n\\t/// @param expiration ipfs expiration\\n\\tfunction allocateProvider(address provider, uint256 amount, uint256 expiration) external;\\n\\n\\t/// @dev provider drip resource to account directly\\n\\t/// @param provider provider address\\n\\t/// @param account user account\\n\\t/// @param amount ipfs storage amount\\n\\t/// @param expiration ipfs expiration\\n\\tfunction drip(address provider, bytes32 account, uint256 amount, uint256 expiration) external;\\n\\n\\t/// @dev allocate user's resource balance\\n\\t/// @param provider provider address\\n\\t/// @param account user account\\n\\t/// @param amount ipfs storage amount\\n\\t/// @param expiration ipfs expiration\\n\\tfunction paymentAllocate(address provider, bytes32 account, uint256 amount, uint256 expiration) external;\\n\\n\\t/// @dev recover provider storage\\n\\t/// @param provider provider address\\n\\t/// @param account user account\\n\\tfunction recoverStorage(address provider, bytes32 account) external;\\n\\n\\t/// @dev return whether ipfs storage is expired for the provider\\n\\t/// @param provider provider address\\n\\t/// @return whether ipfs storage is expired for the provider\\n\\tfunction isProviderExpired(address provider) external view returns (bool);\\n\\n\\t/// @dev return ipfs storage start time for the provider\\n\\t/// @param provider provider address\\n\\t/// @return start time for the provider\\n\\tfunction providerStartTime(address provider) external view returns (uint256);\\n\\n\\t/// @dev return total expiration time for the provider\\n\\t/// @param provider provider address\\n\\t/// @return total expiration time for the provider\\n\\tfunction providerExpiration(address provider) external view returns (uint256);\\n\\n\\t/// @dev return available expiration time for the provider\\n\\t/// @param provider provider address\\n\\t/// @return available expiration time for the provider\\n\\tfunction providerAvailableExpiration(address provider) external view returns (uint256);\\n\\n\\t/// @dev return when the provider will expire\\n\\t/// @param provider provider address\\n\\t/// @return when the provider will expire\\n\\tfunction providerExpiredAt(address provider) external view returns (uint256);\\n\\n\\t/// @dev return ipfs storage amount for the provider\\n\\t/// @param provider provider address\\n\\t/// @return ipfs storage amount for the provider\\n\\tfunction providerBalanceOf(address provider) external view returns (uint256);\\n\\n\\t/// @dev return whether ipfs storage is expired for the account\\n\\t/// @param provider provider address\\n\\t/// @param account user account\\n\\t/// @return whether ipfs storage is expired for the account\\n\\tfunction isExpired(address provider, bytes32 account) external view returns (bool);\\n\\n\\t/// @dev return available expiration time for the account\\n\\t/// @param provider provider address\\n\\t/// @param account user account\\n\\t/// @return available expiration time for the account\\n\\tfunction availableExpiration(address provider, bytes32 account) external view returns (uint256);\\n\\n\\t/// @dev return when the account will expire\\n\\t/// @param provider provider address\\n\\t/// @param account user account\\n\\t/// @return when the account will expire\\n\\tfunction expiredAt(address provider, bytes32 account) external view returns (uint256);\\n\\n\\t/// @dev return ipfs storage start time for the account\\n\\t/// @param provider provider address\\n\\t/// @param account user account\\n\\t/// @return start time for the account\\n\\tfunction startTime(address provider, bytes32 account) external view returns (uint256);\\n\\n\\t/// @dev return total expiration time for the account\\n\\t/// @param provider provider address\\n\\t/// @param account user account\\n\\t/// @return total expiration time for the account\\n\\tfunction expiration(address provider, bytes32 account) external view returns (uint256);\\n\\n\\t/// @dev return ipfs storage amount for the account\\n\\t/// @param provider provider address\\n\\t/// @param account user account\\n\\t/// @return ipfs storage amount for the account\\n\\tfunction balanceOf(address provider, bytes32 account) external view returns (uint256);\\n}\\n\",\"keccak256\":\"0x737cd8d689d7a0ef9211d92c8d052bda00bc16ddb06ce326ee473c3ffc09a654\",\"license\":\"UNLICENSE\"},\"contracts/resources/interfaces/INormalResourceController.sol\":{\"content\":\"// SPDX-License-Identifier: UNLICENSE\\n\\npragma solidity >=0.8.0;\\n\\n/// @author Alexandas\\n/// @dev normal resource controller interface\\ninterface INormalResourceController {\\n\\n\\t/// @dev emit when resource allocated for the provider\\n\\t/// @param provider provider address\\n\\t/// @param amount ipfs storage amount\\n\\tevent ProviderAllocated(address provider, uint256 amount);\\n\\n\\t/// @dev emit when resource allocated for the account\\n\\t/// @param provider provider address\\n\\t/// @param account user account\\n\\t/// @param amount ipfs storage amount\\n\\tevent AccountAllocated(address provider, bytes32 account, uint256 amount);\\n\\n\\t/// @dev allocate resource for the provider\\n\\t/// @param provider provider address\\n\\t/// @param amount resource amount\\n\\tfunction allocateProvider(address provider, uint256 amount) external;\\n\\n\\t/// @dev allocate user's resource balance\\n\\t/// @param provider provider address\\n\\t/// @param account user account\\n\\t/// @param amount resource amount\\n\\tfunction paymentAllocate(address provider, bytes32 account, uint256 amount) external;\\n\\n\\t/// @dev provider drip resource to account directly\\n\\t/// @param provider provider address\\n\\t/// @param account user account\\n\\t/// @param amount resource amount\\n\\tfunction drip(address provider, bytes32 account, uint256 amount) external;\\n\\n\\t/// @dev resource balance\\n\\t/// @param provider provider address\\n\\t/// @param account user account\\n\\t/// @return balance of the account\\n\\tfunction balanceOf(address provider, bytes32 account) external view returns (uint256);\\n\\n\\t/// @dev resource balance\\n\\t/// @param provider provider address\\n\\t/// @return balance of the account\\n\\tfunction providerBalanceOf(address provider) external view returns (uint256);\\n\\n}\\n\",\"keccak256\":\"0x7bf2ade38bde962e0b1430090225c343458a2fa9d002d413468e442a64fe76e7\",\"license\":\"UNLICENSE\"},\"contracts/resources/interfaces/IResourcePriceAdaptor.sol\":{\"content\":\"// SPDX-License-Identifier: UNLICENSE\\n\\npragma solidity >=0.8.0;\\n\\nimport '../../libraries/ResourceData.sol';\\n\\n/// @author Alexandas\\n/// @dev resource adpator interface\\ninterface IResourcePriceAdaptor {\\n\\tstruct PriceAdaptor {\\n\\t\\tResourceData.ResourceType resourceType;\\n\\t\\tuint256 price;\\n\\t}\\n\\n\\t/// @dev emit when index block updated\\n\\t/// @param provider provider address\\n\\t/// @param priceIndexBlock price index block\\n\\tevent PriceIndexBlockUpdated(address provider, uint256 priceIndexBlock);\\n\\n\\t/// @dev emit when price updated\\n\\t/// @param provider provider address\\n\\t/// @param adaptors price adaptors\\n\\tevent PriceAdaptorsUpdated(address provider, PriceAdaptor[] adaptors);\\n\\n\\t/// @dev get price for resource at a specific block\\n\\t/// @param provider provider address\\n\\t/// @param resourceType resource type\\n\\t/// @param priceIndexBlock block number\\n\\t/// @return price for resource at a specific block\\n\\tfunction priceAt(address provider, ResourceData.ResourceType resourceType, uint256 priceIndexBlock) external view returns (uint256);\\n\\n\\t/// @dev get value for `amount` resource at a specific block\\n\\t/// @param provider provider address\\n\\t/// @param resourceType resource type\\n\\t/// @param amount resource amount\\n\\t/// @param priceIndexBlock block number\\n\\t/// @return token value in resource decimals(18)\\n\\tfunction getValueAt(\\n\\t\\taddress provider,\\n\\t\\tResourceData.ResourceType resourceType,\\n\\t\\tuint256 amount,\\n\\t\\tuint256 priceIndexBlock\\n\\t) external view returns (uint256);\\n\\n\\t/// @dev get amount resource with value at a specific block\\n\\t/// @param provider provider address\\n\\t/// @param resourceType resource type\\n\\t/// @param value token value\\n\\t/// @param priceIndexBlock block numer\\n\\t/// @return resource amount\\n\\tfunction getAmountAt(\\n\\t\\taddress provider,\\n\\t\\tResourceData.ResourceType resourceType,\\n\\t\\tuint256 value,\\n\\t\\tuint256 priceIndexBlock\\n\\t) external view returns (uint256);\\n\\n\\t/// @dev return resource price\\n\\t/// @param provider provider address\\n\\t/// @param resourceType resource type\\n\\t/// @return resource price\\n\\tfunction priceOf(address provider, ResourceData.ResourceType resourceType) external view returns (uint256);\\n\\n\\t/// @dev return value of amount resource\\n\\t/// @param provider provider address\\n\\t/// @param resourceType resource type\\n\\t/// @param amount resource amount\\n\\t/// @return token value in resource decimals(18)\\n\\tfunction getValueOf(address provider, ResourceData.ResourceType resourceType, uint256 amount) external view returns (uint256);\\n\\n\\t/// @dev return resource amount with value\\n\\t/// @param provider provider address\\n\\t/// @param resourceType resource type\\n\\t/// @param value token value in resource decimals(18)\\n\\t/// @return resource amount\\n\\tfunction getAmountOf(address provider, ResourceData.ResourceType resourceType, uint256 value) external view returns (uint256);\\n\\n}\\n\",\"keccak256\":\"0x777f11784c9b845ea144fa0eb3b33596e123e1f70f2952e9d7c24ce576fcf10d\",\"license\":\"UNLICENSE\"}},\"version\":1}",
+  "bytecode": "0x60806040523480156200001157600080fd5b5060006200002060016200008e565b9050801562000039576000805461ff0019166101001790555b801562000087576000805461ff00191690556040517f7f26b83ff96e1f2b6a682f133852f6798a09c465da95921460cefb3847402498906200007e9060019062000168565b60405180910390a15b50620001cb565b60008054610100900460ff1615620000f7578160ff166001148015620000c75750620000c5306200013b60201b6200086a1760201c565b155b620000ef5760405162461bcd60e51b8152600401620000e69062000178565b60405180910390fd5b506000919050565b60005460ff808416911610620001215760405162461bcd60e51b8152600401620000e69062000178565b506000805460ff191660ff92909216919091179055600190565b6001600160a01b03163b151590565b600060ff82165b92915050565b62000162816200014a565b82525050565b6020810162000151828462000157565b602080825281016200015181602e81527f496e697469616c697a61626c653a20636f6e747261637420697320616c72656160208201526d191e481a5b9a5d1a585b1a5e995960921b604082015260600190565b6115d380620001db6000396000f3fe608060405234801561001057600080fd5b50600436106100f55760003560e01c80638da5cb5b11610097578063d15aa79d11610066578063d15aa79d146101f6578063e7af17fa14610209578063f2fde38b14610229578063f887ea401461023c57600080fd5b80638da5cb5b1461018c5780639d3ec886146101a5578063ace4d5d0146101d0578063b863d8b9146101e357600080fd5b80635e1a544c116100d35780635e1a544c1461014b57806365d6b40c1461015e578063715018a6146101715780638ab9fd241461017957600080fd5b806327b54756146100fa57806335da9b231461010f578063485cc95514610138575b600080fd5b61010d610108366004610d5f565b610262565b005b61012261011d366004610dbf565b61039b565b60405161012f9190610e17565b60405180910390f35b61010d610146366004610e44565b6103b9565b610122610159366004610e81565b61043f565b61012261016c366004610dbf565b6104a0565b61010d6104b6565b610122610187366004610eb4565b6104ec565b6033546001600160a01b031660405161012f9190610f21565b6101226101b3366004610e81565b606760209081526000928352604080842090915290825290205481565b6101226101de366004610eb4565b61050c565b6101226101f1366004610dbf565b610519565b61010d610204366004610f2f565b6107a0565b610122610217366004610f90565b60656020526000908152604090205481565b61010d610237366004610f90565b61080e565b600054610255906201000090046001600160a01b031681565b60405161012f9190610fc5565b60008060029054906101000a90046001600160a01b03166001600160a01b031663a5a3f6c86040518163ffffffff1660e01b815260040160206040518083038186803b1580156102b157600080fd5b505afa1580156102c5573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906102e99190610fde565b604051636b074a0760e01b81529091506001600160a01b03821690636b074a0790610318903390600401610f21565b60206040518083038186803b15801561033057600080fd5b505afa158015610344573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906103689190611012565b61038d5760405162461bcd60e51b81526004016103849061107c565b60405180910390fd5b6103973383610879565b5050565b60006103b1826103ab868661043f565b90610a37565b949350505050565b60006103c56001610a43565b905080156103dd576000805461ff0019166101001790555b6103e683610ad0565b6103ef82610b22565b801561043a576000805461ff00191690556040517f7f26b83ff96e1f2b6a682f133852f6798a09c465da95921460cefb384740249890610431906001906110a0565b60405180910390a15b505050565b6001600160a01b0382166000908152606760205260408120610497908490849084826004811115610472576104726110ae565b6004811115610483576104836110ae565b815260200190815260200160002054610519565b90505b92915050565b60006103b16104af858561043f565b8390610b52565b6033546001600160a01b031633146104e05760405162461bcd60e51b8152600401610384906110f9565b6104ea6000610ad0565b565b60006105036104fc868685610519565b8490610b52565b95945050505050565b6000610503836103ab8787865b6000826001816004811115610530576105306110ae565b148061054d5750600281600481111561054b5761054b6110ae565b145b8061056957506003816004811115610567576105676110ae565b145b8061058557506004816004811115610583576105836110ae565b145b6105a15760405162461bcd60e51b815260040161038490611151565b600060029054906101000a90046001600160a01b03166001600160a01b031663a5a3f6c86040518163ffffffff1660e01b815260040160206040518083038186803b1580156105ef57600080fd5b505afa158015610603573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906106279190610fde565b6001600160a01b0316636b074a07866040518263ffffffff1660e01b81526004016106529190610f21565b60206040518083038186803b15801561066a57600080fd5b505afa15801561067e573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906106a29190611012565b6106be5760405162461bcd60e51b8152600401610384906111a8565b6001600160a01b0385166000908152606660205260408120908560048111156106e9576106e96110ae565b60048111156106fa576106fa6110ae565b81526020019081526020016000206000848152602001908152602001600020546000141561073a5760405162461bcd60e51b8152600401610384906111ea565b6001600160a01b038516600090815260666020526040812090856004811115610765576107656110ae565b6004811115610776576107766110ae565b81526020019081526020016000206000848152602001908152602001600020549150509392505050565b7fb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103546001600160a01b031633146107e95760405162461bcd60e51b81526004016103849061123c565b6001600160a01b038316600090815260656020526040902082905561043a8382610879565b6033546001600160a01b031633146108385760405162461bcd60e51b8152600401610384906110f9565b6001600160a01b03811661085e5760405162461bcd60e51b81526004016103849061128f565b61086781610ad0565b50565b6001600160a01b03163b151590565b600081511161089a5760405162461bcd60e51b8152600401610384906112e1565b60005b81518110156109f95760008282815181106108ba576108ba6112f1565b6020026020010151602001519050600081116108e85760405162461bcd60e51b815260040161038490611347565b60008383815181106108fc576108fc6112f1565b6020908102919091010151519050600081600481111561091e5761091e6110ae565b141561093c5760405162461bcd60e51b815260040161038490611151565b6001600160a01b03851660009081526066602052604081208391836004811115610968576109686110ae565b6004811115610979576109796110ae565b81526020808201929092526040908101600090812043808352908452828220949094556001600160a01b038916815260679092528120908360048111156109c2576109c26110ae565b60048111156109d3576109d36110ae565b8152602081019190915260400160002055508190506109f18161136d565b91505061089d565b507f5f3923b716a0c549787d81642134926265ea1c382ed8cad7656fe53849c3c0fa8282604051610a2b92919061143d565b60405180910390a15050565b6000610497828461145d565b60008054610100900460ff1615610a8a578160ff166001148015610a665750303b155b610a825760405162461bcd60e51b8152600401610384906114c7565b506000919050565b60005460ff808416911610610ab15760405162461bcd60e51b8152600401610384906114c7565b506000805460ff191660ff92909216919091179055600190565b919050565b603380546001600160a01b038381166001600160a01b0319831681179093556040519116919082907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e090600090a35050565b600054610100900460ff16610b495760405162461bcd60e51b81526004016103849061151f565b61086781610b5e565b60006104978284611545565b6001600160a01b038116610b845760405162461bcd60e51b81526004016103849061158d565b6000805462010000600160b01b031916620100006001600160a01b038416021790556040517f7aed1d3e8155a07ccf395e44ea3109a0e2d6c9b29bbbe9f142d9790596f4dc8090610bd6908390610fc5565b60405180910390a150565b634e487b7160e01b600052604160045260246000fd5b601f19601f830116810181811067ffffffffffffffff82111715610c1d57610c1d610be1565b6040525050565b6000610c2f60405190565b9050610acb8282610bf7565b600067ffffffffffffffff821115610c5557610c55610be1565b5060209081020190565b6005811061086757600080fd5b803561049a81610c5f565b805b811461086757600080fd5b803561049a81610c77565b600060408284031215610ca457610ca4600080fd5b610cae6040610c24565b90506000610cbc8484610c6c565b8252506020610ccd84848301610c84565b60208301525092915050565b6000610cec610ce784610c3b565b610c24565b83815290506020810160408402830185811115610d0b57610d0b600080fd5b835b81811015610d315780610d208882610c8f565b845250602090920191604001610d0d565b5050509392505050565b600082601f830112610d4f57610d4f600080fd5b81356103b1848260208601610cd9565b600060208284031215610d7457610d74600080fd5b813567ffffffffffffffff811115610d8e57610d8e600080fd5b6103b184828501610d3b565b60006001600160a01b03821661049a565b610c7981610d9a565b803561049a81610dab565b600080600060608486031215610dd757610dd7600080fd5b6000610de38686610db4565b9350506020610df486828701610c6c565b9250506040610e0586828701610c84565b9150509250925092565b805b82525050565b6020810161049a8284610e0f565b600061049a82610d9a565b610c7981610e25565b803561049a81610e30565b60008060408385031215610e5a57610e5a600080fd5b6000610e668585610db4565b9250506020610e7785828601610e39565b9150509250929050565b60008060408385031215610e9757610e97600080fd5b6000610ea38585610db4565b9250506020610e7785828601610c6c565b60008060008060808587031215610ecd57610ecd600080fd5b6000610ed98787610db4565b9450506020610eea87828801610c6c565b9350506040610efb87828801610c84565b9250506060610f0c87828801610c84565b91505092959194509250565b610e1181610d9a565b6020810161049a8284610f18565b600080600060608486031215610f4757610f47600080fd5b6000610f538686610db4565b9350506020610f6486828701610c84565b925050604084013567ffffffffffffffff811115610f8457610f84600080fd5b610e0586828701610d3b565b600060208284031215610fa557610fa5600080fd5b60006103b18484610db4565b600061049a82610e25565b610e1181610fb1565b6020810161049a8284610fbc565b805161049a81610e30565b600060208284031215610ff357610ff3600080fd5b60006103b18484610fd3565b801515610c79565b805161049a81610fff565b60006020828403121561102757611027600080fd5b60006103b18484611007565b602981526000602082017f526f75746572577261707065723a2063616c6c6572206973206e6f742074686581526810383937bb34b232b960b91b602082015291505b5060400190565b6020808252810161049a81611033565b600060ff821661049a565b610e118161108c565b6020810161049a8284611097565b634e487b7160e01b600052602160045260246000fd5b60208082527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572910190815260005b5060200190565b6020808252810161049a816110c4565b602b81526000602082017f5265736f75726365507269636541646170746f723a20696e76616c696420726581526a736f75726365207479706560a81b60208201529150611075565b6020808252810161049a81611109565b602a81526000602082017f5265736f75726365507269636541646170746f723a206e6f6e6578697374656e8152693a10383937bb34b232b960b11b60208201529150611075565b6020808252810161049a81611161565b60208082527f5265736f75726365507269636541646170746f723a207a65726f207072696365910190815260006110f2565b6020808252810161049a816111b8565b602581526000602082017f41646d696e577261707065723a2063616c6c6572206973206e6f74207468652081526430b236b4b760d91b60208201529150611075565b6020808252810161049a816111fa565b602681526000602082017f4f776e61626c653a206e6577206f776e657220697320746865207a65726f206181526564647265737360d01b60208201529150611075565b6020808252810161049a8161124c565b602581526000602082017f5265736f75726365507269636541646170746f723a20696e76616c6964207072815264696365727360d81b60208201529150611075565b6020808252810161049a8161129f565b634e487b7160e01b600052603260045260246000fd5b602381526000602082017f5265736f75726365507269636541646170746f723a20696e76616c696420707281526269636560e81b60208201529150611075565b6020808252810161049a81611307565b634e487b7160e01b600052601160045260246000fd5b600060001982141561138157611381611357565b5060010190565b60058110610867576108676110ae565b80610acb81611388565b600061049a82611398565b610e11816113a2565b805160408301906113c784826113ad565b5060208201516113da6020850182610e0f565b50505050565b60006113ec83836113b6565b505060400190565b60006113fe825190565b80845260209384019383018060005b8381101561143257815161142188826113e0565b97506020830192505060010161140d565b509495945050505050565b6040810161144b8285610f18565b81810360208301526103b181846113f4565b600081600019048311821515161561147757611477611357565b500290565b602e81526000602082017f496e697469616c697a61626c653a20636f6e747261637420697320616c72656181526d191e481a5b9a5d1a585b1a5e995960921b60208201529150611075565b6020808252810161049a8161147c565b602b81526000602082017f496e697469616c697a61626c653a20636f6e7472616374206973206e6f74206981526a6e697469616c697a696e6760a81b60208201529150611075565b6020808252810161049a816114d7565b634e487b7160e01b600052601260045260246000fd5b6000826115545761155461152f565b500490565b601b81526000602082017f526f75746572577261707065723a207a65726f20616464726573730000000000815291506110f2565b6020808252810161049a8161155956fea264697066735822122090d6a5cfeb4a1d0826b838f2729f6a49d5c4b513015501bb5442b51d24b2b50f64736f6c63430008090033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100f55760003560e01c80638da5cb5b11610097578063d15aa79d11610066578063d15aa79d146101f6578063e7af17fa14610209578063f2fde38b14610229578063f887ea401461023c57600080fd5b80638da5cb5b1461018c5780639d3ec886146101a5578063ace4d5d0146101d0578063b863d8b9146101e357600080fd5b80635e1a544c116100d35780635e1a544c1461014b57806365d6b40c1461015e578063715018a6146101715780638ab9fd241461017957600080fd5b806327b54756146100fa57806335da9b231461010f578063485cc95514610138575b600080fd5b61010d610108366004610d5f565b610262565b005b61012261011d366004610dbf565b61039b565b60405161012f9190610e17565b60405180910390f35b61010d610146366004610e44565b6103b9565b610122610159366004610e81565b61043f565b61012261016c366004610dbf565b6104a0565b61010d6104b6565b610122610187366004610eb4565b6104ec565b6033546001600160a01b031660405161012f9190610f21565b6101226101b3366004610e81565b606760209081526000928352604080842090915290825290205481565b6101226101de366004610eb4565b61050c565b6101226101f1366004610dbf565b610519565b61010d610204366004610f2f565b6107a0565b610122610217366004610f90565b60656020526000908152604090205481565b61010d610237366004610f90565b61080e565b600054610255906201000090046001600160a01b031681565b60405161012f9190610fc5565b60008060029054906101000a90046001600160a01b03166001600160a01b031663a5a3f6c86040518163ffffffff1660e01b815260040160206040518083038186803b1580156102b157600080fd5b505afa1580156102c5573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906102e99190610fde565b604051636b074a0760e01b81529091506001600160a01b03821690636b074a0790610318903390600401610f21565b60206040518083038186803b15801561033057600080fd5b505afa158015610344573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906103689190611012565b61038d5760405162461bcd60e51b81526004016103849061107c565b60405180910390fd5b6103973383610879565b5050565b60006103b1826103ab868661043f565b90610a37565b949350505050565b60006103c56001610a43565b905080156103dd576000805461ff0019166101001790555b6103e683610ad0565b6103ef82610b22565b801561043a576000805461ff00191690556040517f7f26b83ff96e1f2b6a682f133852f6798a09c465da95921460cefb384740249890610431906001906110a0565b60405180910390a15b505050565b6001600160a01b0382166000908152606760205260408120610497908490849084826004811115610472576104726110ae565b6004811115610483576104836110ae565b815260200190815260200160002054610519565b90505b92915050565b60006103b16104af858561043f565b8390610b52565b6033546001600160a01b031633146104e05760405162461bcd60e51b8152600401610384906110f9565b6104ea6000610ad0565b565b60006105036104fc868685610519565b8490610b52565b95945050505050565b6000610503836103ab8787865b6000826001816004811115610530576105306110ae565b148061054d5750600281600481111561054b5761054b6110ae565b145b8061056957506003816004811115610567576105676110ae565b145b8061058557506004816004811115610583576105836110ae565b145b6105a15760405162461bcd60e51b815260040161038490611151565b600060029054906101000a90046001600160a01b03166001600160a01b031663a5a3f6c86040518163ffffffff1660e01b815260040160206040518083038186803b1580156105ef57600080fd5b505afa158015610603573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906106279190610fde565b6001600160a01b0316636b074a07866040518263ffffffff1660e01b81526004016106529190610f21565b60206040518083038186803b15801561066a57600080fd5b505afa15801561067e573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906106a29190611012565b6106be5760405162461bcd60e51b8152600401610384906111a8565b6001600160a01b0385166000908152606660205260408120908560048111156106e9576106e96110ae565b60048111156106fa576106fa6110ae565b81526020019081526020016000206000848152602001908152602001600020546000141561073a5760405162461bcd60e51b8152600401610384906111ea565b6001600160a01b038516600090815260666020526040812090856004811115610765576107656110ae565b6004811115610776576107766110ae565b81526020019081526020016000206000848152602001908152602001600020549150509392505050565b7fb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103546001600160a01b031633146107e95760405162461bcd60e51b81526004016103849061123c565b6001600160a01b038316600090815260656020526040902082905561043a8382610879565b6033546001600160a01b031633146108385760405162461bcd60e51b8152600401610384906110f9565b6001600160a01b03811661085e5760405162461bcd60e51b81526004016103849061128f565b61086781610ad0565b50565b6001600160a01b03163b151590565b600081511161089a5760405162461bcd60e51b8152600401610384906112e1565b60005b81518110156109f95760008282815181106108ba576108ba6112f1565b6020026020010151602001519050600081116108e85760405162461bcd60e51b815260040161038490611347565b60008383815181106108fc576108fc6112f1565b6020908102919091010151519050600081600481111561091e5761091e6110ae565b141561093c5760405162461bcd60e51b815260040161038490611151565b6001600160a01b03851660009081526066602052604081208391836004811115610968576109686110ae565b6004811115610979576109796110ae565b81526020808201929092526040908101600090812043808352908452828220949094556001600160a01b038916815260679092528120908360048111156109c2576109c26110ae565b60048111156109d3576109d36110ae565b8152602081019190915260400160002055508190506109f18161136d565b91505061089d565b507f5f3923b716a0c549787d81642134926265ea1c382ed8cad7656fe53849c3c0fa8282604051610a2b92919061143d565b60405180910390a15050565b6000610497828461145d565b60008054610100900460ff1615610a8a578160ff166001148015610a665750303b155b610a825760405162461bcd60e51b8152600401610384906114c7565b506000919050565b60005460ff808416911610610ab15760405162461bcd60e51b8152600401610384906114c7565b506000805460ff191660ff92909216919091179055600190565b919050565b603380546001600160a01b038381166001600160a01b0319831681179093556040519116919082907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e090600090a35050565b600054610100900460ff16610b495760405162461bcd60e51b81526004016103849061151f565b61086781610b5e565b60006104978284611545565b6001600160a01b038116610b845760405162461bcd60e51b81526004016103849061158d565b6000805462010000600160b01b031916620100006001600160a01b038416021790556040517f7aed1d3e8155a07ccf395e44ea3109a0e2d6c9b29bbbe9f142d9790596f4dc8090610bd6908390610fc5565b60405180910390a150565b634e487b7160e01b600052604160045260246000fd5b601f19601f830116810181811067ffffffffffffffff82111715610c1d57610c1d610be1565b6040525050565b6000610c2f60405190565b9050610acb8282610bf7565b600067ffffffffffffffff821115610c5557610c55610be1565b5060209081020190565b6005811061086757600080fd5b803561049a81610c5f565b805b811461086757600080fd5b803561049a81610c77565b600060408284031215610ca457610ca4600080fd5b610cae6040610c24565b90506000610cbc8484610c6c565b8252506020610ccd84848301610c84565b60208301525092915050565b6000610cec610ce784610c3b565b610c24565b83815290506020810160408402830185811115610d0b57610d0b600080fd5b835b81811015610d315780610d208882610c8f565b845250602090920191604001610d0d565b5050509392505050565b600082601f830112610d4f57610d4f600080fd5b81356103b1848260208601610cd9565b600060208284031215610d7457610d74600080fd5b813567ffffffffffffffff811115610d8e57610d8e600080fd5b6103b184828501610d3b565b60006001600160a01b03821661049a565b610c7981610d9a565b803561049a81610dab565b600080600060608486031215610dd757610dd7600080fd5b6000610de38686610db4565b9350506020610df486828701610c6c565b9250506040610e0586828701610c84565b9150509250925092565b805b82525050565b6020810161049a8284610e0f565b600061049a82610d9a565b610c7981610e25565b803561049a81610e30565b60008060408385031215610e5a57610e5a600080fd5b6000610e668585610db4565b9250506020610e7785828601610e39565b9150509250929050565b60008060408385031215610e9757610e97600080fd5b6000610ea38585610db4565b9250506020610e7785828601610c6c565b60008060008060808587031215610ecd57610ecd600080fd5b6000610ed98787610db4565b9450506020610eea87828801610c6c565b9350506040610efb87828801610c84565b9250506060610f0c87828801610c84565b91505092959194509250565b610e1181610d9a565b6020810161049a8284610f18565b600080600060608486031215610f4757610f47600080fd5b6000610f538686610db4565b9350506020610f6486828701610c84565b925050604084013567ffffffffffffffff811115610f8457610f84600080fd5b610e0586828701610d3b565b600060208284031215610fa557610fa5600080fd5b60006103b18484610db4565b600061049a82610e25565b610e1181610fb1565b6020810161049a8284610fbc565b805161049a81610e30565b600060208284031215610ff357610ff3600080fd5b60006103b18484610fd3565b801515610c79565b805161049a81610fff565b60006020828403121561102757611027600080fd5b60006103b18484611007565b602981526000602082017f526f75746572577261707065723a2063616c6c6572206973206e6f742074686581526810383937bb34b232b960b91b602082015291505b5060400190565b6020808252810161049a81611033565b600060ff821661049a565b610e118161108c565b6020810161049a8284611097565b634e487b7160e01b600052602160045260246000fd5b60208082527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572910190815260005b5060200190565b6020808252810161049a816110c4565b602b81526000602082017f5265736f75726365507269636541646170746f723a20696e76616c696420726581526a736f75726365207479706560a81b60208201529150611075565b6020808252810161049a81611109565b602a81526000602082017f5265736f75726365507269636541646170746f723a206e6f6e6578697374656e8152693a10383937bb34b232b960b11b60208201529150611075565b6020808252810161049a81611161565b60208082527f5265736f75726365507269636541646170746f723a207a65726f207072696365910190815260006110f2565b6020808252810161049a816111b8565b602581526000602082017f41646d696e577261707065723a2063616c6c6572206973206e6f74207468652081526430b236b4b760d91b60208201529150611075565b6020808252810161049a816111fa565b602681526000602082017f4f776e61626c653a206e6577206f776e657220697320746865207a65726f206181526564647265737360d01b60208201529150611075565b6020808252810161049a8161124c565b602581526000602082017f5265736f75726365507269636541646170746f723a20696e76616c6964207072815264696365727360d81b60208201529150611075565b6020808252810161049a8161129f565b634e487b7160e01b600052603260045260246000fd5b602381526000602082017f5265736f75726365507269636541646170746f723a20696e76616c696420707281526269636560e81b60208201529150611075565b6020808252810161049a81611307565b634e487b7160e01b600052601160045260246000fd5b600060001982141561138157611381611357565b5060010190565b60058110610867576108676110ae565b80610acb81611388565b600061049a82611398565b610e11816113a2565b805160408301906113c784826113ad565b5060208201516113da6020850182610e0f565b50505050565b60006113ec83836113b6565b505060400190565b60006113fe825190565b80845260209384019383018060005b8381101561143257815161142188826113e0565b97506020830192505060010161140d565b509495945050505050565b6040810161144b8285610f18565b81810360208301526103b181846113f4565b600081600019048311821515161561147757611477611357565b500290565b602e81526000602082017f496e697469616c697a61626c653a20636f6e747261637420697320616c72656181526d191e481a5b9a5d1a585b1a5e995960921b60208201529150611075565b6020808252810161049a8161147c565b602b81526000602082017f496e697469616c697a61626c653a20636f6e7472616374206973206e6f74206981526a6e697469616c697a696e6760a81b60208201529150611075565b6020808252810161049a816114d7565b634e487b7160e01b600052601260045260246000fd5b6000826115545761155461152f565b500490565b601b81526000602082017f526f75746572577261707065723a207a65726f20616464726573730000000000815291506110f2565b6020808252810161049a8161155956fea264697066735822122090d6a5cfeb4a1d0826b838f2729f6a49d5c4b513015501bb5442b51d24b2b50f64736f6c63430008090033",
+  "devdoc": {
+    "author": "Alexandas",
+    "details": "Resource price adaptor contract",
+    "kind": "dev",
+    "methods": {
+      "getAmountAt(address,uint8,uint256,uint256)": {
+        "details": "get amount resource with value at a specific block",
+        "params": {
+          "priceIndexBlock": "block numer",
+          "provider": "provider address",
+          "resourceType": "resource type",
+          "value": "token value"
+        },
+        "returns": {
+          "_0": "resource amount"
+        }
+      },
+      "getAmountOf(address,uint8,uint256)": {
+        "details": "return resource amount with value",
+        "params": {
+          "provider": "provider address",
+          "resourceType": "resource type",
+          "value": "token value in resource decimals(18)"
+        },
+        "returns": {
+          "_0": "resource amount"
+        }
+      },
+      "getValueAt(address,uint8,uint256,uint256)": {
+        "details": "get value for `amount` resource at a specific block",
+        "params": {
+          "amount": "resource amount",
+          "priceIndexBlock": "block number",
+          "provider": "provider address",
+          "resourceType": "resource type"
+        },
+        "returns": {
+          "_0": "token value in resource decimals(18)"
+        }
+      },
+      "getValueOf(address,uint8,uint256)": {
+        "details": "return value of amount resource",
+        "params": {
+          "amount": "resource amount",
+          "provider": "provider address",
+          "resourceType": "resource type"
+        },
+        "returns": {
+          "_0": "token value in resource decimals(18)"
+        }
+      },
+      "initialize(address,address)": {
+        "details": "proxy initialize function",
+        "params": {
+          "owner": "contract owner",
+          "router": "router contract address"
+        }
+      },
+      "owner()": {
+        "details": "Returns the address of the current owner."
+      },
+      "priceAt(address,uint8,uint256)": {
+        "details": "get price for resource at a specific block",
+        "params": {
+          "priceIndexBlock": "block number",
+          "provider": "provider address",
+          "resourceType": "resource type"
+        },
+        "returns": {
+          "_0": "price for resource at a specific block"
+        }
+      },
+      "priceOf(address,uint8)": {
+        "details": "return resource price",
+        "params": {
+          "provider": "provider address",
+          "resourceType": "resource type"
+        },
+        "returns": {
+          "_0": "resource price"
+        }
+      },
+      "renounceOwnership()": {
+        "details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner."
+      },
+      "setPriceAdaptors((uint8,uint256)[])": {
+        "details": "update price adaptors",
+        "params": {
+          "adaptors": "price adaptors"
+        }
+      },
+      "transferOwnership(address)": {
+        "details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
+      }
+    },
+    "stateVariables": {
+      "indexBlocks": {
+        "details": "return current price index blocks"
+      }
+    },
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 147,
+        "contract": "contracts/resources/ResourcePriceAdaptorV2.sol:ResourcePriceAdaptorV2",
+        "label": "_initialized",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_uint8"
+      },
+      {
+        "astId": 150,
+        "contract": "contracts/resources/ResourcePriceAdaptorV2.sol:ResourcePriceAdaptorV2",
+        "label": "_initializing",
+        "offset": 1,
+        "slot": "0",
+        "type": "t_bool"
+      },
+      {
+        "astId": 6477,
+        "contract": "contracts/resources/ResourcePriceAdaptorV2.sol:ResourcePriceAdaptorV2",
+        "label": "router",
+        "offset": 2,
+        "slot": "0",
+        "type": "t_contract(IRouter)7712"
+      },
+      {
+        "astId": 1038,
+        "contract": "contracts/resources/ResourcePriceAdaptorV2.sol:ResourcePriceAdaptorV2",
+        "label": "__gap",
+        "offset": 0,
+        "slot": "1",
+        "type": "t_array(t_uint256)50_storage"
+      },
+      {
+        "astId": 10,
+        "contract": "contracts/resources/ResourcePriceAdaptorV2.sol:ResourcePriceAdaptorV2",
+        "label": "_owner",
+        "offset": 0,
+        "slot": "51",
+        "type": "t_address"
+      },
+      {
+        "astId": 122,
+        "contract": "contracts/resources/ResourcePriceAdaptorV2.sol:ResourcePriceAdaptorV2",
+        "label": "__gap",
+        "offset": 0,
+        "slot": "52",
+        "type": "t_array(t_uint256)49_storage"
+      },
+      {
+        "astId": 11880,
+        "contract": "contracts/resources/ResourcePriceAdaptorV2.sol:ResourcePriceAdaptorV2",
+        "label": "priceIndexBlocks",
+        "offset": 0,
+        "slot": "101",
+        "type": "t_mapping(t_address,t_uint256)"
+      },
+      {
+        "astId": 11890,
+        "contract": "contracts/resources/ResourcePriceAdaptorV2.sol:ResourcePriceAdaptorV2",
+        "label": "prices",
+        "offset": 0,
+        "slot": "102",
+        "type": "t_mapping(t_address,t_mapping(t_enum(ResourceType)8044,t_mapping(t_uint256,t_uint256)))"
+      },
+      {
+        "astId": 11971,
+        "contract": "contracts/resources/ResourcePriceAdaptorV2.sol:ResourcePriceAdaptorV2",
+        "label": "indexBlocks",
+        "offset": 0,
+        "slot": "103",
+        "type": "t_mapping(t_address,t_mapping(t_enum(ResourceType)8044,t_uint256))"
+      }
+    ],
+    "types": {
+      "t_address": {
+        "encoding": "inplace",
+        "label": "address",
+        "numberOfBytes": "20"
+      },
+      "t_array(t_uint256)49_storage": {
+        "base": "t_uint256",
+        "encoding": "inplace",
+        "label": "uint256[49]",
+        "numberOfBytes": "1568"
+      },
+      "t_array(t_uint256)50_storage": {
+        "base": "t_uint256",
+        "encoding": "inplace",
+        "label": "uint256[50]",
+        "numberOfBytes": "1600"
+      },
+      "t_bool": {
+        "encoding": "inplace",
+        "label": "bool",
+        "numberOfBytes": "1"
+      },
+      "t_contract(IRouter)7712": {
+        "encoding": "inplace",
+        "label": "contract IRouter",
+        "numberOfBytes": "20"
+      },
+      "t_enum(ResourceType)8044": {
+        "encoding": "inplace",
+        "label": "enum ResourceData.ResourceType",
+        "numberOfBytes": "1"
+      },
+      "t_mapping(t_address,t_mapping(t_enum(ResourceType)8044,t_mapping(t_uint256,t_uint256)))": {
+        "encoding": "mapping",
+        "key": "t_address",
+        "label": "mapping(address => mapping(enum ResourceData.ResourceType => mapping(uint256 => uint256)))",
+        "numberOfBytes": "32",
+        "value": "t_mapping(t_enum(ResourceType)8044,t_mapping(t_uint256,t_uint256))"
+      },
+      "t_mapping(t_address,t_mapping(t_enum(ResourceType)8044,t_uint256))": {
+        "encoding": "mapping",
+        "key": "t_address",
+        "label": "mapping(address => mapping(enum ResourceData.ResourceType => uint256))",
+        "numberOfBytes": "32",
+        "value": "t_mapping(t_enum(ResourceType)8044,t_uint256)"
+      },
+      "t_mapping(t_address,t_uint256)": {
+        "encoding": "mapping",
+        "key": "t_address",
+        "label": "mapping(address => uint256)",
+        "numberOfBytes": "32",
+        "value": "t_uint256"
+      },
+      "t_mapping(t_enum(ResourceType)8044,t_mapping(t_uint256,t_uint256))": {
+        "encoding": "mapping",
+        "key": "t_enum(ResourceType)8044",
+        "label": "mapping(enum ResourceData.ResourceType => mapping(uint256 => uint256))",
+        "numberOfBytes": "32",
+        "value": "t_mapping(t_uint256,t_uint256)"
+      },
+      "t_mapping(t_enum(ResourceType)8044,t_uint256)": {
+        "encoding": "mapping",
+        "key": "t_enum(ResourceType)8044",
+        "label": "mapping(enum ResourceData.ResourceType => uint256)",
+        "numberOfBytes": "32",
+        "value": "t_uint256"
+      },
+      "t_mapping(t_uint256,t_uint256)": {
+        "encoding": "mapping",
+        "key": "t_uint256",
+        "label": "mapping(uint256 => uint256)",
+        "numberOfBytes": "32",
+        "value": "t_uint256"
+      },
+      "t_uint256": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      },
+      "t_uint8": {
+        "encoding": "inplace",
+        "label": "uint8",
+        "numberOfBytes": "1"
+      }
+    }
+  }
+}

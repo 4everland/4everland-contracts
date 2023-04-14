@@ -70,6 +70,7 @@ export type { INormalResourceController } from "./INormalResourceController";
 export type { IResource } from "./IResource";
 export type { IResourcePriceAdaptor } from "./IResourcePriceAdaptor";
 export type { ResourcePriceAdaptor } from "./ResourcePriceAdaptor";
+export type { ResourcePriceAdaptorV2 } from "./ResourcePriceAdaptorV2";
 export type { Billing } from "./Billing";
 export type { FundPool } from "./FundPool";
 export type { FundPoolRegistration } from "./FundPoolRegistration";
@@ -150,6 +151,7 @@ export { INormalResourceController__factory } from "./factories/INormalResourceC
 export { IResource__factory } from "./factories/IResource__factory";
 export { IResourcePriceAdaptor__factory } from "./factories/IResourcePriceAdaptor__factory";
 export { ResourcePriceAdaptor__factory } from "./factories/ResourcePriceAdaptor__factory";
+export { ResourcePriceAdaptorV2__factory } from "./factories/ResourcePriceAdaptorV2__factory";
 export { Billing__factory } from "./factories/Billing__factory";
 export { FundPool__factory } from "./factories/FundPool__factory";
 export { FundPoolRegistration__factory } from "./factories/FundPoolRegistration__factory";

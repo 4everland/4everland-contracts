@@ -19,12 +19,14 @@ import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
-interface ResourcePriceAdaptorInterface extends ethers.utils.Interface {
+interface ResourcePriceAdaptorV2Interface extends ethers.utils.Interface {
   functions: {
+    "fixPriceIndex(address,uint256,tuple[])": FunctionFragment;
     "getAmountAt(address,uint8,uint256,uint256)": FunctionFragment;
     "getAmountOf(address,uint8,uint256)": FunctionFragment;
     "getValueAt(address,uint8,uint256,uint256)": FunctionFragment;
     "getValueOf(address,uint8,uint256)": FunctionFragment;
+    "indexBlocks(address,uint8)": FunctionFragment;
     "initialize(address,address)": FunctionFragment;
     "owner()": FunctionFragment;
     "priceAt(address,uint8,uint256)": FunctionFragment;
@@ -32,9 +34,18 @@ interface ResourcePriceAdaptorInterface extends ethers.utils.Interface {
     "priceOf(address,uint8)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "router()": FunctionFragment;
+    "setPriceAdaptors(tuple[])": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
   };
 
+  encodeFunctionData(
+    functionFragment: "fixPriceIndex",
+    values: [
+      string,
+      BigNumberish,
+      { resourceType: BigNumberish; price: BigNumberish }[]
+    ]
+  ): string;
   encodeFunctionData(
     functionFragment: "getAmountAt",
     values: [string, BigNumberish, BigNumberish, BigNumberish]
@@ -50,6 +61,10 @@ interface ResourcePriceAdaptorInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "getValueOf",
     values: [string, BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "indexBlocks",
+    values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "initialize",
@@ -74,10 +89,18 @@ interface ResourcePriceAdaptorInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "router", values?: undefined): string;
   encodeFunctionData(
+    functionFragment: "setPriceAdaptors",
+    values: [{ resourceType: BigNumberish; price: BigNumberish }[]]
+  ): string;
+  encodeFunctionData(
     functionFragment: "transferOwnership",
     values: [string]
   ): string;
 
+  decodeFunctionResult(
+    functionFragment: "fixPriceIndex",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "getAmountAt",
     data: BytesLike
@@ -88,6 +111,10 @@ interface ResourcePriceAdaptorInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "getValueAt", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getValueOf", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "indexBlocks",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "priceAt", data: BytesLike): Result;
@@ -101,6 +128,10 @@ interface ResourcePriceAdaptorInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "router", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "setPriceAdaptors",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "transferOwnership",
     data: BytesLike
@@ -146,7 +177,7 @@ export type PriceIndexBlockUpdatedEvent = TypedEvent<
 
 export type RouterUpdatedEvent = TypedEvent<[string] & { router: string }>;
 
-export class ResourcePriceAdaptor extends BaseContract {
+export class ResourcePriceAdaptorV2 extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -187,9 +218,16 @@ export class ResourcePriceAdaptor extends BaseContract {
     toBlock?: string | number | undefined
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
-  interface: ResourcePriceAdaptorInterface;
+  interface: ResourcePriceAdaptorV2Interface;
 
   functions: {
+    fixPriceIndex(
+      provider: string,
+      index: BigNumberish,
+      adaptors: { resourceType: BigNumberish; price: BigNumberish }[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     getAmountAt(
       provider: string,
       resourceType: BigNumberish,
@@ -217,6 +255,12 @@ export class ResourcePriceAdaptor extends BaseContract {
       provider: string,
       resourceType: BigNumberish,
       amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    indexBlocks(
+      arg0: string,
+      arg1: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
@@ -252,11 +296,23 @@ export class ResourcePriceAdaptor extends BaseContract {
 
     router(overrides?: CallOverrides): Promise<[string]>;
 
+    setPriceAdaptors(
+      adaptors: { resourceType: BigNumberish; price: BigNumberish }[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     transferOwnership(
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
+
+  fixPriceIndex(
+    provider: string,
+    index: BigNumberish,
+    adaptors: { resourceType: BigNumberish; price: BigNumberish }[],
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   getAmountAt(
     provider: string,
@@ -285,6 +341,12 @@ export class ResourcePriceAdaptor extends BaseContract {
     provider: string,
     resourceType: BigNumberish,
     amount: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  indexBlocks(
+    arg0: string,
+    arg1: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
@@ -317,12 +379,24 @@ export class ResourcePriceAdaptor extends BaseContract {
 
   router(overrides?: CallOverrides): Promise<string>;
 
+  setPriceAdaptors(
+    adaptors: { resourceType: BigNumberish; price: BigNumberish }[],
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   transferOwnership(
     newOwner: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   callStatic: {
+    fixPriceIndex(
+      provider: string,
+      index: BigNumberish,
+      adaptors: { resourceType: BigNumberish; price: BigNumberish }[],
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     getAmountAt(
       provider: string,
       resourceType: BigNumberish,
@@ -350,6 +424,12 @@ export class ResourcePriceAdaptor extends BaseContract {
       provider: string,
       resourceType: BigNumberish,
       amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    indexBlocks(
+      arg0: string,
+      arg1: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -382,6 +462,11 @@ export class ResourcePriceAdaptor extends BaseContract {
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
     router(overrides?: CallOverrides): Promise<string>;
+
+    setPriceAdaptors(
+      adaptors: { resourceType: BigNumberish; price: BigNumberish }[],
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     transferOwnership(
       newOwner: string,
@@ -474,6 +559,13 @@ export class ResourcePriceAdaptor extends BaseContract {
   };
 
   estimateGas: {
+    fixPriceIndex(
+      provider: string,
+      index: BigNumberish,
+      adaptors: { resourceType: BigNumberish; price: BigNumberish }[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     getAmountAt(
       provider: string,
       resourceType: BigNumberish,
@@ -501,6 +593,12 @@ export class ResourcePriceAdaptor extends BaseContract {
       provider: string,
       resourceType: BigNumberish,
       amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    indexBlocks(
+      arg0: string,
+      arg1: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -536,6 +634,11 @@ export class ResourcePriceAdaptor extends BaseContract {
 
     router(overrides?: CallOverrides): Promise<BigNumber>;
 
+    setPriceAdaptors(
+      adaptors: { resourceType: BigNumberish; price: BigNumberish }[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     transferOwnership(
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -543,6 +646,13 @@ export class ResourcePriceAdaptor extends BaseContract {
   };
 
   populateTransaction: {
+    fixPriceIndex(
+      provider: string,
+      index: BigNumberish,
+      adaptors: { resourceType: BigNumberish; price: BigNumberish }[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     getAmountAt(
       provider: string,
       resourceType: BigNumberish,
@@ -570,6 +680,12 @@ export class ResourcePriceAdaptor extends BaseContract {
       provider: string,
       resourceType: BigNumberish,
       amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    indexBlocks(
+      arg0: string,
+      arg1: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -604,6 +720,11 @@ export class ResourcePriceAdaptor extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     router(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    setPriceAdaptors(
+      adaptors: { resourceType: BigNumberish; price: BigNumberish }[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
 
     transferOwnership(
       newOwner: string,

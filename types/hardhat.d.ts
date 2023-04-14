@@ -293,6 +293,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ResourcePriceAdaptor__factory>;
     getContractFactory(
+      name: "ResourcePriceAdaptorV2",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ResourcePriceAdaptorV2__factory>;
+    getContractFactory(
       name: "Billing",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.Billing__factory>;
@@ -683,6 +687,11 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.ResourcePriceAdaptor>;
+    getContractAt(
+      name: "ResourcePriceAdaptorV2",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ResourcePriceAdaptorV2>;
     getContractAt(
       name: "Billing",
       address: string,
